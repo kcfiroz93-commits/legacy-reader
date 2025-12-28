@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Check } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ AUTHOR CONTENT ZONE - EDIT THIS SECTION ⬇️
@@ -12,7 +12,6 @@ const BOOK_DATA = {
   author: "KC FIROZ", 
   
   // 2. YOUR IMAGES (Must be inside the 'public' folder)
-  // Updated to match your specific .png files
   logoPath: "/logo.png",   
   coverPath: "/cover.png", 
 
@@ -100,7 +99,6 @@ const CoverPage = ({ onStart }) => (
            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
            onError={(e) => {
              console.warn("Cover not found at:", BOOK_DATA.coverPath);
-             // Fallback if image fails
              e.target.style.display='none';
              e.target.parentNode.style.backgroundColor = '#1c1917';
              e.target.parentNode.innerHTML = '<div class="flex items-center justify-center h-full text-stone-500 font-serif">Cover Image</div>';
@@ -165,7 +163,54 @@ const TableOfContents = ({ chapters, activeChapter, onSelect, onClose }) => (
   </div>
 );
 
-const Controls = ({ theme, toggleTheme, fontSize, setFontSize }) => (
+// --- NEW FEATURE: APP ICON SIMULATOR ---
+const IconSimulator = ({ onClose }) => (
+  <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4 animate-fade-in">
+    <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white">
+      <X size={24} />
+    </button>
+
+    <h2 className="text-amber-500 font-mono tracking-widest uppercase mb-12 text-sm">Device Simulation Mode</h2>
+
+    <div className="flex flex-col md:flex-row gap-12 items-center">
+      
+      {/* iOS Simulation */}
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-32 h-32 bg-black rounded-[28px] overflow-hidden ring-1 ring-white/10 shadow-2xl">
+           {/* iOS icon is a square with rounded corners */}
+           <img src={BOOK_DATA.logoPath} className="w-full h-full object-cover bg-stone-900" alt="App Icon" />
+        </div>
+        <span className="text-xs font-sans text-stone-500">iOS (iPhone)</span>
+        <div className="text-[10px] text-stone-600 max-w-[150px] text-center">
+          Standard: Rounded Corners.<br/>Ensure logo is centered.
+        </div>
+      </div>
+
+      {/* Android Simulation */}
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-32 h-32 flex items-center justify-center">
+           {/* Android often uses circular crops for adaptive icons */}
+           <div className="w-28 h-28 rounded-full overflow-hidden bg-stone-900 ring-1 ring-white/10 shadow-2xl">
+             <img src={BOOK_DATA.logoPath} className="w-full h-full object-cover" alt="App Icon" />
+           </div>
+        </div>
+        <span className="text-xs font-sans text-stone-500">Android (Adaptive)</span>
+        <div className="text-[10px] text-stone-600 max-w-[150px] text-center">
+          Adaptive: Often Circular.<br/>Corners will be cut off.
+        </div>
+      </div>
+
+    </div>
+    
+    <div className="mt-16 p-4 border border-amber-900/30 bg-amber-900/5 rounded text-center">
+      <p className="text-amber-600/80 text-xs font-mono">
+        RECOMMENDED SIZE: 512x512px (PNG)
+      </p>
+    </div>
+  </div>
+);
+
+const Controls = ({ theme, toggleTheme, fontSize, setFontSize, onSimulate }) => (
   <div className="absolute bottom-full right-0 mb-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
     <div className="space-y-6">
       {/* Theme Toggle */}
@@ -206,6 +251,16 @@ const Controls = ({ theme, toggleTheme, fontSize, setFontSize }) => (
           <span className="text-lg">Aa</span>
         </div>
       </div>
+
+      {/* App Icon Simulator Button */}
+      <button 
+        onClick={onSimulate}
+        className="w-full flex items-center justify-center space-x-2 py-3 border border-stone-200 dark:border-zinc-700 rounded-sm text-xs font-sans text-stone-500 hover:text-amber-600 hover:border-amber-600/30 transition-all"
+      >
+        <Smartphone size={14} />
+        <span>Icon Simulator</span>
+      </button>
+
     </div>
   </div>
 );
@@ -219,6 +274,7 @@ export default function TheLegacyReader() {
   const [fontSize, setFontSize] = useState(19);
   const [showControls, setShowControls] = useState(false);
   const [showTOC, setShowTOC] = useState(false);
+  const [showSimulator, setShowSimulator] = useState(false);
   const [progress, setProgress] = useState(0);
 
   // Handle scroll progress
@@ -314,6 +370,7 @@ export default function TheLegacyReader() {
                 toggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 fontSize={fontSize}
                 setFontSize={setFontSize}
+                onSimulate={() => { setShowControls(false); setShowSimulator(true); }}
               />
             )}
           </div>
@@ -384,6 +441,10 @@ export default function TheLegacyReader() {
           onSelect={(idx) => { setCurrentChapterIndex(idx); setShowTOC(false); window.scrollTo(0,0); }}
           onClose={() => setShowTOC(false)}
         />
+      )}
+
+      {showSimulator && (
+        <IconSimulator onClose={() => setShowSimulator(false)} />
       )}
 
       {/* Global Styles */}
