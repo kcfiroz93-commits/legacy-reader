@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Check } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ AUTHOR CONTENT ZONE - EDIT THIS SECTION ⬇️
@@ -211,7 +211,7 @@ const IconSimulator = ({ onClose }) => (
 );
 
 const Controls = ({ theme, toggleTheme, fontSize, setFontSize, onSimulate }) => (
-  <div className="absolute bottom-full right-0 mb-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
+  <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
     <div className="space-y-6">
       {/* Theme Toggle */}
       <div className="flex items-center justify-between">
