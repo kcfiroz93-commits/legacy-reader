@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ CONFIGURATION ZONE ⬇️
@@ -14,9 +14,12 @@ const CONFIG = {
   // 2. FILES (Must be in 'public' folder)
   logoPath: "/logo.png",   
   coverPath: "/cover.png", 
-  bookPath: "/book.md",
+  
+  // 3. BOOK VERSIONS
+  bookPath_en: "/book.md",      // English Source
+  bookPath_ml: "/book-ml.md",   // Malayalam Source
 
-  // 3. FALLBACK CONTENT
+  // 4. FALLBACK CONTENT
   defaultChapters: [
     {
       id: 0,
@@ -27,8 +30,7 @@ const CONFIG = {
   ]
 };
 
-// --- PRELOADED CONTENT (FALLBACK) ---
-// This ensures the book works immediately even if the file fetch fails
+// --- PRELOADED CONTENT (FALLBACK - ENGLISH) ---
 const PRELOADED_BOOK = `
 ![Cover Image](cover.jpg)
 
@@ -1153,7 +1155,7 @@ const CoverPage = ({ onStart, loading }) => (
         </span>
       </button>
     </div>
-    <div className="absolute bottom-6 text-stone-700 text-[10px] font-mono tracking-wider opacity-50">v2.4.0 SYSTEM READY</div>
+    <div className="absolute bottom-6 text-stone-700 text-[10px] font-mono tracking-wider opacity-50">v2.5.0 MULTI-LANG READY</div>
   </div>
 );
 
@@ -1201,9 +1203,19 @@ const IconSimulator = ({ onClose }) => (
   </div>
 );
 
-const Controls = ({ theme, toggleTheme, fontSize, setFontSize, onSimulate }) => (
+const Controls = ({ theme, toggleTheme, fontSize, setFontSize, onSimulate, language, setLanguage }) => (
   <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
     <div className="space-y-6">
+      
+      {/* LANGUAGE TOGGLE */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-sans uppercase tracking-wider text-stone-500 dark:text-stone-400">Lang</span>
+        <div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1 border border-stone-200 dark:border-zinc-700">
+          <button onClick={() => setLanguage('en')} className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${language === 'en' ? 'bg-white shadow-sm text-amber-600' : 'text-stone-400'}`}>EN</button>
+          <button onClick={() => setLanguage('ml')} className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${language === 'ml' ? 'bg-zinc-700 shadow-sm text-amber-400' : 'text-stone-400'}`}>ML</button>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <span className="text-xs font-sans uppercase tracking-wider text-stone-500 dark:text-stone-400">Mode</span>
         <div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1 border border-stone-200 dark:border-zinc-700">
@@ -1236,21 +1248,34 @@ export default function TheLegacyReader() {
   const [showTOC, setShowTOC] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [language, setLanguage] = useState('en'); // 'en' or 'ml'
 
   // --- AUTO-LOADER SYSTEM ---
   useEffect(() => {
     async function loadBook() {
+      setLoading(true);
       try {
-        // Try to fetch file first, IF it fails, use preloaded content
-        // This solves the preview error while keeping the deployment feature active
+        const path = language === 'en' ? CONFIG.bookPath_en : CONFIG.bookPath_ml;
+        
+        // Try fetching the correct file based on language
         try {
-            const response = await fetch(`${CONFIG.bookPath}?t=${Date.now()}`);
+            const response = await fetch(`${path}?t=${Date.now()}`);
             if (!response.ok) throw new Error("Fetch failed");
             const text = await response.text();
             processText(text);
         } catch (fetchError) {
-            console.warn("Using embedded content fallback");
-            processText(PRELOADED_BOOK);
+            // Fallback logic
+            if (language === 'en') {
+                console.warn("Using embedded content fallback");
+                processText(PRELOADED_BOOK);
+            } else {
+                setChapters([{
+                    id: 0,
+                    title: "Coming Soon",
+                    subtitle: "Language Unavailable",
+                    content: "<p>The Malayalam version has not been uploaded yet. Please upload <strong>book-ml.md</strong> to the public folder.</p>"
+                }]);
+            }
         }
       } catch (error) {
         console.error("Critical Failure:", error);
@@ -1275,7 +1300,7 @@ export default function TheLegacyReader() {
     }
 
     loadBook();
-  }, []);
+  }, [language]); // Reload when language changes
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1324,7 +1349,7 @@ export default function TheLegacyReader() {
           </div>
           <div className="relative">
             <button onClick={() => setShowControls(!showControls)} className={`p-2 -mr-2 transition-colors ${showControls ? 'text-amber-600' : 'hover:text-amber-600'}`}><Type size={20} /></button>
-            {showControls && <Controls theme={theme} toggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} fontSize={fontSize} setFontSize={setFontSize} onSimulate={() => { setShowControls(false); setShowSimulator(true); }} />}
+            {showControls && <Controls theme={theme} toggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} fontSize={fontSize} setFontSize={setFontSize} onSimulate={() => { setShowControls(false); setShowSimulator(true); }} language={language} setLanguage={setLanguage} />}
           </div>
         </div>
       </header>
