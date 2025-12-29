@@ -11,32 +11,32 @@ const CONFIG = {
   
   // LANDING PAGE IMAGES
   seriesCover: "/cover.png",   // Entry 1: Leads to Book Series
-  profileCover: "/cover1.png", // Entry 2: Leads to Architect Profile (User must upload this)
+  profileCover: "/cover1.png", // Entry 2: Leads to Architect Profile
 
   // EXTERNAL LINKS
   authorWebsite: "https://author.kc-capitals.com",
-  profilePdfPath: "/profile.pdf", // User must upload this
+  profilePdfPath: "/profile.pdf",
 
   // MICRO BOOK DEFINITIONS (13 Books: 0 to 12)
-  // This maps the UI cards to specific markdown files
+  // Ensure you have cover-0.png through cover-12.png in your public folder
   library: [
-    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book.md" }, // Your main book
-    { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", file: "/book-1.md" },
-    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md" },
-    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md" },
-    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", file: "/book-4.md" },
-    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", file: "/book-5.md" },
-    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", file: "/book-6.md" },
-    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", file: "/book-7.md" },
-    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", file: "/book-8.md" },
-    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", file: "/book-9.md" },
-    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", file: "/book-10.md" },
-    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", file: "/book-11.md" },
-    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", file: "/book-12.md" },
+    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book.md", cover: "/cover.png" }, // Reusing main cover for Book 0
+    { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png" },
+    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png" },
+    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png" },
+    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", file: "/book-4.md", cover: "/cover-4.png" },
+    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", file: "/book-5.md", cover: "/cover-5.png" },
+    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", file: "/book-6.md", cover: "/cover-6.png" },
+    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", file: "/book-7.md", cover: "/cover-7.png" },
+    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", file: "/book-8.md", cover: "/cover-8.png" },
+    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", file: "/book-9.md", cover: "/cover-9.png" },
+    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", file: "/book-10.md", cover: "/cover-10.png" },
+    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", file: "/book-11.md", cover: "/cover-11.png" },
+    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", file: "/book-12.md", cover: "/cover-12.png" },
   ]
 };
 
-// --- MARKDOWN PARSER ENGINE ---
+// --- MARKDOWN PARSER ENGINE V2.0 ---
 const parseMarkdown = (text) => {
   if (!text) return [];
   const parts = text.split(/^#{1,3}\s+(.+)$/gm);
@@ -50,7 +50,10 @@ const parseMarkdown = (text) => {
         if (!p) return '';
         if (p.startsWith('![') && p.includes('](')) {
           const imgMatch = p.match(/!\[(.*?)\]\((.*?)\)/);
-          if (imgMatch) return `<div class="my-8 flex justify-center"><img src="${imgMatch[2]}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
+          if (imgMatch) {
+             let src = imgMatch[2];
+             return `<div class="my-8 flex justify-center"><img src="${src}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
+          }
         }
         if (p.startsWith('> ')) return `<blockquote class="border-l-2 border-amber-600 pl-4 italic text-stone-400 my-6">${p.replace(/^> /, '')}</blockquote>`;
         if (p === '---' || p === '***') return `<hr class="border-stone-800 my-8 opacity-50" />`;
@@ -69,7 +72,7 @@ const parseMarkdown = (text) => {
 
 // --- SUB-COMPONENTS ---
 
-// 1. LANDING PAGE PORTAL
+// 1. LANDING PORTAL
 const LandingPortal = ({ onEnterSeries, onEnterProfile }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/10 via-zinc-950 to-zinc-950 z-0"></div>
@@ -106,7 +109,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile }) => (
             alt="Author Cover" 
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
             onError={(e) => {
-              // Fallback if user hasn't uploaded cover1.png yet
               e.target.style.display='none';
               e.target.parentNode.className += " flex items-center justify-center";
               e.target.parentNode.innerHTML += `<div class="text-center p-6"><div class="text-4xl mb-4 text-stone-600">👤</div><div class="text-stone-500 font-serif">Upload cover1.png</div></div>`;
@@ -140,20 +142,33 @@ const LibraryGrid = ({ onSelectBook, onBack }) => (
             onClick={() => onSelectBook(book)}
             className="group flex flex-col text-left space-y-3"
           >
+            {/* BOOK CARD */}
             <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
-              {/* If we had specific covers for each book, we'd map them here. Using generic style for now */}
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between">
-                <div className="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">{String(book.id).padStart(2, '0')}</div>
-                <div>
-                  <div className="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600 group-hover:text-amber-500 group-hover:border-amber-500 transition-colors">L</div>
-                </div>
-              </div>
-              {/* Optional: Overlay actual cover.png if it's book 0 */}
-              {book.id === 0 && <img src={CONFIG.seriesCover} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />}
+              
+              {/* IMAGE LOADER */}
+              <img 
+                src={book.cover} 
+                alt={book.title}
+                className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                onError={(e) => {
+                    // Fallback to stylized placeholder if image missing
+                    e.target.style.display='none';
+                    e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between";
+                    e.target.parentNode.innerHTML = `
+                        <div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div>
+                        <div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>
+                    `;
+                }}
+              />
+              
+              {/* HOVER OVERLAY */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
             </div>
+
+            {/* TEXT INFO */}
             <div>
               <h3 className="text-sm font-bold text-stone-300 group-hover:text-white font-serif leading-tight">{book.title}</h3>
-              <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1">{book.subtitle}</p>
+              <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1 line-clamp-1">{book.subtitle}</p>
             </div>
           </button>
         ))}
@@ -203,7 +218,7 @@ const ProfileOptions = ({ onBack }) => (
   </div>
 );
 
-// 4. READER COMPONENT (Refactored to be reusable)
+// 4. READER COMPONENT
 const ReaderView = ({ bookData, onBack }) => {
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -219,9 +234,6 @@ const ReaderView = ({ bookData, onBack }) => {
     async function loadContent() {
       setLoading(true);
       try {
-        // Construct filename based on language (e.g., book.md vs book-ml.md)
-        // If it's the main book, we use book.md. For others, we assume book-X.md
-        // To handle ML, we append -ml before extension
         let filePath = bookData.file;
         if (language === 'ml') {
             filePath = filePath.replace('.md', '-ml.md');
@@ -240,7 +252,7 @@ const ReaderView = ({ bookData, onBack }) => {
              setChapters([{ id: 0, title: "Unavailable", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
         } else {
              // Fallback for English if file missing
-             setChapters([{ id: 0, title: "Coming Soon", subtitle: "404", content: "<p>This micro book has not been uploaded yet.</p>" }]);
+             setChapters([{ id: 0, title: "Coming Soon", subtitle: "404", content: "<p>This micro book content has not been uploaded yet.</p>" }]);
         }
       } finally {
         setLoading(false);
@@ -421,5 +433,3 @@ export default function TheLegacyReader() {
     </>
   );
 }
-
-
