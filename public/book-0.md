@@ -1,4 +1,4 @@
-![Cover Image](cover.jpg)
+![Cover Image](cover-0.png)
 
 ---
 
