@@ -7,7 +7,7 @@ import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe,
 
 const CONFIG = {
   author: "KC FIROZ", 
-  logoPath: "/logo.png",   
+  logoPath: "/icon-v2.png",   
   
   // LANDING PAGE IMAGES
   seriesCover: "/cover.png",   
@@ -124,7 +124,6 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {CONFIG.library.map((book) => {
-          // Calculate Progress
           const bookProgress = progressData[book.id] || { current: 0, total: 1 };
           const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
           const isStarted = progressData[book.id] !== undefined;
@@ -134,8 +133,6 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
               <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
                 <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between"; e.target.parentNode.innerHTML = `<div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div><div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>`; }} />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
-                
-                {/* PROGRESS BADGE */}
                 {isStarted && (
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800">
                     <div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div>
@@ -183,7 +180,7 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
   const [showControls, setShowControls] = useState(false);
   const [showTOC, setShowTOC] = useState(false);
   const [language, setLanguage] = useState('en');
-  const [zenMode, setZenMode] = useState(false); // Zen Mode State
+  const [zenMode, setZenMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
 
@@ -194,15 +191,31 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
       try {
         let filePath = bookData.file;
         if (language === 'ml') filePath = filePath.replace('.md', '-ml.md');
-        const response = await fetch(`${filePath}?t=${Date.now()}`);
-        if (!response.ok) throw new Error("File not found");
+        
+        // Add cache busting
+        const fetchUrl = `${filePath}?t=${Date.now()}`;
+        console.log(`Fetching: ${fetchUrl}`);
+
+        const response = await fetch(fetchUrl);
+        if (!response.ok) throw new Error(`Status: ${response.status}`); // Pass status code
         const text = await response.text();
         const parsed = parseMarkdown(text);
         if (parsed.length > 0) setChapters(parsed);
-        else setChapters([{ id: 0, title: "Reading", subtitle: bookData.title, content: text.split('\n').map(p=>`<p>${p}</p>`).join('') }]);
+        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
       } catch (err) {
-        if (language === 'ml') setChapters([{ id: 0, title: "Unavailable", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
-        else setChapters([{ id: 0, title: "Coming Soon", subtitle: "404", content: "<p>This micro book content has not been uploaded yet.</p>" }]);
+        let errorMessage = `<p>System could not load the book content.</p><p class="text-xs font-mono text-red-400 mt-4">Error details: ${err.message}</p>`;
+        
+        if (language === 'ml') {
+             setChapters([{ id: 0, title: "Unavailable", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
+        } else {
+             // Specific error for English to help user debug
+             setChapters([{ 
+                 id: 0, 
+                 title: "Content Missing", 
+                 subtitle: "404 Error", 
+                 content: `${errorMessage}<p class="mt-4">Please ensure you have uploaded a file named <strong>${bookData.file.replace('/', '')}</strong> to your 'public' folder.</p>` 
+             }]);
+        }
       } finally {
         setLoading(false);
       }
@@ -210,7 +223,7 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
     loadContent();
   }, [bookData, language]);
 
-  // Update Progress when chapter changes (or chapters load)
+  // Update Progress
   useEffect(() => {
     if (chapters.length > 0) {
         onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
@@ -226,7 +239,7 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
   const searchResults = useMemo(() => {
     if (!searchQuery || searchQuery.length < 3) return [];
     return chapters.map((chap, idx) => {
-        const text = chap.content.replace(/<[^>]*>/g, ' '); // Strip HTML
+        const text = chap.content.replace(/<[^>]*>/g, ' ');
         if (text.toLowerCase().includes(searchQuery.toLowerCase())) return { ...chap, index: idx };
         return null;
     }).filter(Boolean);
@@ -238,7 +251,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
       
-      {/* HEADER (Hidden in Zen Mode) */}
       {!zenMode && (
         <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
             <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -264,7 +276,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
                 </div>
             </div>
             </div>
-            {/* SEARCH BAR DROPDOWN */}
             {showSearch && (
                 <div className="border-t border-stone-800 bg-zinc-950/95 backdrop-blur p-4 animate-slide-up">
                     <div className="max-w-xl mx-auto">
@@ -316,7 +327,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
         </article>
       </main>
 
-      {/* FOOTER NAV (Hidden in Zen Mode) */}
       {!zenMode && (
         <footer className={`fixed bottom-0 w-full z-30 border-t backdrop-blur-md transition-colors ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
             <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -351,13 +361,11 @@ export default function TheLegacyReader() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [progressData, setProgressData] = useState({});
 
-  // LOAD PROGRESS ON START
   useEffect(() => {
     const saved = localStorage.getItem('legacy_os_progress');
     if (saved) setProgressData(JSON.parse(saved));
   }, []);
 
-  // SAVE PROGRESS
   const updateProgress = (bookId, chapterIndex, totalChapters) => {
     const newProgress = { ...progressData, [bookId]: { current: chapterIndex, total: totalChapters, lastRead: Date.now() } };
     setProgressData(newProgress);
