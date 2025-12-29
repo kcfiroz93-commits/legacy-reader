@@ -110,18 +110,25 @@ const calculateReadingTime = (text) => {
   return Math.ceil(words / wordsPerMinute);
 };
 
-// --- MARKDOWN PARSER ENGINE V2.0 ---
+// --- MARKDOWN PARSER ENGINE V2.1 (Robust) ---
 const parseMarkdown = (text) => {
   if (!text) return [];
-  const parts = text.split(/^#{1,3}\s+(.+)$/gm);
+  
+  // V2.1 Fix: Allow leading whitespace before headers (^\s*)
+  const parts = text.split(/^\s*#{1,3}\s+(.+)$/gm);
+  
   const chapters = [];
+  // Loop starts at 1 because split on regex creates [preamble, title1, content1, title2, content2...]
   for (let i = 1; i < parts.length; i += 2) {
     const title = parts[i].trim();
     const rawContent = parts[i + 1];
     if (!title || !rawContent) continue;
+    
     let htmlContent = rawContent.split(/\n\s*\n/).map(para => {
         let p = para.trim();
         if (!p) return '';
+        
+        // Image Parser
         if (p.startsWith('![') && p.includes('](')) {
           const imgMatch = p.match(/!\[(.*?)\]\((.*?)\)/);
           if (imgMatch) {
@@ -129,16 +136,26 @@ const parseMarkdown = (text) => {
              return `<div class="my-8 flex justify-center"><img src="${src}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
           }
         }
+        
+        // Blockquotes
         if (p.startsWith('> ')) return `<blockquote class="border-l-2 border-amber-600 pl-4 italic text-stone-400 my-6">${p.replace(/^> /, '')}</blockquote>`;
+        
+        // HR
         if (p === '---' || p === '***') return `<hr class="border-stone-800 my-8 opacity-50" />`;
+        
+        // Bold & Italic
         p = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-stone-200 font-bold">$1</strong>');
         p = p.replace(/\*(.*?)\*/g, '<em class="text-amber-600/80">$1</em>');
+        
+        // Lists
         if (p.startsWith('- ') || p.startsWith('* ')) {
              const items = p.split('\n').map(item => `<li class="ml-4 list-disc text-stone-400">${item.replace(/^[-*] /, '')}</li>`).join('');
              return `<ul class="space-y-2 my-4">${items}</ul>`;
         }
+        
         return `<p>${p}</p>`;
       }).join('');
+      
     chapters.push({ id: i, title: title, subtitle: `SECTION ${chapters.length + 1}`, content: htmlContent });
   }
   return chapters;
@@ -184,73 +201,49 @@ const InstallGuide = ({ onClose }) => (
   </div>
 );
 
-// 2. LANDING PORTAL (VIBRANT UPGRADE)
+// 2. LANDING PORTAL
 const LandingPortal = ({ onEnterSeries, onEnterProfile, onShowInstall }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-    {/* Animated Background Particles */}
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-950 to-zinc-950 z-0"></div>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-amber-800/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-    </div>
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/10 via-zinc-950 to-zinc-950 z-0"></div>
+    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] animate-pulse"></div>
     
-    <div className="z-10 w-full max-w-5xl mx-auto flex flex-col items-center animate-fade-in relative">
-      <div className="mb-14 text-center space-y-6">
-        <div className="relative inline-block group">
-            <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full group-hover:bg-amber-500/30 transition-all duration-500"></div>
-            <img src={CONFIG.logoPath} alt="Logo" className="relative w-24 h-24 mx-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-500 mb-2 drop-shadow-[0_0_15px_rgba(217,119,6,0.3)]" />
-        </div>
-        
-        <h1 className="text-4xl md:text-6xl font-serif text-transparent bg-clip-text bg-gradient-to-br from-stone-100 via-stone-200 to-stone-500 tracking-tight leading-tight drop-shadow-lg">
-          EXPLORE THE LEGACY<br/>E-BOOK SERIES
+    <div className="z-10 w-full max-w-5xl mx-auto flex flex-col items-center animate-fade-in">
+      <div className="mb-12 text-center space-y-4">
+        <img src={CONFIG.logoPath} alt="Logo" className="w-20 h-20 mx-auto object-contain opacity-80 mb-6" />
+        <h1 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-b from-stone-100 to-stone-500 tracking-tight">
+          EXPLORE THE LEGACY E-BOOK SERIES
         </h1>
-        <div className="w-16 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto rounded-full mt-8 opacity-80"></div>
+        <div className="w-24 h-1 bg-amber-700/50 mx-auto rounded-full mt-6"></div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 md:gap-20 w-full justify-center items-center mt-4">
-        
-        {/* CARD 1: SERIES */}
-        <div 
-          onClick={onEnterSeries}
-          className="group relative cursor-pointer w-full max-w-xs md:max-w-sm aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_40px_rgba(217,119,6,0.15)] hover:-translate-y-2"
-        >
-          <img src={CONFIG.seriesCover} alt="Series Cover" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 filter grayscale-[20%] group-hover:grayscale-0" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-10">
-            <span className="font-mono text-xs font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-6 py-3 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">ENTER LIBRARY</span>
+      <div className="flex flex-col md:flex-row gap-8 md:gap-16 w-full justify-center items-center">
+        <div onClick={onEnterSeries} className="group relative cursor-pointer w-full max-w-sm aspect-[3/4] bg-zinc-900 border border-stone-800 hover:border-amber-600/50 transition-all duration-500 rounded-sm overflow-hidden shadow-2xl hover:shadow-amber-900/20">
+          <img src={CONFIG.seriesCover} alt="Series Cover" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex items-end justify-center pb-8">
+            <span className="font-mono text-xs tracking-[0.2em] text-stone-400 group-hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 backdrop-blur-md rounded-full border border-white/10">ENTER LIBRARY</span>
           </div>
         </div>
 
-        {/* CARD 2: ARCHITECT */}
-        <div 
-          onClick={onEnterProfile}
-          className="group relative cursor-pointer w-full max-w-xs md:max-w-sm aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_40px_rgba(217,119,6,0.15)] hover:-translate-y-2"
-        >
-          <img 
-            src={CONFIG.profileCover} 
-            alt="Author Cover" 
-            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 filter grayscale-[20%] group-hover:grayscale-0"
-            onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-6"><div class="text-4xl mb-4 text-stone-600">👤</div><div class="text-stone-500 font-serif">Upload cover1.png</div></div>`; }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-10">
-            <span className="font-mono text-xs font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-6 py-3 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 border border-white/10 group-hover:border-transparent">THE ARCHITECT</span>
+        <div onClick={onEnterProfile} className="group relative cursor-pointer w-full max-w-sm aspect-[3/4] bg-zinc-900 border border-stone-800 hover:border-amber-600/50 transition-all duration-500 rounded-sm overflow-hidden shadow-2xl hover:shadow-amber-900/20">
+          <img src={CONFIG.profileCover} alt="Author Cover" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-6"><div class="text-4xl mb-4 text-stone-600">👤</div><div class="text-stone-500 font-serif">Upload cover1.png</div></div>`; }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex items-end justify-center pb-8">
+            <span className="font-mono text-xs tracking-[0.2em] text-stone-400 group-hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 backdrop-blur-md rounded-full border border-white/10">THE ARCHITECT</span>
           </div>
         </div>
-
       </div>
 
-      {/* INSTALL BUTTON */}
       <button 
         onClick={onShowInstall}
-        className="mt-20 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10"
+        className="mt-16 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-600 hover:text-amber-600 transition-colors px-4 py-2 border border-stone-800 rounded-full hover:border-amber-600/30"
       >
-        <Download size={14} />
+        <Download size={12} />
         INSTALL APP ICON
       </button>
     </div>
   </div>
 );
 
-// 3. LIBRARY GRID VIEW WITH PROGRESS
+// 3. LIBRARY GRID VIEW
 const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
   <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
     <button onClick={onBack} className="fixed top-6 left-6 z-50 flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
@@ -293,7 +286,7 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
   </div>
 );
 
-// 4. DEDICATION VIEW (NEW)
+// 4. DEDICATION VIEW
 const DedicationView = ({ onBack }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
     <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
@@ -361,14 +354,16 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
         let filePath = bookData.file;
         if (language === 'ml') filePath = filePath.replace('.md', '-ml.md');
         
-        // Add cache busting
         const fetchUrl = `${filePath}?t=${Date.now()}`;
         console.log(`Fetching: ${fetchUrl}`);
 
         const response = await fetch(fetchUrl);
-        if (!response.ok) throw new Error(`Status: ${response.status}`); // Pass status code
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
         const text = await response.text();
+        
+        // Use the robust V2.1 parser
         const parsed = parseMarkdown(text);
+        
         if (parsed.length > 0) setChapters(parsed);
         else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
       } catch (err) {
@@ -377,7 +372,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
         if (language === 'ml') {
              setChapters([{ id: 0, title: "Unavailable", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
         } else {
-             // Specific error for English to help user debug
              setChapters([{ 
                  id: 0, 
                  title: "Content Missing", 
@@ -392,7 +386,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
     loadContent();
   }, [bookData, language]);
 
-  // Update Progress
   useEffect(() => {
     if (chapters.length > 0) {
         onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
@@ -404,7 +397,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
     else document.documentElement.classList.remove('dark');
   }, [theme]);
 
-  // Search Logic
   const searchResults = useMemo(() => {
     if (!searchQuery || searchQuery.length < 3) return [];
     return chapters.map((chap, idx) => {
@@ -419,7 +411,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
-      
       {!zenMode && (
         <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
             <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -466,7 +457,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
         </header>
       )}
 
-      {/* CONTENT */}
       <main className={`max-w-2xl mx-auto px-6 pb-32 transition-all duration-500 ${zenMode ? 'pt-20 cursor-text' : 'pt-32'}`}>
         <article className="animate-fade-in">
           {zenMode && (
@@ -474,7 +464,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
                   <Minimize size={20} />
               </button>
           )}
-          
           {loading ? (
              <div className="flex justify-center py-20 text-stone-500 font-mono text-xs animate-pulse">LOADING SYSTEM...</div>
           ) : (
