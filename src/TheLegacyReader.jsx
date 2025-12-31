@@ -121,20 +121,27 @@ const calculateReadingTime = (text) => {
 // --- MARKDOWN PARSER ENGINE V2.2 (Robust & Forgiving) ---
 const parseMarkdown = (text) => {
   if (!text) return [];
+  // Regex to split by headers (#, ##, ###) while keeping them
   const parts = text.split(/(?=^#{1,3}\s+)/gm);
+  
   const chapters = [];
   
   parts.forEach(part => {
+    // Extract title from the first line
     const match = part.match(/^(#{1,3})\s+(.+)$/m);
     if (!match) return; 
     
     const title = match[2].trim();
+    // Remove the header line from content
     const rawContent = part.replace(/^(#{1,3})\s+(.+)$/m, '').trim();
+    
     if (!rawContent) return;
 
     let htmlContent = rawContent.split(/\n\s*\n/).map(para => {
         let p = para.trim();
         if (!p) return '';
+        
+        // Image Parser
         if (p.startsWith('![') && p.includes('](')) {
           const imgMatch = p.match(/!\[(.*?)\]\((.*?)\)/);
           if (imgMatch) {
@@ -142,14 +149,23 @@ const parseMarkdown = (text) => {
              return `<div class="my-8 flex justify-center"><img src="${src}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
           }
         }
+        
+        // Blockquotes
         if (p.startsWith('> ')) return `<blockquote class="border-l-2 border-amber-600 pl-4 italic text-stone-400 my-6">${p.replace(/^> /, '')}</blockquote>`;
+        
+        // HR
         if (p === '---' || p === '***') return `<hr class="border-stone-800 my-8 opacity-50" />`;
+        
+        // Bold & Italic
         p = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-stone-200 font-bold">$1</strong>');
         p = p.replace(/\*(.*?)\*/g, '<em class="text-amber-600/80">$1</em>');
+        
+        // Lists
         if (p.startsWith('- ') || p.startsWith('* ')) {
              const items = p.split('\n').map(item => `<li class="ml-4 list-disc text-stone-400">${item.replace(/^[-*] /, '')}</li>`).join('');
              return `<ul class="space-y-2 my-4">${items}</ul>`;
         }
+        
         return `<p>${p}</p>`;
       }).join('');
       
@@ -421,6 +437,203 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
     </div>
   </div>
 );
+
+const DedicationView = ({ onBack }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-2xl w-full mx-auto space-y-12 py-12">
+      <h2 className="text-3xl font-serif text-amber-600 text-center tracking-wide border-b border-stone-800 pb-6 mb-8">Dedication</h2>
+      <div className="grid grid-cols-1 gap-8">
+        {DEDICATIONS.map((item, index) => (
+          <div key={index} className="space-y-4 text-center">
+            <h3 className="text-xl font-bold text-stone-200 font-serif">{item.title}</h3>
+            <div className="text-stone-400 font-serif leading-relaxed italic text-sm md:text-base px-4" dangerouslySetInnerHTML={{ __html: item.content }} />
+            {index < DEDICATIONS.length - 1 && <div className="w-12 h-px bg-stone-800 mx-auto mt-8 opacity-50"></div>}
+          </div>
+        ))}
+      </div>
+      <div className="text-center pt-12"><p className="text-[10px] font-mono text-stone-600 uppercase tracking-widest">FROM THE LEGACY OS MASTER MAP</p></div>
+    </div>
+  </div>
+);
+
+const ProfileOptions = ({ onBack, onShowDedications }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-md w-full space-y-8 animate-slide-up text-center">
+      <div className="w-24 h-24 mx-auto bg-zinc-900 rounded-full border border-amber-600/30 flex items-center justify-center mb-8"><User size={40} className="text-amber-600" /></div>
+      <h2 className="text-3xl font-serif text-stone-200">The Architect</h2>
+      <p className="text-stone-500 text-sm leading-relaxed px-4">Access the professional profile, download the legacy dossier, or view dedications.</p>
+      <div className="space-y-4 pt-8">
+        <a href={CONFIG.authorWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">LEGACY ARCHITECT</span><ExternalLink size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <a href={CONFIG.profilePdfPath} download className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">DOWNLOAD PROFILE</span><Download size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <button onClick={onShowDedications} className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group">
+          <span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">READ DEDICATIONS</span>
+          <FileText size={18} className="text-stone-600 group-hover:text-amber-500" />
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => {
+  const [chapters, setChapters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(initialProgress || 0);
+  const [theme, setTheme] = useState('dark');
+  const [fontSize, setFontSize] = useState(19);
+  const [showControls, setShowControls] = useState(false);
+  const [showTOC, setShowTOC] = useState(false);
+  const [language, setLanguage] = useState('en');
+  const [zenMode, setZenMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+    async function loadContent() {
+      setLoading(true);
+      try {
+        let filePath = bookData.file;
+        if (language === 'ml') filePath = filePath.replace('.md', '-ml.md');
+        const fetchUrl = `${filePath}?t=${Date.now()}`;
+        const response = await fetch(fetchUrl);
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
+        const text = await response.text();
+        const parsed = parseMarkdown(text);
+        if (parsed.length > 0) setChapters(parsed);
+        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
+      } catch (err) {
+        if (language === 'ml') setChapters([{ id: 0, title: "Coming soon..", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
+        else setChapters([{ id: 0, title: "Coming soon..", subtitle: "Content", content: `<p>The content for <strong>${bookData.title}</strong> is coming soon.</p>` }]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadContent();
+  }, [bookData, language]);
+
+  useEffect(() => {
+    if (chapters.length > 0) onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
+  }, [currentChapterIndex, chapters, bookData.id]);
+
+  useEffect(() => {
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  }, [theme]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 3) return [];
+    return chapters.map((chap, idx) => {
+        const text = chap.content.replace(/<[^>]*>/g, ' ');
+        if (text.toLowerCase().includes(searchQuery.toLowerCase())) return { ...chap, index: idx };
+        return null;
+    }).filter(Boolean);
+  }, [searchQuery, chapters]);
+
+  const currentChapter = chapters[currentChapterIndex] || { title: "Loading...", content: "" };
+  const readingTime = calculateReadingTime(currentChapter.content || "");
+
+  return (
+    <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
+      {!zenMode && (
+        <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={onBack} className="p-2 -ml-2 hover:text-amber-600 transition-colors flex items-center gap-2"><ArrowLeft size={20} /></button>
+            <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowTOC(true)}>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-600 opacity-80">{bookData.title}</span>
+                <span className={`text-xs font-serif ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{currentChapter.subtitle || "READING"}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+                <button onClick={() => setShowSearch(!showSearch)} className="p-2 hover:text-amber-600 transition-colors"><Search size={18} /></button>
+                <button onClick={() => setZenMode(true)} className="p-2 hover:text-amber-600 transition-colors"><Maximize size={18} /></button>
+                <div className="relative">
+                    <button onClick={() => setShowControls(!showControls)} className={`p-2 transition-colors ${showControls ? 'text-amber-600' : 'hover:text-amber-600'}`}><Type size={20} /></button>
+                    {showControls && (
+                        <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Lang</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setLanguage('en')} className={`px-3 py-1 rounded-full text-[10px] ${language === 'en' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}>EN</button><button onClick={() => setLanguage('ml')} className={`px-3 py-1 rounded-full text-[10px] ${language === 'ml' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}>ML</button></div></div>
+                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Mode</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setTheme('light')} className={`p-2 rounded-full ${theme === 'light' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}><Sun size={14} /></button><button onClick={() => setTheme('dark')} className={`p-2 rounded-full ${theme === 'dark' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}><Moon size={14} /></button></div></div>
+                                <div className="space-y-3"><div className="flex items-center justify-between text-stone-500"><span className="text-xs font-sans uppercase">Size</span><span className="text-xs font-mono">{fontSize}px</span></div><input type="range" min="16" max="26" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1 bg-stone-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-600" /></div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            </div>
+            {showSearch && (
+                <div className="border-t border-stone-800 bg-zinc-950/95 backdrop-blur p-4 animate-slide-up">
+                    <div className="max-w-xl mx-auto">
+                        <input type="text" placeholder="Search in this book..." className="w-full bg-zinc-900 border border-stone-700 p-3 text-sm text-white focus:border-amber-600 focus:outline-none rounded-sm mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} autoFocus />
+                        {searchResults.length > 0 && (
+                            <div className="max-h-40 overflow-y-auto space-y-2">
+                                {searchResults.map(res => (
+                                    <button key={res.id} onClick={() => { setCurrentChapterIndex(res.index); setShowSearch(false); }} className="w-full text-left p-3 hover:bg-stone-900 rounded border border-transparent hover:border-stone-800">
+                                        <div className="text-xs text-amber-600 font-mono">{res.subtitle}</div>
+                                        <div className="text-sm text-stone-300 font-serif">{res.title}</div>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        {searchQuery.length > 0 && searchResults.length === 0 && <div className="text-center text-stone-500 text-xs py-2">No results found</div>}
+                    </div>
+                </div>
+            )}
+        </header>
+      )}
+
+      <main className={`max-w-2xl mx-auto px-6 pb-32 transition-all duration-500 ${zenMode ? 'pt-20 cursor-text' : 'pt-32'}`}>
+        <article className="animate-fade-in">
+          {zenMode && (
+              <button onClick={() => setZenMode(false)} className="fixed top-6 right-6 p-2 bg-black/20 hover:bg-black/50 text-stone-500 hover:text-white rounded-full transition-colors z-50"><Minimize size={20} /></button>
+          )}
+          {loading ? (
+             <div className="flex justify-center py-20 text-stone-500 font-mono text-xs animate-pulse">LOADING SYSTEM...</div>
+          ) : (
+            <>
+                <header className="mb-12 text-center">
+                    <span className="block text-amber-600 font-mono text-xs tracking-[0.2em] mb-4 uppercase">{currentChapter.subtitle}</span>
+                    <h2 className={`text-3xl md:text-4xl font-serif font-bold mb-6 ${theme === 'dark' ? 'text-stone-100' : 'text-stone-900'}`}>{currentChapter.title}</h2>
+                    <div className="flex items-center justify-center space-x-2 text-stone-500 text-[10px] font-mono mb-8 opacity-60">
+                        <Clock size={12} />
+                        <span>{readingTime} MIN READ</span>
+                    </div>
+                    <div className="w-8 h-[1px] bg-amber-600/50 mx-auto"></div>
+                </header>
+                <div className="prose dark:prose-invert prose-lg md:prose-xl mx-auto font-serif leading-loose" style={{ fontSize: `${fontSize}px` }}>
+                    <div dangerouslySetInnerHTML={{ __html: currentChapter.content }} />
+                </div>
+            </>
+          )}
+        </article>
+      </main>
+
+      {!zenMode && (
+        <footer className={`fixed bottom-0 w-full z-30 border-t backdrop-blur-md transition-colors ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={() => { if(currentChapterIndex > 0) { setCurrentChapterIndex(prev => prev - 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === 0} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === 0 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><ChevronLeft size={16} /><span className="text-sm font-sans font-medium hidden md:inline">Previous</span></button>
+            <span className="text-[10px] font-mono text-stone-500 tracking-wider">{(currentChapterIndex + 1)} / {chapters.length}</span>
+            <button onClick={() => { if(currentChapterIndex < chapters.length - 1) { setCurrentChapterIndex(prev => prev + 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === chapters.length - 1} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === chapters.length - 1 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><span className="text-sm font-sans font-medium hidden md:inline">Next</span><ChevronRight size={16} /></button>
+            </div>
+        </footer>
+      )}
+
+      {showTOC && (
+        <div className="fixed inset-0 z-40 bg-zinc-950/98 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-fade-in">
+            <button onClick={() => setShowTOC(false)} className="absolute top-6 right-6 text-stone-400 hover:text-white transition-colors p-2"><X size={32} strokeWidth={1} /></button>
+            <h2 className="text-2xl font-serif text-amber-600 mb-12 tracking-wider border-b border-amber-900/30 pb-4">INDEX</h2>
+            <nav className="space-y-4 w-full max-w-md text-center max-h-[70vh] overflow-y-auto">
+            {chapters.map((chapter, index) => (
+                <button key={chapter.id} onClick={() => { setCurrentChapterIndex(index); setShowTOC(false); window.scrollTo(0,0); }} className={`w-full py-4 px-4 text-lg md:text-xl font-serif transition-all duration-300 rounded-sm ${currentChapterIndex === index ? 'bg-amber-900/10 text-amber-500 border border-amber-900/20' : 'text-stone-500 hover:text-stone-200 hover:bg-stone-900'}`}>
+                <span className="block text-[10px] font-mono text-stone-600 mb-1 uppercase tracking-widest">{chapter.subtitle}</span>
+                {chapter.title}
+                </button>
+            ))}
+            </nav>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // --- MAIN CONTROLLER (THE BRAIN) ---
 export default function TheLegacyReader() {
