@@ -12,7 +12,6 @@ const CONFIG = {
   // LANDING PAGE IMAGES
   seriesCover: "/cover.png",   
   profileCover: "/cover1.png", 
-  // You will upload these later. For now, we use placeholders or reuse existing if available.
   audioCover: "/cover-audio.png", 
   reviewsCover: "/cover-reviews.png",
 
@@ -23,7 +22,7 @@ const CONFIG = {
 
   // MICRO BOOK DEFINITIONS
   library: [
-    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-6.png" }, // Updated to cover-6.png per request
+    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-6.png?v=2" }, 
     { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png" },
     { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png" },
     { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png" },
@@ -68,7 +67,7 @@ const REVIEWS_DATA = [
     name: "Video Review: The Impact", 
     role: "Reader Community", 
     type: "video",
-    thumbnail: "/video-thumb-1.jpg", // You'll need to upload this
+    thumbnail: "/video-thumb-1.jpg", 
     videoUrl: "https://youtube.com/..." 
   }
 ];
@@ -151,22 +150,15 @@ const calculateReadingTime = (text) => {
 // --- MARKDOWN PARSER ENGINE V2.2 (Robust & Forgiving) ---
 const parseMarkdown = (text) => {
   if (!text) return [];
-  // Split by headers. 
-  // V2.2 fix: Handle potential whitespace lines before headers more gracefully
-  // and handle ## or # styles.
   const parts = text.split(/(?=^#{1,3}\s+)/gm);
-  
   const chapters = [];
   
   parts.forEach(part => {
-    // Extract title from first line
     const match = part.match(/^(#{1,3})\s+(.+)$/m);
-    if (!match) return; // Skip if no header found
+    if (!match) return; 
     
     const title = match[2].trim();
-    // Remove the header line from content
     const rawContent = part.replace(/^(#{1,3})\s+(.+)$/m, '').trim();
-    
     if (!rawContent) return;
 
     let htmlContent = rawContent.split(/\n\s*\n/).map(para => {
@@ -209,28 +201,15 @@ const InstallGuide = ({ onClose }) => (
         <Smartphone size={32} className="text-amber-600" />
       </div>
       <h2 className="text-xl font-serif text-stone-200">Install to Home Screen</h2>
-      
       <div className="space-y-6 text-left bg-zinc-900/50 p-6 rounded border border-stone-800">
         <div className="flex gap-4">
           <div className="text-2xl">🍎</div>
-          <div>
-            <h3 className="text-sm font-bold text-stone-300 mb-1">iPhone (iOS)</h3>
-            <p className="text-xs text-stone-500 leading-relaxed">
-              1. Tap the <strong>Share</strong> button (box with arrow).<br/>
-              2. Scroll down and tap <strong>"Add to Home Screen"</strong>.
-            </p>
-          </div>
+          <div><h3 className="text-sm font-bold text-stone-300 mb-1">iPhone (iOS)</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Share</strong> button (box with arrow).<br/>2. Scroll down and tap <strong>"Add to Home Screen"</strong>.</p></div>
         </div>
         <div className="h-px bg-stone-800"></div>
         <div className="flex gap-4">
           <div className="text-2xl">🤖</div>
-          <div>
-            <h3 className="text-sm font-bold text-stone-300 mb-1">Android</h3>
-            <p className="text-xs text-stone-500 leading-relaxed">
-              1. Tap the <strong>Menu</strong> (three dots).<br/>
-              2. Tap <strong>"Add to Home screen"</strong> or "Install App".
-            </p>
-          </div>
+          <div><h3 className="text-sm font-bold text-stone-300 mb-1">Android</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Menu</strong> (three dots).<br/>2. Tap <strong>"Add to Home screen"</strong> or "Install App".</p></div>
         </div>
       </div>
       <button onClick={onClose} className="text-xs font-mono text-stone-500 hover:text-white mt-8">CLOSE GUIDE</button>
@@ -250,15 +229,10 @@ const ReviewModal = ({ onClose }) => (
       <p className="text-stone-400 text-sm leading-relaxed px-4">
         Your feedback shapes the legacy. Please send your audio, video, or text reviews directly to the author.
       </p>
-      
       <div className="bg-zinc-900 p-6 rounded border border-stone-800 flex flex-col items-center space-y-4">
         <span className="text-xs font-mono text-stone-500 uppercase tracking-widest">SEND TO</span>
-        <a href={`mailto:${CONFIG.reviewEmail}`} className="text-lg font-bold text-white hover:text-amber-500 transition-colors border-b border-stone-700 pb-1">
-          {CONFIG.reviewEmail}
-        </a>
-        <p className="text-[10px] text-stone-600 mt-4 max-w-xs">
-          *Reviews are curated. Selected reviews will be featured in the public gallery.
-        </p>
+        <a href={`mailto:${CONFIG.reviewEmail}`} className="text-lg font-bold text-white hover:text-amber-500 transition-colors border-b border-stone-700 pb-1">{CONFIG.reviewEmail}</a>
+        <p className="text-[10px] text-stone-600 mt-4 max-w-xs">*Reviews are curated. Selected reviews will be featured in the public gallery.</p>
       </div>
       <button onClick={onClose} className="text-xs font-mono text-stone-500 hover:text-white mt-8">RETURN TO PORTAL</button>
     </div>
@@ -268,12 +242,10 @@ const ReviewModal = ({ onClose }) => (
 // 3. LANDING PORTAL
 const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterReviews, onShowInstall }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-    {/* Animated Background */}
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-950 to-zinc-950 z-0"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-amber-800/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-        {/* Floating Particles (Simulated with simple divs) */}
         <div className="absolute top-10 left-20 w-1 h-1 bg-amber-500 rounded-full opacity-50 animate-bounce" style={{ animationDuration: '3s' }}></div>
         <div className="absolute bottom-20 right-40 w-1 h-1 bg-amber-500 rounded-full opacity-30 animate-bounce" style={{ animationDuration: '5s' }}></div>
     </div>
@@ -284,69 +256,89 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
             <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full group-hover:bg-amber-500/30 transition-all duration-500"></div>
             <img src={CONFIG.logoPath} alt="Logo" className="relative w-20 h-20 mx-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-500 mb-4 drop-shadow-[0_0_15px_rgba(217,119,6,0.3)]" />
         </div>
-        
-        {/* GLOWING GOLD TITLE */}
-        <h1 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-500 to-amber-200 tracking-tight leading-tight drop-shadow-[0_0_10px_rgba(217,119,6,0.5)] font-bold">
-          EXPLORE THE LEGACY E-BOOK SERIES
-        </h1>
-        {/* OFF-WHITE SUBTITLE */}
-        <p className="text-sm md:text-lg font-mono tracking-widest text-stone-300 uppercase opacity-90">
-          From the world's first LEGACY ARCHITECT
-        </p>
+        <h1 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-500 to-amber-200 tracking-tight leading-tight drop-shadow-[0_0_10px_rgba(217,119,6,0.5)] font-bold">EXPLORE THE LEGACY E-BOOK SERIES</h1>
+        <p className="text-sm md:text-lg font-mono tracking-widest text-stone-300 uppercase opacity-90">From the world's first LEGACY ARCHITECT</p>
         <div className="w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto rounded-full mt-6 opacity-80"></div>
       </div>
 
-      {/* 4-COLUMN GRID LAYOUT */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl px-4 mt-4">
-        
-        {/* 1. E-BOOK SERIES */}
         <div onClick={onEnterSeries} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
           <img src={CONFIG.seriesCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8">
-            <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">ENTER LIBRARY</span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">ENTER LIBRARY</span></div>
         </div>
-
-        {/* 2. THE LEGACY ARCHITECT */}
         <div onClick={onEnterProfile} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
           <img src={CONFIG.profileCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">👤</div><div class="text-xs text-stone-500">Upload cover1.png</div></div>`; }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8">
-            <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">THE LEGACY ARCHITECT</span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">THE LEGACY ARCHITECT</span></div>
         </div>
-
-        {/* 3. AUDIO BOOKS (NEW) */}
         <div onClick={onEnterAudio} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
           <img src={CONFIG.audioCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">🎙️</div><div class="text-xs text-stone-500">Upload cover-audio.png</div></div>`; }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8">
-            <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">AUDIO BOOKS</span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">AUDIO BOOKS</span></div>
         </div>
-
-        {/* 4. REVIEWS (NEW) */}
         <div onClick={onEnterReviews} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
           <img src={CONFIG.reviewsCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">★</div><div class="text-xs text-stone-500">Upload cover-reviews.png</div></div>`; }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8">
-            <span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">REVIEWS</span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">REVIEWS</span></div>
         </div>
-
       </div>
-
-      <button onClick={onShowInstall} className="mt-12 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10">
-        <Download size={14} /> INSTALL APP ICON
-      </button>
+      <button onClick={onShowInstall} className="mt-12 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10"><Download size={14} /> INSTALL APP ICON</button>
     </div>
   </div>
 );
 
-// ... (Other components like LibraryGrid, ReaderView, etc. remain largely the same, I will include them in the full structure below for completeness) ...
+const AudioView = ({ onBack }) => {
+  const [currentTrack, setCurrentTrack] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const playTrack = (track) => {
+    if (currentTrack?.id === track.id) {
+        if (isPlaying) audioRef.current.pause();
+        else audioRef.current.play();
+        setIsPlaying(!isPlaying);
+    } else {
+        setCurrentTrack(track);
+        setIsPlaying(true);
+        setTimeout(() => audioRef.current?.play(), 100);
+    }
+  };
+  return (
+    <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
+      <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
+      <div className="max-w-xl w-full mx-auto mt-12 space-y-8">
+        <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">Spoken Legacy</h2><p className="text-xs font-mono text-stone-500">AUDIO ARCHIVE • VOLUME 1</p></div>
+        <div className="space-y-4">
+            {AUDIO_TRACKS.map((track) => (
+                <div key={track.id} onClick={() => playTrack(track)} className={`p-4 rounded border cursor-pointer transition-all flex items-center justify-between group ${currentTrack?.id === track.id ? 'bg-zinc-900 border-amber-600' : 'border-stone-800 hover:bg-zinc-900 hover:border-stone-700'}`}>
+                    <div className="flex items-center gap-4"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${currentTrack?.id === track.id ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-500 group-hover:text-stone-300'}`}>{currentTrack?.id === track.id && isPlaying ? <Pause size={16} /> : <Play size={16} />}</div><div><h3 className={`text-sm font-bold ${currentTrack?.id === track.id ? 'text-amber-500' : 'text-stone-300'}`}>{track.title}</h3><p className="text-[10px] text-stone-500 font-mono">DURATION: {track.duration}</p></div></div>
+                    {currentTrack?.id === track.id && <div className="text-amber-600 animate-pulse"><Volume2 size={16} /></div>}
+                </div>
+            ))}
+        </div>
+        {currentTrack && (<div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-stone-800 p-4 flex items-center justify-between z-50"><div className="flex items-center gap-4"><button onClick={() => playTrack(currentTrack)} className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button><div><p className="text-xs font-mono text-amber-600">NOW PLAYING</p><p className="text-sm font-bold text-white">{currentTrack.title}</p></div></div><audio ref={audioRef} src={currentTrack.file} onEnded={() => setIsPlaying(false)} /></div>)}
+      </div>
+    </div>
+  );
+};
+
+const ReviewsView = ({ onBack, onReviewClick }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-4xl w-full mx-auto mt-12 space-y-12">
+        <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">Impact & Reflections</h2><p className="text-xs font-mono text-stone-500">COMMUNITY REVIEWS</p></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {REVIEWS_DATA.map((review) => (
+                <div key={review.id} className="p-6 bg-zinc-900/50 border border-stone-800 rounded-sm hover:border-stone-700 transition-all">
+                    {review.type === 'video' ? (<div className="aspect-video bg-black rounded mb-4 flex items-center justify-center border border-stone-800 relative group cursor-pointer"><div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center group-hover:bg-amber-600 transition-colors"><Play size={20} className="text-white ml-1" /></div><p className="absolute bottom-2 left-2 text-[10px] font-mono bg-black/50 px-2 py-1 rounded">VIDEO REVIEW</p></div>) : (<div className="mb-4"><Star size={16} className="text-amber-600 mb-2" /><p className="text-sm text-stone-400 italic leading-relaxed">"{review.content}"</p></div>)}
+                    <div className="flex items-center gap-3 mt-4 border-t border-stone-800/50 pt-4"><div className="w-8 h-8 bg-stone-800 rounded-full flex items-center justify-center text-[10px] font-bold text-stone-500">{review.name.charAt(0)}</div><div><p className="text-xs font-bold text-stone-200">{review.name}</p><p className="text-[10px] text-stone-600 uppercase">{review.role}</p></div></div>
+                </div>
+            ))}
+        </div>
+        <div className="text-center pt-12"><button onClick={onReviewClick} className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-black text-xs font-bold tracking-widest rounded-full hover:bg-white transition-colors"><MessageSquare size={16} /> SUBMIT YOUR REVIEW</button></div>
+    </div>
+  </div>
+);
 
 const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
   <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
-    <button onClick={onBack} className="fixed top-6 left-6 z-50 flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
-      <ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">HOME</span>
-    </button>
+    <button onClick={onBack} className="fixed top-6 left-6 z-50 flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5"><ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">HOME</span></button>
     <div className="max-w-6xl mx-auto mt-12">
       <h2 className="text-2xl font-serif text-amber-600 mb-2">The Legacy Series</h2>
       <p className="text-stone-500 font-mono text-xs tracking-wider mb-12">SYSTEM ARCHITECTURE</p>
@@ -412,120 +404,6 @@ const ProfileOptions = ({ onBack, onShowDedications }) => (
   </div>
 );
 
-// --- NEW COMPONENTS FOR AUDIO & REVIEWS ---
-
-const AudioView = ({ onBack }) => {
-  const [currentTrack, setCurrentTrack] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
-
-  const playTrack = (track) => {
-    if (currentTrack?.id === track.id) {
-        if (isPlaying) audioRef.current.pause();
-        else audioRef.current.play();
-        setIsPlaying(!isPlaying);
-    } else {
-        setCurrentTrack(track);
-        setIsPlaying(true);
-        // Timeout to allow ref to update if needed
-        setTimeout(() => audioRef.current?.play(), 100);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
-      <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
-      <div className="max-w-xl w-full mx-auto mt-12 space-y-8">
-        <div className="text-center space-y-2">
-            <h2 className="text-2xl font-serif text-amber-600">Spoken Legacy</h2>
-            <p className="text-xs font-mono text-stone-500">AUDIO ARCHIVE • VOLUME 1</p>
-        </div>
-
-        <div className="space-y-4">
-            {AUDIO_TRACKS.map((track) => (
-                <div key={track.id} onClick={() => playTrack(track)} className={`p-4 rounded border cursor-pointer transition-all flex items-center justify-between group ${currentTrack?.id === track.id ? 'bg-zinc-900 border-amber-600' : 'border-stone-800 hover:bg-zinc-900 hover:border-stone-700'}`}>
-                    <div className="flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${currentTrack?.id === track.id ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-500 group-hover:text-stone-300'}`}>
-                            {currentTrack?.id === track.id && isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                        </div>
-                        <div>
-                            <h3 className={`text-sm font-bold ${currentTrack?.id === track.id ? 'text-amber-500' : 'text-stone-300'}`}>{track.title}</h3>
-                            <p className="text-[10px] text-stone-500 font-mono">DURATION: {track.duration}</p>
-                        </div>
-                    </div>
-                    {currentTrack?.id === track.id && <div className="text-amber-600 animate-pulse"><Volume2 size={16} /></div>}
-                </div>
-            ))}
-        </div>
-
-        {/* Global Player Bar */}
-        {currentTrack && (
-            <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-stone-800 p-4 flex items-center justify-between z-50">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => playTrack(currentTrack)} className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors">
-                        {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                    </button>
-                    <div>
-                        <p className="text-xs font-mono text-amber-600">NOW PLAYING</p>
-                        <p className="text-sm font-bold text-white">{currentTrack.title}</p>
-                    </div>
-                </div>
-                {/* Hidden Audio Element */}
-                <audio ref={audioRef} src={currentTrack.file} onEnded={() => setIsPlaying(false)} />
-            </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const ReviewsView = ({ onBack, onReviewClick }) => (
-  <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
-    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
-    <div className="max-w-4xl w-full mx-auto mt-12 space-y-12">
-        <div className="text-center space-y-2">
-            <h2 className="text-2xl font-serif text-amber-600">Impact & Reflections</h2>
-            <p className="text-xs font-mono text-stone-500">COMMUNITY REVIEWS</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {REVIEWS_DATA.map((review) => (
-                <div key={review.id} className="p-6 bg-zinc-900/50 border border-stone-800 rounded-sm hover:border-stone-700 transition-all">
-                    {review.type === 'video' ? (
-                        <div className="aspect-video bg-black rounded mb-4 flex items-center justify-center border border-stone-800 relative group cursor-pointer">
-                            <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center group-hover:bg-amber-600 transition-colors">
-                                <Play size={20} className="text-white ml-1" />
-                            </div>
-                            <p className="absolute bottom-2 left-2 text-[10px] font-mono bg-black/50 px-2 py-1 rounded">VIDEO REVIEW</p>
-                        </div>
-                    ) : (
-                        <div className="mb-4">
-                            <Star size={16} className="text-amber-600 mb-2" />
-                            <p className="text-sm text-stone-400 italic leading-relaxed">"{review.content}"</p>
-                        </div>
-                    )}
-                    <div className="flex items-center gap-3 mt-4 border-t border-stone-800/50 pt-4">
-                        <div className="w-8 h-8 bg-stone-800 rounded-full flex items-center justify-center text-[10px] font-bold text-stone-500">
-                            {review.name.charAt(0)}
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold text-stone-200">{review.name}</p>
-                            <p className="text-[10px] text-stone-600 uppercase">{review.role}</p>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
-
-        <div className="text-center pt-12">
-            <button onClick={onReviewClick} className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-black text-xs font-bold tracking-widest rounded-full hover:bg-white transition-colors">
-                <MessageSquare size={16} /> SUBMIT YOUR REVIEW
-            </button>
-        </div>
-    </div>
-  </div>
-);
-
 const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => {
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -549,21 +427,12 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
         const response = await fetch(fetchUrl);
         if (!response.ok) throw new Error(`Status: ${response.status}`);
         const text = await response.text();
-        // Use the robust V2.2 parser
         const parsed = parseMarkdown(text);
         if (parsed.length > 0) setChapters(parsed);
         else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
       } catch (err) {
-        if (language === 'ml') {
-             setChapters([{ id: 0, title: "Coming soon..", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
-        } else {
-             setChapters([{ 
-                 id: 0, 
-                 title: "Coming soon..", 
-                 subtitle: "Content", 
-                 content: `<p>The content for <strong>${bookData.title}</strong> is coming soon.</p>` 
-             }]);
-        }
+        if (language === 'ml') setChapters([{ id: 0, title: "Coming soon..", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
+        else setChapters([{ id: 0, title: "Coming soon..", subtitle: "Content", content: `<p>The content for <strong>${bookData.title}</strong> is coming soon.</p>` }]);
       } finally {
         setLoading(false);
       }
@@ -740,7 +609,6 @@ export default function TheLegacyReader() {
       {view === 'profile' && <ProfileOptions onBack={goHome} onShowDedications={goDedications} />}
       {view === 'dedications' && <DedicationView onBack={goProfile} />}
       
-      {/* Functional Views for New Sections */}
       {view === 'audio' && <AudioView onBack={goHome} />}
       {view === 'reviews' && <ReviewsView onBack={goHome} onReviewClick={() => setShowReviewModal(true)} />}
 
