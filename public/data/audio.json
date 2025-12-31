@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction: The 10/90 Rule",
+    "duration": "04:12",
+    "file": "/audio/intro.mp3"
+  },
+  {
+    "id": 2,
+    "title": "Chapter 1: The First 32 Years",
+    "duration": "12:30",
+    "file": "/audio/ch1.mp3"
+  },
+  {
+    "id": 3,
+    "title": "Chapter 2: The Age 33 Shift",
+    "duration": "09:45",
+    "file": "/audio/ch2.mp3"
+  },
+  {
+    "id": 4,
+    "title": "Chapter 3: Destiny (The 10%)",
+    "duration": "11:20",
+    "file": "/audio/ch3.mp3"
+  }
+]

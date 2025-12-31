@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Sarah Ahmed",
+    "role": "Clinical Psychologist",
+    "type": "text",
+    "content": "The Legacy OS isn't just a book; it's a restructuring of the mind. The chapter on Emotional Governance saved my career."
+  },
+  {
+    "id": 2,
+    "name": "Rajesh K.",
+    "role": "Entrepreneur",
+    "type": "text",
+    "content": "I've read hundreds of business books. This is the first one that taught me how to build a life, not just a company."
+  },
+  {
+    "id": 3,
+    "name": "Video Review: The Impact",
+    "role": "Reader Community",
+    "type": "video",
+    "thumbnail": "/video-thumb-1.jpg",
+    "videoUrl": "https://youtube.com/..."
+  }
+]
