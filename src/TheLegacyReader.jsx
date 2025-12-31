@@ -20,13 +20,14 @@ const CONFIG = {
   profilePdfPath: "/profile.pdf",
   reviewEmail: "adv.firoz@kc-capitals.com",
 
-  // DATA PATHS (For easy updates via JSON files in public folder)
+  // DATA PATHS
   audioDataPath: "/data/audio.json",
   reviewsDataPath: "/data/reviews.json",
 
   // MICRO BOOK DEFINITIONS
   library: [
-    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-6.png?v=2" }, 
+    // Fixed: Pointing to cover-0.png with cache buster ?v=4
+    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-0.png?v=4" }, 
     { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png" },
     { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png" },
     { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png" },
@@ -42,7 +43,6 @@ const CONFIG = {
   ]
 };
 
-// --- DEDICATIONS (Keep hardcoded as requested structure locked) ---
 const DEDICATIONS = [
   {
     title: "To my parents — ALAVI KC & AMINA K",
@@ -118,7 +118,7 @@ const calculateReadingTime = (text) => {
   return Math.ceil(words / wordsPerMinute);
 };
 
-// --- MARKDOWN PARSER ENGINE V2.2 ---
+// --- MARKDOWN PARSER ENGINE V2.2 (Robust & Forgiving) ---
 const parseMarkdown = (text) => {
   if (!text) return [];
   const parts = text.split(/(?=^#{1,3}\s+)/gm);
@@ -192,7 +192,6 @@ const AnimatedCard = ({ children, delay = 0 }) => {
   );
 };
 
-
 // --- SUB-COMPONENTS ---
 
 // 1. INSTALLATION GUIDE MODAL
@@ -242,10 +241,9 @@ const ReviewModal = ({ onClose }) => (
   </div>
 );
 
-// 3. LANDING PORTAL (VIBRANT & EXPANDED WITH SCROLL ANIMATION)
+// 3. LANDING PORTAL (VIBRANT)
 const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterReviews, onShowInstall }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-    {/* Animated Background */}
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-950 to-zinc-950 z-0"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] animate-pulse"></div>
@@ -267,7 +265,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl px-4 mt-4">
         
-        {/* CARD 1: SERIES - Always Visible (No delay) */}
         <AnimatedCard>
             <div onClick={onEnterSeries} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.seriesCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
@@ -275,7 +272,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
             </div>
         </AnimatedCard>
 
-        {/* CARD 2: ARCHITECT - Delayed Reveal */}
         <AnimatedCard delay={200}>
             <div onClick={onEnterProfile} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.profileCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">👤</div><div class="text-xs text-stone-500">Upload cover1.png</div></div>`; }} />
@@ -283,7 +279,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
             </div>
         </AnimatedCard>
 
-        {/* CARD 3: AUDIO BOOKS - More Delay */}
         <AnimatedCard delay={400}>
             <div onClick={onEnterAudio} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.audioCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">🎙️</div><div class="text-xs text-stone-500">Upload cover-audio.png</div></div>`; }} />
@@ -291,7 +286,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
             </div>
         </AnimatedCard>
 
-        {/* CARD 4: REVIEWS - Max Delay */}
         <AnimatedCard delay={600}>
             <div onClick={onEnterReviews} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.reviewsCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">★</div><div class="text-xs text-stone-500">Upload cover-reviews.png</div></div>`; }} />
@@ -396,8 +390,6 @@ const ReviewsView = ({ onBack, onReviewClick }) => {
   );
 };
 
-// ... (Other components like LibraryGrid, DedicationView, ProfileOptions, ReaderView, etc. remain largely the same, I will include them in the full structure below for completeness) ...
-
 const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
   <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
     <button onClick={onBack} className="fixed top-6 left-6 z-50 flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
@@ -429,203 +421,6 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
     </div>
   </div>
 );
-
-const DedicationView = ({ onBack }) => (
-  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
-    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
-    <div className="max-w-2xl w-full mx-auto space-y-12 py-12">
-      <h2 className="text-3xl font-serif text-amber-600 text-center tracking-wide border-b border-stone-800 pb-6 mb-8">Dedication</h2>
-      <div className="grid grid-cols-1 gap-8">
-        {DEDICATIONS.map((item, index) => (
-          <div key={index} className="space-y-4 text-center">
-            <h3 className="text-xl font-bold text-stone-200 font-serif">{item.title}</h3>
-            <div className="text-stone-400 font-serif leading-relaxed italic text-sm md:text-base px-4" dangerouslySetInnerHTML={{ __html: item.content }} />
-            {index < DEDICATIONS.length - 1 && <div className="w-12 h-px bg-stone-800 mx-auto mt-8 opacity-50"></div>}
-          </div>
-        ))}
-      </div>
-      <div className="text-center pt-12"><p className="text-[10px] font-mono text-stone-600 uppercase tracking-widest">FROM THE LEGACY OS MASTER MAP</p></div>
-    </div>
-  </div>
-);
-
-const ProfileOptions = ({ onBack, onShowDedications }) => (
-  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative">
-    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
-    <div className="max-w-md w-full space-y-8 animate-slide-up text-center">
-      <div className="w-24 h-24 mx-auto bg-zinc-900 rounded-full border border-amber-600/30 flex items-center justify-center mb-8"><User size={40} className="text-amber-600" /></div>
-      <h2 className="text-3xl font-serif text-stone-200">The Architect</h2>
-      <p className="text-stone-500 text-sm leading-relaxed px-4">Access the professional profile, download the legacy dossier, or view dedications.</p>
-      <div className="space-y-4 pt-8">
-        <a href={CONFIG.authorWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">LEGACY ARCHITECT</span><ExternalLink size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
-        <a href={CONFIG.profilePdfPath} download className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">DOWNLOAD PROFILE</span><Download size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
-        <button onClick={onShowDedications} className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group">
-          <span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">READ DEDICATIONS</span>
-          <FileText size={18} className="text-stone-600 group-hover:text-amber-500" />
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
-const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => {
-  const [chapters, setChapters] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(initialProgress || 0);
-  const [theme, setTheme] = useState('dark');
-  const [fontSize, setFontSize] = useState(19);
-  const [showControls, setShowControls] = useState(false);
-  const [showTOC, setShowTOC] = useState(false);
-  const [language, setLanguage] = useState('en');
-  const [zenMode, setZenMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
-
-  useEffect(() => {
-    async function loadContent() {
-      setLoading(true);
-      try {
-        let filePath = bookData.file;
-        if (language === 'ml') filePath = filePath.replace('.md', '-ml.md');
-        const fetchUrl = `${filePath}?t=${Date.now()}`;
-        const response = await fetch(fetchUrl);
-        if (!response.ok) throw new Error(`Status: ${response.status}`);
-        const text = await response.text();
-        const parsed = parseMarkdown(text);
-        if (parsed.length > 0) setChapters(parsed);
-        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
-      } catch (err) {
-        if (language === 'ml') setChapters([{ id: 0, title: "Coming soon..", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
-        else setChapters([{ id: 0, title: "Coming soon..", subtitle: "Content", content: `<p>The content for <strong>${bookData.title}</strong> is coming soon.</p>` }]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadContent();
-  }, [bookData, language]);
-
-  useEffect(() => {
-    if (chapters.length > 0) onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
-  }, [currentChapterIndex, chapters, bookData.id]);
-
-  useEffect(() => {
-    if (theme === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }, [theme]);
-
-  const searchResults = useMemo(() => {
-    if (!searchQuery || searchQuery.length < 3) return [];
-    return chapters.map((chap, idx) => {
-        const text = chap.content.replace(/<[^>]*>/g, ' ');
-        if (text.toLowerCase().includes(searchQuery.toLowerCase())) return { ...chap, index: idx };
-        return null;
-    }).filter(Boolean);
-  }, [searchQuery, chapters]);
-
-  const currentChapter = chapters[currentChapterIndex] || { title: "Loading...", content: "" };
-  const readingTime = calculateReadingTime(currentChapter.content || "");
-
-  return (
-    <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
-      {!zenMode && (
-        <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
-            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-            <button onClick={onBack} className="p-2 -ml-2 hover:text-amber-600 transition-colors flex items-center gap-2"><ArrowLeft size={20} /></button>
-            <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowTOC(true)}>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-600 opacity-80">{bookData.title}</span>
-                <span className={`text-xs font-serif ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{currentChapter.subtitle || "READING"}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-                <button onClick={() => setShowSearch(!showSearch)} className="p-2 hover:text-amber-600 transition-colors"><Search size={18} /></button>
-                <button onClick={() => setZenMode(true)} className="p-2 hover:text-amber-600 transition-colors"><Maximize size={18} /></button>
-                <div className="relative">
-                    <button onClick={() => setShowControls(!showControls)} className={`p-2 transition-colors ${showControls ? 'text-amber-600' : 'hover:text-amber-600'}`}><Type size={20} /></button>
-                    {showControls && (
-                        <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Lang</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setLanguage('en')} className={`px-3 py-1 rounded-full text-[10px] ${language === 'en' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}>EN</button><button onClick={() => setLanguage('ml')} className={`px-3 py-1 rounded-full text-[10px] ${language === 'ml' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}>ML</button></div></div>
-                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Mode</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setTheme('light')} className={`p-2 rounded-full ${theme === 'light' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}><Sun size={14} /></button><button onClick={() => setTheme('dark')} className={`p-2 rounded-full ${theme === 'dark' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}><Moon size={14} /></button></div></div>
-                                <div className="space-y-3"><div className="flex items-center justify-between text-stone-500"><span className="text-xs font-sans uppercase">Size</span><span className="text-xs font-mono">{fontSize}px</span></div><input type="range" min="16" max="26" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1 bg-stone-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-600" /></div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-            </div>
-            {showSearch && (
-                <div className="border-t border-stone-800 bg-zinc-950/95 backdrop-blur p-4 animate-slide-up">
-                    <div className="max-w-xl mx-auto">
-                        <input type="text" placeholder="Search in this book..." className="w-full bg-zinc-900 border border-stone-700 p-3 text-sm text-white focus:border-amber-600 focus:outline-none rounded-sm mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} autoFocus />
-                        {searchResults.length > 0 && (
-                            <div className="max-h-40 overflow-y-auto space-y-2">
-                                {searchResults.map(res => (
-                                    <button key={res.id} onClick={() => { setCurrentChapterIndex(res.index); setShowSearch(false); }} className="w-full text-left p-3 hover:bg-stone-900 rounded border border-transparent hover:border-stone-800">
-                                        <div className="text-xs text-amber-600 font-mono">{res.subtitle}</div>
-                                        <div className="text-sm text-stone-300 font-serif">{res.title}</div>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                        {searchQuery.length > 0 && searchResults.length === 0 && <div className="text-center text-stone-500 text-xs py-2">No results found</div>}
-                    </div>
-                </div>
-            )}
-        </header>
-      )}
-
-      <main className={`max-w-2xl mx-auto px-6 pb-32 transition-all duration-500 ${zenMode ? 'pt-20 cursor-text' : 'pt-32'}`}>
-        <article className="animate-fade-in">
-          {zenMode && (
-              <button onClick={() => setZenMode(false)} className="fixed top-6 right-6 p-2 bg-black/20 hover:bg-black/50 text-stone-500 hover:text-white rounded-full transition-colors z-50"><Minimize size={20} /></button>
-          )}
-          {loading ? (
-             <div className="flex justify-center py-20 text-stone-500 font-mono text-xs animate-pulse">LOADING SYSTEM...</div>
-          ) : (
-            <>
-                <header className="mb-12 text-center">
-                    <span className="block text-amber-600 font-mono text-xs tracking-[0.2em] mb-4 uppercase">{currentChapter.subtitle}</span>
-                    <h2 className={`text-3xl md:text-4xl font-serif font-bold mb-6 ${theme === 'dark' ? 'text-stone-100' : 'text-stone-900'}`}>{currentChapter.title}</h2>
-                    <div className="flex items-center justify-center space-x-2 text-stone-500 text-[10px] font-mono mb-8 opacity-60">
-                        <Clock size={12} />
-                        <span>{readingTime} MIN READ</span>
-                    </div>
-                    <div className="w-8 h-[1px] bg-amber-600/50 mx-auto"></div>
-                </header>
-                <div className="prose dark:prose-invert prose-lg md:prose-xl mx-auto font-serif leading-loose" style={{ fontSize: `${fontSize}px` }}>
-                    <div dangerouslySetInnerHTML={{ __html: currentChapter.content }} />
-                </div>
-            </>
-          )}
-        </article>
-      </main>
-
-      {!zenMode && (
-        <footer className={`fixed bottom-0 w-full z-30 border-t backdrop-blur-md transition-colors ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
-            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-            <button onClick={() => { if(currentChapterIndex > 0) { setCurrentChapterIndex(prev => prev - 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === 0} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === 0 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><ChevronLeft size={16} /><span className="text-sm font-sans font-medium hidden md:inline">Previous</span></button>
-            <span className="text-[10px] font-mono text-stone-500 tracking-wider">{(currentChapterIndex + 1)} / {chapters.length}</span>
-            <button onClick={() => { if(currentChapterIndex < chapters.length - 1) { setCurrentChapterIndex(prev => prev + 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === chapters.length - 1} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === chapters.length - 1 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><span className="text-sm font-sans font-medium hidden md:inline">Next</span><ChevronRight size={16} /></button>
-            </div>
-        </footer>
-      )}
-
-      {showTOC && (
-        <div className="fixed inset-0 z-40 bg-zinc-950/98 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-fade-in">
-            <button onClick={() => setShowTOC(false)} className="absolute top-6 right-6 text-stone-400 hover:text-white transition-colors p-2"><X size={32} strokeWidth={1} /></button>
-            <h2 className="text-2xl font-serif text-amber-600 mb-12 tracking-wider border-b border-amber-900/30 pb-4">INDEX</h2>
-            <nav className="space-y-4 w-full max-w-md text-center max-h-[70vh] overflow-y-auto">
-            {chapters.map((chapter, index) => (
-                <button key={chapter.id} onClick={() => { setCurrentChapterIndex(index); setShowTOC(false); window.scrollTo(0,0); }} className={`w-full py-4 px-4 text-lg md:text-xl font-serif transition-all duration-300 rounded-sm ${currentChapterIndex === index ? 'bg-amber-900/10 text-amber-500 border border-amber-900/20' : 'text-stone-500 hover:text-stone-200 hover:bg-stone-900'}`}>
-                <span className="block text-[10px] font-mono text-stone-600 mb-1 uppercase tracking-widest">{chapter.subtitle}</span>
-                {chapter.title}
-                </button>
-            ))}
-            </nav>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // --- MAIN CONTROLLER (THE BRAIN) ---
 export default function TheLegacyReader() {
