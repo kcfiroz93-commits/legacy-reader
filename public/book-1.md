@@ -1,46 +1,13 @@
----
-
-# THE LEGACY OS
-**Rebuilding a Lost Life into a Generational System**
-
-**By Advocate Firoz KC**
-**Master Edition – Global (2027)**
-**Master Canon v1.0**
-
----
-
-### COPYRIGHT PAGE
-
-**© 2025 SHAHANA HERITAGE LLP**
-All rights reserved.
-
-No part of this book may be reproduced, stored, or transmitted in any form without prior written permission of the author, except for brief quotations used in reviews.
-
-**First Edition – 2026**
-
----
-
 # MY LIFE; 10% DESTINY 90% CREATION
+
 **A Memoir + Operating Framework for Self-Design**
 
 **By Advocate Firoz KC**
 **Micro Book 1st Edition – Global (JANUARY 1st- 2026)**
 **Master Canon v1.0**
 
----
-
-### COPYRIGHT PAGE
-
-**© 2025 SHAHANA HERITAGE LLP**
-All rights reserved.
-
-No part of this book may be reproduced, stored, or transmitted in any form without prior written permission of the author, except for brief quotations used in reviews.
-
-**First Edition – 2026**
-
----
-
 ## CHAPTER-I
+
 **THE FIRST 32 YEARS — A BRIEF MAP**
 
 Every life has a beginning, but not every beginning becomes a blueprint.
@@ -54,6 +21,7 @@ I did not know it then.
 ### 1. A Childhood of Freedom and Warmth
 
 I grew up under the wings of parents who defined love not through control, but through trust.
+
 * Unlimited freedom.
 * Unfiltered affection.
 * Unconditional support.
@@ -73,7 +41,7 @@ For the first time, I saw the law not as a subject but as a shield.
 That day, I decided I would become a lawyer.
 
 The decision wasn’t emotional.
-It was instinctive — a young boy finding his place in a world that suddenly felt serious.
+It is instinctive — a young boy finding his place in a world that suddenly felt serious.
 
 ### 3. Education Without Interference
 
@@ -106,6 +74,7 @@ I had never known financial difficulty until around age twenty-nine.
 ### 6. The Era of Experiments
 
 My ambition to gain stability in construction and real estate pushed me into dozens of ventures—funded mostly with borrowed capital, because real estate wealth often comes locked inside immovable assets.
+
 * A football turf.
 * A restaurant chain.
 * Franchise stores.
@@ -166,7 +135,7 @@ This duty, not comfort, led to my second marriage with Innu.
 It wasn’t a transition.
 It was a transformation which took almost a year — an acceptance of truth, duty, and destiny’s design.
 
-### [cite_start]12. The Fall and the Rebuild [cite: 1414]
+### 12. The Fall and the Rebuild
 
 Failures accumulated.
 Relationships broke.
@@ -188,6 +157,7 @@ I didn’t become spiritual through rituals.
 Life awakened me.
 
 I learned that:
+
 * Human emotion is greater than religious identity.
 * Understanding people is more valuable than judging them.
 * A good heart is a man’s real wealth.
@@ -231,9 +201,8 @@ The first 32 years taught me everything I needed to know before I crossed the in
 
 The next chapter is where the shift happens.
 
----
-
 ## CHAPTER-II
+
 **THE MOMENT THAT FORGED THE 10/90 RULE**
 
 Some ages pass quietly.
@@ -288,6 +257,7 @@ Daniel Levinson described age 30–35 as the “culminating life structure,” w
 Erik Erikson saw this as the shift from identity to legacy.
 
 Religion and mythology recognized it centuries ago:
+
 * Jesus completed his mission at thirty-three.
 * Buddha’s early thirties marked his awakening.
 * Islam describes the soul’s eternal form as “the prime age,” aligned with early thirties.
@@ -306,6 +276,7 @@ The human spine has thirty-three vertebrae — a staircase of human potential, d
 When body, mind, emotion, and experience finally stabilize, a person gains the internal structure required to design life intentionally.
 
 This is what thirty-three truly represents:
+
 * Alignment.
 * Not luck.
 * Not miracles.
@@ -397,10 +368,10 @@ Every person has the ability to experience their own “thirty-three moment,” 
 
 It begins with four steps:
 
-1.  **Awareness** — understanding your past honestly, without denial or blame.
-2.  **Alignment** — bringing thoughts, emotions, body, and relationships into integrity.
-3.  **Action** — choosing discipline over impulse, structure over chaos.
-4.  **Architecture** — building systems that carry you even on the days you feel weak.
+1. **Awareness** — understanding your past honestly, without denial or blame.
+2. **Alignment** — bringing thoughts, emotions, body, and relationships into integrity.
+3. **Action** — choosing discipline over impulse, structure over chaos.
+4. **Architecture** — building systems that carry you even on the days you feel weak.
 
 These four steps transform life from accidental to intentional.
 
@@ -429,9 +400,8 @@ I started living architecturally.
 Thirty-three was not the age I changed.
 It was the age I began creating.
 
----
-
 ## CHAPTER-III
+
 **DESTINY — THE 10% WE DON’T CONTROL**
 
 Every philosophy becomes hollow if it does not acknowledge the part of life that lies beyond human choice.
@@ -558,6 +528,7 @@ Accepting destiny isn’t defeat.
 It is maturity.
 
 It means understanding that:
+
 * Life will not consult you before changing your path.
 * Not every event is a message.
 * Not every loss has a reason.
@@ -610,9 +581,8 @@ Creation writes the script.
 
 And the transition from one to the other is where life truly begins.
 
----
-
 ## CHAPTER-IV
+
 **CREATION — THE 90% WE CAN BUILD**
 
 If destiny is the 10% we inherit, creation is the 90% we construct.
@@ -660,6 +630,7 @@ Clarity kills fear.
 Clarity cuts noise.
 
 Clarity means knowing:
+
 * who you are
 * what you value
 * what you will not compromise
@@ -671,6 +642,7 @@ This is the mental foundation of creation.
 **2. Structure**
 
 Creation collapses without structure.
+
 * Discipline is a structure.
 * Family governance is a structure.
 * Legal clarity is a structure.
@@ -684,6 +656,7 @@ Anything without structure becomes reactive.
 This is the engine of creation.
 
 Responsibility means:
+
 * doing what is required, not what is comfortable
 * owning consequences
 * leading from the front
@@ -699,6 +672,7 @@ Only four aspects of life are truly within our control:
 **1. Our Choices**
 
 Every decision is a brick in your future.
+
 * Good choices build structure.
 * Bad choices build lessons.
 * No choices build regrets.
@@ -728,21 +702,21 @@ Between destiny’s events and our reactions lies the space where creation begin
 My life after thirty-three runs on a simple internal OS — five non-negotiable principles:
 
 * **Everything must serve legacy.**
-Every action must benefit my family, my son, my businesses, and the generations that come after us.
+  Every action must benefit my family, my son, my businesses, and the generations that come after us.
 
 * **Everything must align with core values.**
-Integrity, responsibility, compassion, clarity, discipline, empathy, and long-term thinking.
+  Integrity, responsibility, compassion, clarity, discipline, empathy, and long-term thinking.
 
 * **Everything must outlive emotion.**
-Decisions should not be built on moods.
-Emotions guide; they must not lead.
+  Decisions should not be built on moods.
+  Emotions guide; they must not lead.
 
 * **Everything must protect family.**
-Family first is not a slogan — it is the architecture of my life.
+  Family first is not a slogan — it is the architecture of my life.
 
 * **Everything must be built for decades, not days.**
-Short-term pleasure destroys long-term purpose.
-I design for longevity.
+  Short-term pleasure destroys long-term purpose.
+  I design for longevity.
 
 ### THE ARCHITECTURE OF SELF-DESIGN
 
@@ -750,6 +724,7 @@ Self-design is not self-improvement.
 Self-design is structural.
 
 It means:
+
 * redesigning your identity
 * updating your values
 * rewriting your internal rules
@@ -765,6 +740,7 @@ It is the 90% we create — brick by brick, decision by decision, system by syst
 Here are the central systems I built intentionally — not as reactions, but as architecture.
 
 **Governance Systems**
+
 * Family constitution.
 * Decision-making clarity.
 * Responsibility protocols.
@@ -773,6 +749,7 @@ Here are the central systems I built intentionally — not as reactions, but as 
 These systems prevent emotional chaos and protect relationships.
 
 **Business & Wealth Systems**
+
 * KC Capitals: the central command.
 * AssetWise: the cashflow engine.
 * Crypto Tribe: the future wealth frontier.
@@ -781,6 +758,7 @@ These systems prevent emotional chaos and protect relationships.
 These systems create financial stability and long-term asset growth.
 
 **Emotional Systems**
+
 * Journaling.
 * Reflection.
 * Boundaries.
@@ -790,6 +768,7 @@ These systems create financial stability and long-term asset growth.
 These protect mental clarity.
 
 **Daily Systems**
+
 * Task clarity.
 * Review cycles.
 * Health routines.
@@ -804,6 +783,7 @@ Identity is not inherited.
 Identity is built.
 
 Your identity is the filter through which you experience everything.
+
 * If you change your identity, you change your interpretation.
 * If you change your interpretation, you change your actions.
 * If you change your actions, you change your life.
@@ -820,10 +800,10 @@ Your identity must be engineered.
 
 The creator mindset has four qualities:
 
-1.  **Acceptance**: You accept the 10% you cannot change.
-2.  **Ownership**: You take responsibility for the 90% you can build.
-3.  **Long-Term Focus**: Every decision is made with the future in mind.
-4.  **Adaptability**: No creation survives without flexibility.
+1. **Acceptance**: You accept the 10% you cannot change.
+2. **Ownership**: You take responsibility for the 90% you can build.
+3. **Long-Term Focus**: Every decision is made with the future in mind.
+4. **Adaptability**: No creation survives without flexibility.
 
 This mindset turns life into a deliberate project.
 
@@ -853,9 +833,8 @@ Creation is disciplined effort — repeated across years.
 It is the process of turning experiences into wisdom, wisdom into principles, principles into systems, and systems into outcomes.
 Creation is the 90% that belongs only to you.
 
----
-
 ## CHAPTER-V
+
 **THE 10 TACTICS OF CREATION**
 
 Creation is not an emotion.
@@ -876,6 +855,7 @@ Most people see failure as the end of a story.
 In reality, failure is the data you need to rewrite the story.
 
 Failure shows:
+
 * what you misunderstood
 * what you overestimated
 * what you underestimated
@@ -898,6 +878,7 @@ Strength is not the absence of emotion.
 Strength is the ability to carry emotion without collapsing.
 
 Emotional stamina is built through:
+
 * reflection
 * healthy detachment
 * delayed reactions
@@ -918,6 +899,7 @@ Whatever you become in ten years is simply the accumulation of what you do daily
 Daily systems protect your growth when motivation disappears.
 
 Your systems may include:
+
 * a clear morning rhythm
 * a task management ritual
 * regular reviews
@@ -940,6 +922,7 @@ If left unstructured, families drift into misunderstanding, conflict, ego, blame
 But with governance, families become stable, growth-driven, and harmonious.
 
 Family governance includes:
+
 * clarity of roles
 * clarity of financial responsibilities
 * decision-making protocols
@@ -959,6 +942,7 @@ Legal clarity is not for when problems arise.
 Legal clarity is a lifestyle — a preventive strategy.
 
 It means:
+
 * documenting agreements
 * protecting assets
 * maintaining clean books
@@ -996,6 +980,7 @@ Wealth built blindly collapses faster.
 People are assets — or liabilities.
 
 Network architecture means:
+
 * knowing who adds value
 * knowing who drains energy
 * nurturing long-term alliances
@@ -1013,6 +998,7 @@ Choose with intention.
 Trauma destroys or transforms — nothing in between.
 
 Trauma becomes destructive when:
+
 * you suppress it
 * you avoid it
 * you deny it
@@ -1020,6 +1006,7 @@ Trauma becomes destructive when:
 * you attach identity to it
 
 Trauma becomes meaning when:
+
 * you acknowledge it
 * you understand it
 * you learn from it
@@ -1038,6 +1025,7 @@ Courage does not come from fearlessness.
 Courage comes from responsibility.
 
 When you carry responsibility for:
+
 * a child
 * a family
 * a future
@@ -1059,6 +1047,7 @@ Life does not change automatically.
 Life changes when you redesign your next phase with precision.
 
 Phase design includes:
+
 * knowing what to shed
 * knowing what to strengthen
 * knowing what to build
@@ -1073,9 +1062,8 @@ It should be an upgrade of your identity.
 
 Designing the next phase intentionally ensures that the future doesn’t become a repetition of old patterns.
 
----
-
 ## CHAPTER-VI
+
 **THE CONSTRAINTS MAP**
 
 Creation gives us power, but it does not give us absolute control.
@@ -1139,6 +1127,7 @@ Your job is to remain consistent despite unfairness.
 ### CONSTRAINT 4: OTHER PEOPLE HAVE THEIR OWN TRAJECTORIES
 
 You cannot change:
+
 * someone’s nature
 * someone’s mindset
 * someone’s maturity
@@ -1199,6 +1188,7 @@ This is the essence of creation.
 ### CONSTRAINT 8: YOU CANNOT CREATE WITHOUT SACRIFICE
 
 Creation demands:
+
 * time
 * patience
 * loneliness
@@ -1227,6 +1217,7 @@ Acting according to that phase is maturity.
 ### CONSTRAINT 10: YOU CANNOT DO IT ALONE
 
 Even the strongest person needs:
+
 * a support system
 * mentors
 * a partner
@@ -1262,9 +1253,8 @@ And start understanding “what is possible for me, in my reality, with my respo
 
 This honesty is what separates maturity from fantasy.
 
----
-
 ## CHAPTER-VII
+
 **THE 90-DAY BLUEPRINT FOR PHASE TWO**
 
 A transformed life does not begin with inspiration.
@@ -1287,6 +1277,7 @@ The final week is integration — where everything clicks into place.
 Let’s begin.
 
 ### PHASE 1 — DAYS 1 TO 30
+
 **AWARENESS: UNDERSTANDING YOURSELF WITHOUT EXCUSES**
 
 Awareness is the first architecture of creation.
@@ -1297,6 +1288,7 @@ These first thirty days are about honest observation — not performance, not pr
 **1. Daily Self-Reflection (10 minutes)**
 
 Every day, answer three questions in a notebook:
+
 * What drained my energy today?
 * What strengthened me today?
 * What did I learn about myself today?
@@ -1306,6 +1298,7 @@ Honesty is your only requirement.
 **2. The Patterns Audit**
 
 Within the first 2 weeks, list:
+
 * repeated mistakes
 * repeated emotional triggers
 * repeated conflicts
@@ -1318,6 +1311,7 @@ This is self-mapping.
 **3. Relationship Inventory**
 
 Identify:
+
 * who uplifts you
 * who drains you
 * who manipulates you
@@ -1329,6 +1323,7 @@ Creation requires clean emotional environments.
 **4. Financial Truth**
 
 Without fear:
+
 * list your assets
 * list your liabilities
 * list your cashflow
@@ -1345,6 +1340,7 @@ Who must I stop being?
 Awareness is painful — but pain here is progress.
 
 ### PHASE 2 — DAYS 31 TO 60
+
 **ALIGNMENT: BRINGING YOUR LIFE BACK INTO ORDER**
 
 Awareness without alignment creates frustration.
@@ -1357,6 +1353,7 @@ This phase is about everything falling into place internally.
 Write your five core values — non-negotiable principles that will guide every decision.
 
 Examples:
+
 * Integrity.
 * Responsibility.
 * Family-first.
@@ -1368,6 +1365,7 @@ These values become your compass.
 **2. Boundary Setting**
 
 Make a list of:
+
 * behaviours you will not tolerate
 * people you will distance from
 * habits you will eliminate
@@ -1379,6 +1377,7 @@ Boundaries are emotional architecture.
 **3. Health Stabilization**
 
 Alignment requires physical grounding:
+
 * regulate sleep
 * hydrate consistently
 * walk daily
@@ -1390,6 +1389,7 @@ Your mind cannot align if the body is in collapse.
 **4. Emotional Reset**
 
 For 30 days:
+
 * no overreacting
 * no impulsive responses
 * no arguments
@@ -1400,6 +1400,7 @@ You are training emotional integrity.
 **5. Major Decision Filter**
 
 Every important decision must pass two questions:
+
 * Does this align with my core values?
 * Does this strengthen my future self?
 
@@ -1409,6 +1410,7 @@ If not, drop it.
 Alignment removes noise.
 
 ### PHASE 3 — DAYS 61 TO 90
+
 **ACTION: BUILDING THE FIRST VERSION OF YOUR NEXT LIFE**
 
 Action is where creation becomes visible.
@@ -1417,6 +1419,7 @@ These 30 days turn clarity into movement and movement into momentum.
 **1. The 3-Project Rule**
 
 Choose only three goals for the next 90 days:
+
 * one personal
 * one relational
 * one financial or professional
@@ -1435,6 +1438,7 @@ Small steps compound.
 **3. Weekly Review Ritual (Sunday 30 minutes)**
 
 Track:
+
 * progress
 * mistakes
 * distractions
@@ -1446,6 +1450,7 @@ Review is the engine of improvement.
 **4. Environment Engineering**
 
 Make small but powerful adjustments:
+
 * clean your workspace
 * organize digital files
 * reduce clutter
@@ -1457,6 +1462,7 @@ Your environment shapes your execution.
 **5. Partnership & Support**
 
 No transformation thrives in isolation. Identify:
+
 * one person who supports your growth
 * one mentor to learn from
 * one accountability partner
@@ -1494,6 +1500,7 @@ Not celebration of success, But celebration of growth.
 
 Ninety days will not solve every problem.
 But ninety days will:
+
 * reset your identity
 * rebuild your discipline
 * remove emotional noise
@@ -1510,9 +1517,8 @@ It is about direction.
 
 Ninety days can change the trajectory of your next decade.
 
----
-
 ## CONCLUSION
+
 **MY LIFE, REBUILT**
 
 There comes a moment when a man stops being a result of his past And becomes the architect of his future.
@@ -1595,15 +1601,16 @@ And so can you.
 This is my second life —
 And its best chapters are yet to be written.
 
----
-
 ## APPENDIX
+
 This appendix is designed as a companion to the 10/90 rule — helping readers turn the book into action, reflection, and long-term transformation.
 
 ### 1. SELF-DESIGN WORKSHEET
+
 **A 1-page internal audit for rebuilding your next phase**
 
 **A. Identity**
+
 * Who am I today? (Write three honest statements.)
 * Who do I want to become? (Write three intentional statements.)
 * What identity traits must I shed? (Ego, impulsiveness, fear, old stories, etc.)
@@ -1617,6 +1624,7 @@ List your five core values — non-negotiable principles that guide every decisi
 5.
 
 **C. Emotional Audit**
+
 * What triggers me emotionally?
 * What calms me?
 * What patterns keep repeating?
@@ -1624,6 +1632,7 @@ List your five core values — non-negotiable principles that guide every decisi
 * What boundaries must be set?
 
 **D. Responsibilities**
+
 * Who depends on me?
 * What are my top 5 responsibilities this year?
 * Which responsibilities am I avoiding?
@@ -1631,61 +1640,71 @@ List your five core values — non-negotiable principles that guide every decisi
 
 **E. Systems**
 Tick the systems you currently lack or need improvement in:
-- [ ] Daily Routine
-- [ ] Task Management
-- [ ] Financial Structure
-- [ ] Emotional Management
-- [ ] Relationship Boundaries
-- [ ] Learning System
-- [ ] Health Routine
-- [ ] Wealth-Building System
-- [ ] Family Governance
-- [ ] Legal Structure
+
+* [ ] Daily Routine
+* [ ] Task Management
+* [ ] Financial Structure
+* [ ] Emotional Management
+* [ ] Relationship Boundaries
+* [ ] Learning System
+* [ ] Health Routine
+* [ ] Wealth-Building System
+* [ ] Family Governance
+* [ ] Legal Structure
 
 **F. 90-Day Design**
 Write your three focused goals for the next 90 days:
+
 * Personal Goal:
 * Relational Goal:
 * Professional/Financial Goal:
 
 ### 2. REFLECTION QUESTIONS
+
 **For deeper clarity, healing, and direction**
 
 These questions are meant to be answered slowly — across weeks or months.
 
 **Identity & Purpose**
+
 * What parts of my identity were built by trauma, not truth?
 * What would my life look like if I stopped acting out of fear?
 * What are the three things I would change if nothing held me back?
 
 **Emotional Landscape**
+
 * What emotions do I avoid and why?
 * What wound from my past still shapes my reactions?
 * What have I not forgiven myself for?
 
 **Relationships**
+
 * Who brings clarity into my life?
 * Who brings confusion?
 * What relationships deserve reconciliation?
 * What relationships require distance?
 
 **Responsibility & Leadership**
+
 * What responsibilities make me stronger?
 * What responsibilities am I delaying?
 * What kind of leader do I want to be at home and in business?
 
 **Creation & Legacy**
+
 * What do I want my legacy to protect?
 * What systems must I build for the next generation?
 * What habits will shape my next decade?
 
 **Future Self**
+
 * What does my healed self look like?
 * What does my disciplined self look like?
 * What does my best self look like?
 * What am I ready to build now that I wasn’t ready for before?
 
 ### 3. A NOTE ON SUPPORT SYSTEMS
+
 **Why no one rebuilds alone**
 
 You can design your identity.
@@ -1733,6 +1752,7 @@ My readers will look for a way to stay connected as they implement the 10/90 rul
 **→ author.kc-capitals.com**
 
 This link will contain:
+
 * Deeper teachings
 * Long-form reflections
 * Frameworks
