@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2 } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ CONFIGURATION ZONE ⬇️
@@ -25,23 +25,48 @@ const CONFIG = {
   reviewsDataPath: "/data/reviews.json",
 
   // MICRO BOOK DEFINITIONS
+  // Grouped by phases for display logic
   library: [
-    // Fixed: Pointing to cover-0.png with cache buster ?v=4
-    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-0.png?v=4" }, 
-    { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png" },
-    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png" },
-    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png" },
-    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", file: "/book-4.md", cover: "/cover-4.png" },
-    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", file: "/book-5.md", cover: "/cover-5.png" },
-    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", file: "/book-6.md", cover: "/cover-6.png" },
-    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", file: "/book-7.md", cover: "/cover-7.png" },
-    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", file: "/book-8.md", cover: "/cover-8.png" },
-    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", file: "/book-9.md", cover: "/cover-9.png" },
-    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", file: "/book-10.md", cover: "/cover-10.png" },
-    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", file: "/book-11.md", cover: "/cover-11.png" },
-    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", file: "/book-12.md", cover: "/cover-12.png" },
+    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-0.png?v=4", section: "master_launch", releaseDate: "01-01-2026" },
+    { id: 1, title: "Micro Book 1", subtitle: "My Life: 10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png", section: "phase_1", releaseDate: "01-01-2026" },
+    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png", section: "phase_1", releaseDate: "01-02-2026" },
+    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png", section: "phase_1", releaseDate: "01-03-2026" },
+    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", file: "/book-4.md", cover: "/cover-4.png", section: "phase_1", releaseDate: "01-04-2026" },
+    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", file: "/book-5.md", cover: "/cover-5.png", section: "phase_2", releaseDate: "01-05-2026" },
+    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", file: "/book-6.md", cover: "/cover-6.png", section: "phase_2", releaseDate: "01-06-2026" },
+    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", file: "/book-7.md", cover: "/cover-7.png", section: "phase_2", releaseDate: "01-07-2026" },
+    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", file: "/book-8.md", cover: "/cover-8.png", section: "phase_2", releaseDate: "01-08-2026" },
+    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", file: "/book-9.md", cover: "/cover-9.png", section: "phase_3", releaseDate: "01-09-2026" },
+    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", file: "/book-10.md", cover: "/cover-10.png", section: "phase_3", releaseDate: "01-10-2026" },
+    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", file: "/book-11.md", cover: "/cover-11.png", section: "phase_3", releaseDate: "01-11-2026" },
+    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", file: "/book-12.md", cover: "/cover-12.png", section: "phase_3", releaseDate: "01-12-2026" },
+    { id: 13, title: "Master Book", subtitle: "THE LEGACY OS MASTER BOOK", file: "/book-master.md", cover: "/cover-14.png", section: "master_book", releaseDate: "01-01-2027" },
+  ],
+
+  // MODULE INDEX DATA
+  moduleIndex: [
+    { phase: "I", module: "My Life", function: "Core philosophy" },
+    { phase: "I", module: "Age 33 Reset", function: "Identity reboot" },
+    { phase: "I", module: "The Blueprint", function: "Life design" },
+    { phase: "I", module: "Emotional Governance", function: "Internal control" },
+    { phase: "II", module: "Trauma Alchemy", function: "Pain integration" },
+    { phase: "II", module: "90-Day OS Upgrade", function: "Identity recalibration" },
+    { phase: "II", module: "Legal Clarity", function: "Protection" },
+    { phase: "II", module: "Wealth Kernel", function: "Money architecture" },
+    { phase: "III", module: "Family Constitution", function: "Governance" },
+    { phase: "III", module: "Firewall", function: "Risk defense" },
+    { phase: "III", module: "Generational OS", function: "Dynasty systems" },
+    { phase: "III", module: "My Legacy", function: "Succession" },
   ]
 };
+
+const SECTIONS = [
+  { id: "master_launch", title: "1. Master Map — Launch Edition" },
+  { id: "phase_1", title: "2. Phase I: The Foundation & The Rebuild" },
+  { id: "phase_2", title: "3. Phase II: Building Capability & Resources" },
+  { id: "phase_3", title: "4. Phase III: Scaling & Legacy" },
+  { id: "master_book", title: "5. THE LEGACY OS MASTER BOOK" },
+];
 
 const DEDICATIONS = [
   {
@@ -118,30 +143,23 @@ const calculateReadingTime = (text) => {
   return Math.ceil(words / wordsPerMinute);
 };
 
-// --- MARKDOWN PARSER ENGINE V2.2 (Robust & Forgiving) ---
+// --- MARKDOWN PARSER ENGINE V2.2 ---
 const parseMarkdown = (text) => {
   if (!text) return [];
-  // Regex to split by headers (#, ##, ###) while keeping them
   const parts = text.split(/(?=^#{1,3}\s+)/gm);
-  
   const chapters = [];
   
   parts.forEach(part => {
-    // Extract title from the first line
     const match = part.match(/^(#{1,3})\s+(.+)$/m);
     if (!match) return; 
     
     const title = match[2].trim();
-    // Remove the header line from content
     const rawContent = part.replace(/^(#{1,3})\s+(.+)$/m, '').trim();
-    
     if (!rawContent) return;
 
     let htmlContent = rawContent.split(/\n\s*\n/).map(para => {
         let p = para.trim();
         if (!p) return '';
-        
-        // Image Parser
         if (p.startsWith('![') && p.includes('](')) {
           const imgMatch = p.match(/!\[(.*?)\]\((.*?)\)/);
           if (imgMatch) {
@@ -149,23 +167,14 @@ const parseMarkdown = (text) => {
              return `<div class="my-8 flex justify-center"><img src="${src}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
           }
         }
-        
-        // Blockquotes
         if (p.startsWith('> ')) return `<blockquote class="border-l-2 border-amber-600 pl-4 italic text-stone-400 my-6">${p.replace(/^> /, '')}</blockquote>`;
-        
-        // HR
         if (p === '---' || p === '***') return `<hr class="border-stone-800 my-8 opacity-50" />`;
-        
-        // Bold & Italic
         p = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-stone-200 font-bold">$1</strong>');
         p = p.replace(/\*(.*?)\*/g, '<em class="text-amber-600/80">$1</em>');
-        
-        // Lists
         if (p.startsWith('- ') || p.startsWith('* ')) {
              const items = p.split('\n').map(item => `<li class="ml-4 list-disc text-stone-400">${item.replace(/^[-*] /, '')}</li>`).join('');
              return `<ul class="space-y-2 my-4">${items}</ul>`;
         }
-        
         return `<p>${p}</p>`;
       }).join('');
       
@@ -177,7 +186,7 @@ const parseMarkdown = (text) => {
   return chapters;
 };
 
-// --- ANIMATED CARD COMPONENT (SCROLL REVEAL) ---
+// --- ANIMATED CARD COMPONENT ---
 const AnimatedCard = ({ children, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
@@ -210,7 +219,6 @@ const AnimatedCard = ({ children, delay = 0 }) => {
 
 // --- SUB-COMPONENTS ---
 
-// 1. INSTALLATION GUIDE MODAL
 const InstallGuide = ({ onClose }) => (
   <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
     <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
@@ -235,7 +243,6 @@ const InstallGuide = ({ onClose }) => (
   </div>
 );
 
-// 2. REVIEW MODAL (NEW)
 const ReviewModal = ({ onClose }) => (
   <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
     <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
@@ -257,7 +264,39 @@ const ReviewModal = ({ onClose }) => (
   </div>
 );
 
-// 3. LANDING PORTAL (VIBRANT)
+const ModuleIndexView = ({ onBack }) => (
+    <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
+        <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
+        <div className="max-w-3xl w-full mx-auto mt-12 space-y-12">
+            <div className="text-center space-y-2">
+                <h2 className="text-2xl font-serif text-amber-600">Module Index</h2>
+                <p className="text-xs font-mono text-stone-500">QUICK REFERENCE PAGE</p>
+            </div>
+            
+            <div className="bg-zinc-900/50 rounded border border-stone-800 overflow-hidden">
+                <table className="w-full text-left text-sm text-stone-400">
+                    <thead className="bg-zinc-900 text-stone-300 font-bold uppercase text-xs border-b border-stone-800">
+                        <tr>
+                            <th className="p-4 w-1/4">Phase</th>
+                            <th className="p-4 w-1/2">Module</th>
+                            <th className="p-4 w-1/4">Function</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-800/50">
+                        {CONFIG.moduleIndex.map((item, index) => (
+                            <tr key={index} className="hover:bg-zinc-800/30 transition-colors">
+                                <td className="p-4 font-mono text-amber-600/80">{item.phase}</td>
+                                <td className="p-4 text-stone-200 font-medium">{item.module}</td>
+                                <td className="p-4 italic">{item.function}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+);
+
 const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterReviews, onShowInstall }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -315,8 +354,6 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
     </div>
   </div>
 );
-
-// --- AUDIO & REVIEWS VIEWS (NOW FETCHING FROM JSON) ---
 
 const AudioView = ({ onBack }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
@@ -406,37 +443,73 @@ const ReviewsView = ({ onBack, onReviewClick }) => {
   );
 };
 
-const LibraryGrid = ({ onSelectBook, onBack, progressData }) => (
-  <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
-    <button onClick={onBack} className="fixed top-6 left-6 z-50 flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
-      <ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">HOME</span>
-    </button>
-    <div className="max-w-6xl mx-auto mt-12">
-      <h2 className="text-2xl font-serif text-amber-600 mb-2">The Legacy Series</h2>
-      <p className="text-stone-500 font-mono text-xs tracking-wider mb-12">SYSTEM ARCHITECTURE</p>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {CONFIG.library.map((book) => {
-          const bookProgress = progressData[book.id] || { current: 0, total: 1 };
-          const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
-          const isStarted = progressData[book.id] !== undefined;
-          return (
-            <button key={book.id} onClick={() => onSelectBook(book)} className="group flex flex-col text-left space-y-3 relative">
-              <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
-                <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between"; e.target.parentNode.innerHTML = `<div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div><div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>`; }} />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
-                {isStarted && <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800"><div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div></div>}
-              </div>
-              <div>
-                <div className="flex justify-between items-center"><h3 className="text-sm font-bold text-stone-300 group-hover:text-white font-serif leading-tight">{book.title}</h3>{isStarted && <span className="text-[9px] font-mono text-amber-600/80">{percent}%</span>}</div>
-                <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1 line-clamp-1">{book.subtitle}</p>
-              </div>
+const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex }) => {
+  const groupedBooks = useMemo(() => {
+    const groups = {};
+    SECTIONS.forEach(sec => {
+        groups[sec.id] = CONFIG.library.filter(b => b.section === sec.id);
+    });
+    return groups;
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
+        <div className="fixed top-6 left-6 z-50 flex gap-4">
+            <button onClick={onBack} className="flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
+                <ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">HOME</span>
             </button>
-          );
-        })}
-      </div>
-    </div>
+        </div>
+        
+        <div className="fixed top-6 right-6 z-50">
+            <button onClick={onShowIndex} className="flex items-center space-x-2 text-amber-500 hover:text-white transition-colors bg-amber-900/20 hover:bg-amber-900/40 px-4 py-2 rounded-full backdrop-blur-md border border-amber-500/20">
+                <Table size={16} /> <span className="text-xs font-mono tracking-widest">MODULE INDEX</span>
+            </button>
+        </div>
+
+        <div className="max-w-6xl mx-auto mt-20 space-y-20 pb-20">
+            <div className="text-center space-y-2 mb-16">
+                <h2 className="text-3xl font-serif text-amber-600">System Architecture</h2>
+                <p className="text-xs font-mono text-stone-500 uppercase tracking-widest">THE LEGACY SERIES • 2026-2027</p>
+            </div>
+            
+            {SECTIONS.map((section) => (
+                <div key={section.id} className="space-y-6">
+                    <div className="flex items-center gap-4">
+                        <div className="h-px bg-stone-800 flex-grow"></div>
+                        <h3 className="text-lg font-serif text-stone-400 uppercase tracking-widest">{section.title}</h3>
+                        <div className="h-px bg-stone-800 flex-grow"></div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {groupedBooks[section.id]?.map((book) => {
+                            const bookProgress = progressData[book.id] || { current: 0, total: 1 };
+                            const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
+                            const isStarted = progressData[book.id] !== undefined;
+                            
+                            return (
+                                <button key={book.id} onClick={() => onSelectBook(book)} className="group flex flex-col text-left space-y-3 relative">
+                                    <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
+                                        <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between"; e.target.parentNode.innerHTML = `<div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div><div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>`; }} />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
+                                        {isStarted && <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800"><div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div></div>}
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between items-start">
+                                            <h3 className="text-sm font-bold text-stone-300 group-hover:text-white font-serif leading-tight">{book.title}</h3>
+                                        </div>
+                                        <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1 line-clamp-1">{book.subtitle}</p>
+                                        <p className="text-[9px] text-stone-600 font-mono mt-2">RELEASE: {book.releaseDate}</p>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            ))}
+        </div>
   </div>
-);
+  );
+};
 
 const DedicationView = ({ onBack }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
@@ -660,6 +733,7 @@ export default function TheLegacyReader() {
   const goAudio = () => setView('audio');
   const goReviews = () => setView('reviews');
   const goDedications = () => setView('dedications');
+  const goIndex = () => setView('index'); // New Nav function
   const openBook = (book) => { setSelectedBook(book); setView('reader'); };
 
   return (
@@ -677,10 +751,13 @@ export default function TheLegacyReader() {
       {showInstallGuide && <InstallGuide onClose={() => setShowInstallGuide(false)} />}
       {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
 
-      {view === 'gallery' && <LibraryGrid onSelectBook={openBook} onBack={goHome} progressData={progressData} />}
+      {view === 'gallery' && <LibraryGrid onSelectBook={openBook} onBack={goHome} progressData={progressData} onShowIndex={goIndex} />}
       {view === 'profile' && <ProfileOptions onBack={goHome} onShowDedications={goDedications} />}
       {view === 'dedications' && <DedicationView onBack={goProfile} />}
       
+      {/* Module Index View */}
+      {view === 'index' && <ModuleIndexView onBack={goGallery} />}
+
       {view === 'audio' && <AudioView onBack={goHome} />}
       {view === 'reviews' && <ReviewsView onBack={goHome} onReviewClick={() => setShowReviewModal(true)} />}
 
