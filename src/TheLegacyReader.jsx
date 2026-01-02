@@ -73,7 +73,7 @@ const CONFIG = {
         title: "ലെഗസി ഇ-ബുക്ക് സീരീസ്", 
         subtitle: "ലോകത്തിലെ ആദ്യത്തെ ലെഗസി ആർക്കിടെക്റ്റിൽ നിന്ന്",
         enterLib: "ലൈബ്രറി",
-        architect: "ആർക്കിടെക്റ്റ്",
+        architect: "ലെഗസി ആർക്കിടെക്റ്റ്",
         audio: "ഓഡിയോ",
         reviews: "അഭിപ്രായങ്ങൾ",
         install: "ഇൻസ്റ്റാൾ ചെയ്യുക",
@@ -130,14 +130,14 @@ const DEDICATIONS_CONTENT = {
         <p>you are the first architects of our lives and the foundation beneath everything we are attempting to build. Your sacrifices were quiet, your love unconditional, and your prayers constant. Whatever strength, resilience, and purpose I have today is rooted in the values you lived every single day without fanfare.</p>
       `
     },
-    // ... (Add other English dedications here if needed from your previous inputs)
+    // ... Add more EN dedications here if needed
   ],
   ml: [
      {
         title: "എന്റെ മാതാപിതാക്കൾക്ക് — അലവി കെസി & അമിന കെ",
-        content: "<p>ഉമ്മയും ഉപ്പയും...</p><p>(Malayalam content for parents dedication goes here)</p>"
+        content: "<p>ഉമ്മയും ഉപ്പയും...</p><p>നിങ്ങളാണ് നമ്മുടെ ജീവിതത്തിന്റെ പ്രഥമ ശിൽപ്പികൾ...</p>"
      },
-     // ... (Add other Malayalam dedications here)
+     // ... Add more ML dedications here
   ]
 };
 
@@ -223,9 +223,13 @@ const ReviewModal = ({ onClose }) => (
 
 const ModuleIndexView = ({ onBack, t }) => (
     <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
-        <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} /></button>
+        <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
         <div className="max-w-3xl w-full mx-auto mt-12 space-y-12">
-            <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">{t.index}</h2></div>
+            <div className="text-center space-y-2">
+                <h2 className="text-2xl font-serif text-amber-600">{t.index}</h2>
+                <p className="text-xs font-mono text-stone-500">QUICK REFERENCE PAGE</p>
+            </div>
+            
             <div className="bg-zinc-900/50 rounded border border-stone-800 overflow-hidden">
                 <table className="w-full text-left text-sm text-stone-400">
                     <thead className="bg-zinc-900 text-stone-300 font-bold uppercase text-xs border-b border-stone-800">
@@ -276,42 +280,33 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
   </div>
 );
 
-const AudioView = ({ onBack }) => {
-  const [currentTrack, setCurrentTrack] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    fetch(CONFIG.audioDataPath).then(res => res.json()).then(data => { setTracks(data); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
-
-  const playTrack = (track) => {
-    if (currentTrack?.id === track.id) {
-        if (isPlaying) audioRef.current.pause(); else audioRef.current.play();
-        setIsPlaying(!isPlaying);
-    } else {
-        setCurrentTrack(track); setIsPlaying(true); setTimeout(() => audioRef.current?.play(), 100);
-    }
-  };
+const AudioView = ({ onBack, t, onSelectBook }) => {
+  const books = CONFIG.library;
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
-      <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
-      <div className="max-w-xl w-full mx-auto mt-12 space-y-8">
-        <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">Spoken Legacy</h2><p className="text-xs font-mono text-stone-500">AUDIO ARCHIVE • VOLUME 1</p></div>
-        {loading ? <div className="text-center text-xs font-mono text-stone-500">LOADING TRACKS...</div> : (
-             <div className="space-y-4">
-                {tracks.length === 0 ? <div className="text-center text-xs text-stone-600 italic py-10">No audio tracks found. Upload audio.json to public/data/</div> : tracks.map((track) => (
-                    <div key={track.id} onClick={() => playTrack(track)} className={`p-4 rounded border cursor-pointer transition-all flex items-center justify-between group ${currentTrack?.id === track.id ? 'bg-zinc-900 border-amber-600' : 'border-stone-800 hover:bg-zinc-900 hover:border-stone-700'}`}>
-                        <div className="flex items-center gap-4"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${currentTrack?.id === track.id ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-500 group-hover:text-stone-300'}`}>{currentTrack?.id === track.id && isPlaying ? <Pause size={16} /> : <Play size={16} />}</div><div><h3 className={`text-sm font-bold ${currentTrack?.id === track.id ? 'text-amber-500' : 'text-stone-300'}`}>{track.title}</h3><p className="text-[10px] text-stone-500 font-mono">DURATION: {track.duration}</p></div></div>
-                        {currentTrack?.id === track.id && <div className="text-amber-600 animate-pulse"><Volume2 size={16} /></div>}
+      <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white flex items-center gap-2"><ArrowLeft size={20} /><span className="text-xs font-mono">{t.home}</span></button>
+      <div className="max-w-4xl w-full mx-auto mt-20 space-y-12">
+        <div className="text-center space-y-2"><h2 className="text-3xl font-serif text-amber-600">{t.audio}</h2><p className="text-xs font-mono text-stone-500">AUDIO ARCHIVE • VOLUME 1</p></div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {books.map((book) => (
+                <div key={book.id} onClick={() => onSelectBook(book)} className="p-4 bg-zinc-900/50 border border-stone-800 rounded-lg hover:border-amber-600 cursor-pointer transition-all flex items-center gap-4 group">
+                    <div className="w-16 h-24 bg-zinc-800 rounded overflow-hidden flex-shrink-0">
+                         <img src={book.cover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100" />
                     </div>
-                ))}
-            </div>
-        )}
-        {currentTrack && (<div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-stone-800 p-4 flex items-center justify-between z-50"><div className="flex items-center gap-4"><button onClick={() => playTrack(currentTrack)} className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button><div><p className="text-xs font-mono text-amber-600">NOW PLAYING</p><p className="text-sm font-bold text-white">{currentTrack.title}</p></div></div><audio ref={audioRef} src={currentTrack.file} onEnded={() => setIsPlaying(false)} /></div>)}
+                    <div>
+                        <h3 className="text-sm font-bold text-stone-200 group-hover:text-amber-500 font-serif">{book.title}</h3>
+                        <p className="text-[10px] text-stone-500 uppercase mt-1">{book.subtitle}</p>
+                        <div className="mt-3 flex gap-2">
+                             <span className="px-2 py-1 bg-black/50 rounded text-[9px] font-mono text-stone-400 border border-stone-800">EN</span>
+                             <span className="px-2 py-1 bg-black/50 rounded text-[9px] font-mono text-stone-400 border border-stone-800">ML</span>
+                        </div>
+                    </div>
+                    <div className="ml-auto text-stone-600 group-hover:text-amber-500"><Headphones size={20} /></div>
+                </div>
+            ))}
+        </div>
       </div>
     </div>
   );
@@ -660,8 +655,7 @@ export default function TheLegacyReader() {
   const [progressData, setProgressData] = useState({});
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [lang, setLang] = useState('en'); 
-  const [formatModal, setFormatModal] = useState(null); 
+  const [lang, setLang] = useState('en'); // Global Language State
 
   useEffect(() => {
     const saved = localStorage.getItem('legacy_os_progress');
@@ -682,21 +676,24 @@ export default function TheLegacyReader() {
   const goDedications = () => setView('dedications');
   const goIndex = () => setView('index');
 
+  // Trigger Format Modal when book is clicked
   const onBookClick = (book) => {
     setFormatModal(book);
   };
 
+  // Handle Format Selection
   const handleFormatSelect = (format) => {
      if (format === 'read') {
          setSelectedBook(formatModal);
          setView('reader');
      } else if (format === 'listen') {
          setSelectedBook(formatModal);
-         setView('audio_player'); 
+         setView('audio_player'); // New view for specific audio book
      }
      setFormatModal(null);
   };
 
+  const [formatModal, setFormatModal] = useState(null); 
   const t = CONFIG.translations[lang] || CONFIG.translations['en'];
 
   return (
@@ -717,6 +714,7 @@ export default function TheLegacyReader() {
       {showInstallGuide && <InstallGuide onClose={() => setShowInstallGuide(false)} />}
       {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
       
+      {/* Format Selection Modal */}
       {formatModal && (
           <FormatSelectionModal 
             onClose={() => setFormatModal(null)} 
@@ -731,8 +729,10 @@ export default function TheLegacyReader() {
       
       {view === 'index' && <ModuleIndexView onBack={goGallery} t={t} />}
 
-      {view === 'audio' && <AudioView onBack={goHome} />}
+      {/* Global Audio Archive (from Landing) */}
+      {view === 'audio' && <AudioView onBack={goHome} t={t} onSelectBook={onBookClick} />}
       
+      {/* Specific Audio Book Player (from Library) */}
       {view === 'audio_player' && selectedBook && <AudioPlayerView bookData={selectedBook} onBack={goGallery} language={lang} t={t} />}
 
       {view === 'reviews' && <ReviewsView onBack={goHome} onReviewClick={() => setShowReviewModal(true)} />}
