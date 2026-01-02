@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ CONFIGURATION ZONE ⬇️
@@ -21,29 +21,80 @@ const CONFIG = {
   reviewEmail: "adv.firoz@kc-capitals.com",
 
   // DATA PATHS
-  audioDataPath: "/data/audio.json",
+  audioDataPath: "/data/audio.json", 
   reviewsDataPath: "/data/reviews.json",
 
   // MICRO BOOK DEFINITIONS
-  // Grouped by phases for display logic
   library: [
-    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", file: "/book-0.md", cover: "/cover-0.png?v=4", section: "master_launch", releaseDate: "01-01-2026" },
-    { id: 1, title: "Micro Book 1", subtitle: "My Life: 10% Destiny, 90% Creation", file: "/book-1.md", cover: "/cover-1.png", section: "phase_1", releaseDate: "01-01-2026" },
-    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", file: "/book-2.md", cover: "/cover-2.png", section: "phase_1", releaseDate: "01-02-2026" },
-    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", file: "/book-3.md", cover: "/cover-3.png", section: "phase_1", releaseDate: "01-03-2026" },
-    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", file: "/book-4.md", cover: "/cover-4.png", section: "phase_1", releaseDate: "01-04-2026" },
-    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", file: "/book-5.md", cover: "/cover-5.png", section: "phase_2", releaseDate: "01-05-2026" },
-    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", file: "/book-6.md", cover: "/cover-6.png", section: "phase_2", releaseDate: "01-06-2026" },
-    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", file: "/book-7.md", cover: "/cover-7.png", section: "phase_2", releaseDate: "01-07-2026" },
-    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", file: "/book-8.md", cover: "/cover-8.png", section: "phase_2", releaseDate: "01-08-2026" },
-    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", file: "/book-9.md", cover: "/cover-9.png", section: "phase_3", releaseDate: "01-09-2026" },
-    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", file: "/book-10.md", cover: "/cover-10.png", section: "phase_3", releaseDate: "01-10-2026" },
-    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", file: "/book-11.md", cover: "/cover-11.png", section: "phase_3", releaseDate: "01-11-2026" },
-    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", file: "/book-12.md", cover: "/cover-12.png", section: "phase_3", releaseDate: "01-12-2026" },
-    { id: 13, title: "Master Book", subtitle: "THE LEGACY OS MASTER BOOK", file: "/book-master.md", cover: "/cover-14.png", section: "master_book", releaseDate: "01-01-2027" },
+    { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", cover: "/cover-0.png?v=4", section: "master_launch", releaseDate: "01-01-2026" },
+    { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", cover: "/cover-1.png", section: "phase_1", releaseDate: "01-01-2026" },
+    { id: 2, title: "Micro Book 2", subtitle: "The Age 33 Reset", cover: "/cover-2.png", section: "phase_1", releaseDate: "01-02-2026" },
+    { id: 3, title: "Micro Book 3", subtitle: "The Blueprint", cover: "/cover-3.png", section: "phase_1", releaseDate: "01-03-2026" },
+    { id: 4, title: "Micro Book 4", subtitle: "Emotional Governance", cover: "/cover-4.png", section: "phase_1", releaseDate: "01-04-2026" },
+    { id: 5, title: "Micro Book 5", subtitle: "Legal Clarity Framework", cover: "/cover-5.png", section: "phase_2", releaseDate: "01-05-2026" },
+    { id: 6, title: "Micro Book 6", subtitle: "The Wealth Kernel 1.0", cover: "/cover-6.png", section: "phase_2", releaseDate: "01-06-2026" },
+    { id: 7, title: "Micro Book 7", subtitle: "The Family Constitution", cover: "/cover-7.png", section: "phase_2", releaseDate: "01-07-2026" },
+    { id: 8, title: "Micro Book 8", subtitle: "The Trauma Alchemy Manual", cover: "/cover-8.png", section: "phase_2", releaseDate: "01-08-2026" },
+    { id: 9, title: "Micro Book 9", subtitle: "The 90-Day OS Upgrade", cover: "/cover-9.png", section: "phase_3", releaseDate: "01-09-2026" },
+    { id: 10, title: "Micro Book 10", subtitle: "The Generational OS", cover: "/cover-10.png", section: "phase_3", releaseDate: "01-10-2026" },
+    { id: 11, title: "Micro Book 11", subtitle: "The Firewall", cover: "/cover-11.png", section: "phase_3", releaseDate: "01-11-2026" },
+    { id: 12, title: "Micro Book 12", subtitle: "My Legacy", cover: "/cover-12.png", section: "phase_3", releaseDate: "01-12-2026" },
+    { id: 13, title: "Master Book", subtitle: "THE LEGACY OS MASTER BOOK", cover: "/cover-14.png", section: "master_book", releaseDate: "01-01-2027" },
   ],
 
-  // MODULE INDEX DATA
+  translations: {
+    en: {
+        title: "EXPLORE THE LEGACY E-BOOK SERIES",
+        subtitle: "From the world's first LEGACY ARCHITECT",
+        enterLib: "ENTER LIBRARY",
+        architect: "THE LEGACY ARCHITECT",
+        audio: "AUDIO BOOKS",
+        reviews: "REVIEWS",
+        install: "INSTALL APP ICON",
+        home: "HOME",
+        index: "MODULE INDEX",
+        read: "READ E-BOOK",
+        listen: "LISTEN AUDIO",
+        selectLang: "SELECT LANGUAGE",
+        eng: "ENGLISH",
+        mal: "MALAYALAM",
+        comingSoon: "Coming Soon...",
+        contentMissing: "Content Missing",
+        dedicationTitle: "Dedication",
+        fromMasterMap: "FROM THE LEGACY OS MASTER MAP",
+        authorTitle: "The Legacy Architect",
+        authorDesc: "Access the professional profile, download the legacy dossier, or view dedications.",
+        visitWebsite: "LEGACY ARCHITECT",
+        downloadProfile: "DOWNLOAD PROFILE",
+        readDedications: "READ DEDICATIONS"
+    },
+    ml: {
+        title: "ലെഗസി ഇ-ബുക്ക് സീരീസ്", 
+        subtitle: "ലോകത്തിലെ ആദ്യത്തെ ലെഗസി ആർക്കിടെക്റ്റിൽ നിന്ന്",
+        enterLib: "ലൈബ്രറി",
+        architect: "ലെഗസി ആർക്കിടെക്റ്റ്",
+        audio: "ഓഡിയോ",
+        reviews: "അഭിപ്രായങ്ങൾ",
+        install: "ഇൻസ്റ്റാൾ ചെയ്യുക",
+        home: "ഹോം",
+        index: "സൂചിക",
+        read: "വായിക്കുക",
+        listen: "കേൾക്കുക",
+        selectLang: "ഭാഷ തിരഞ്ഞെടുക്കുക",
+        eng: "ഇംഗ്ലീഷ്",
+        mal: "മലയാളം",
+        comingSoon: "ഉടൻ വരുന്നു...",
+        contentMissing: "ഉള്ളടക്കം ലഭ്യമല്ല",
+        dedicationTitle: "സമർപ്പണം",
+        fromMasterMap: "ലെഗസി ഒഎസ് മാസ്റ്റർ മാപ്പിൽ നിന്ന്",
+        authorTitle: "ലെഗസി ആർക്കിടെക്റ്റ്",
+        authorDesc: "പ്രൊഫഷണൽ പ്രൊഫൈൽ ആക്സസ് ചെയ്യുക, ലെഗസി ഡോഷിയർ ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ സമർപ്പണങ്ങൾ കാണുക.",
+        visitWebsite: "ലെഗസി ആർക്കിടെക്റ്റ്",
+        downloadProfile: "പ്രൊഫൈൽ ഡൗൺലോഡ്",
+        readDedications: "സമർപ്പണങ്ങൾ വായിക്കുക"
+    }
+  },
+
   moduleIndex: [
     { phase: "I", module: "My Life", function: "Core philosophy" },
     { phase: "I", module: "Age 33 Reset", function: "Identity reboot" },
@@ -68,73 +119,97 @@ const SECTIONS = [
   { id: "master_book", title: "5. THE LEGACY OS MASTER BOOK" },
 ];
 
-const DEDICATIONS = [
-  {
-    title: "To my parents — ALAVI KC & AMINA K",
-    content: `
-      <p>Umma and Uppa,</p>
-      <p>you are the first architects of our lives and the foundation beneath everything we are attempting to build. Your sacrifices were quiet, your love unconditional, and your prayers constant. Whatever strength, resilience, and purpose I have today is rooted in the values you lived every single day without fanfare.</p>
-    `
-  },
-  {
-    title: "To the parents of Shanu and Innu — NAZAR ALADI & SHAJITHA O. K.",
-    content: `
-      <p>Umma and Uppa,</p>
-      <p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p>
-      <p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>
-      <p>Both homes together shaped my character before I shaped my ambitions.<br/>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
-      <p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p>
-      <p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p>
-      <p>With deep respect and unwavering commitment,<br/>— Muthu</p>
-    `
-  },
-  {
-    title: "To my beloved Shanu —",
-    content: `
-      <p>You walked into my life like quiet light and left like a prayer, and nothing in my world has been the same since. You did not just share my days; you rewrote my meaning. Your love taught me how to feel, your strength taught me how to stand, and your absence taught me how deep the heart can break and still keep beating.</p>
-      <p>You gave our son life and gave me purpose in the same moment.</p>
-      <p>Your last act on this earth was an act of pure love — and I will honor it for the rest of my life.</p>
-      <p>I carry you in decisions, in silences, in the way I hold Fateh close. I see you in his eyes, in his smile, in the way he reaches out for the world. He is your living chapter — the continuation of your story written in breath and laughter. I promise you this: he will grow with dignity, honesty, and courage. He will know exactly who you were and how much of him comes from you.</p>
-      <p>You were my home before I learned how to build one.</p>
-      <p>You were the calm in my storms, the laughter in my tiredness, the softness in my edges.</p>
-      <p>I miss the life we did not get to finish.<br/>I miss the conversations we never got to have.<br/>I miss the ordinary days that would have been ours.</p>
-      <p>But grief is not the end of our story — legacy is.</p>
-      <p>Everything I build now carries your name in its foundation.<br/>Every prayer I make carries you in its silence.<br/>Every tomorrow I walk into carries the echo of your “stay strong”.</p>
-      <p>If life allows, we will meet again beyond time and explanations. Until then, I will love you through the way I live, the way I raise our son, and the way I honor your memory without letting it break me.</p>
-      <p>You are not gone from my life.<br/>You are woven into it — permanently.</p>
-      <p>With love that didn’t end,<br/>— Ikka.</p>
-    `
-  },
-  {
-    title: "To Innu —",
-    content: `
-      <p>You stepped into my life at a time when the story was already heavy, and instead of stepping back, you chose to stand beside me. That choice was courage. You brought stability where there was chaos, warmth where there was cold, and direction when everything felt unstructured. You did not replace anything — you rebuilt with me, piece by piece, without asking for applause.</p>
-      <p>You are my partner in execution, not just emotion.</p>
-      <p>You carry responsibility with grace and shoulder pain without theatrics, and that inspires me daily.</p>
-      <p>You did not just accept my past; you embraced it with maturity, honoring every chapter that came before you while helping me write the next ones. You love Fateh not as an obligation, but as purpose, and the way you mother him is one of the greatest answers life has given me. Through you, he learns compassion, resilience, and calm strength.</p>
-      <p>You are proof that strength can be quiet and still be unbreakable.</p>
-      <p>You keep moving forward, even when the path is steep, and you push me to level up with you.</p>
-      <p>I want you to know this clearly: your journey matters too. Your dreams, your growth, your healing, your architecture of life — all of it is important. You are not just part of my legacy; you are a co-architect of it. Where I design systems, you breathe life into them. Where I build structures, you create the home inside them.</p>
-      <p>We will not just survive our past; we will outgrow it.<br/>We will not just talk about vision; we will execute it.</p>
-      <p>I am grateful for your patience when I am consumed by work, for your strength when I am tired, and for your faith when plans stretch longer than expected. The life we are building is not accidental — it is intentional, disciplined, and shared.</p>
-      <p>The best chapters are not the ones behind us.<br/>They are the ones we are still committed to writing together.</p>
-      <p>With trust, respect, and unshaken belief in our future,<br/>— Icha.</p>
-    `
-  },
-  {
-    title: "To my son, Fateh Shah KC —",
-    content: `
-      <p>You arrived in this world carrying both love and loss in the same moment, and you changed the entire architecture of my life. You did not just make me a father; you made me a custodian of legacy — of my parents, of your Ummi Shanu, of your Ammi Innu, and of everything our families stand for.</p>
-      <p>This life is my responsibility.<br/>The future is yours.</p>
-      <p>I am building systems so you do not merely inherit assets, but inherit clarity, courage, and character. I want your operating system to be calibrated for wisdom, integrity, compassion, and strength. I want you to stand tall without arrogance, to be kind without being weak, and to be resilient enough to rebuild yourself whenever life resets your plans.</p>
-      <p>Your name carries your roadmap:<br/><strong>Fateh</strong> — victory through purpose<br/><strong>Shah</strong> — heritage, dignity, and lineage<br/><strong>KC</strong> — roots, responsibility, and continuity</p>
-      <p>You are not expected to be perfect. You are expected to be honest, accountable, and unafraid of becoming yourself. If one day you lead our enterprises and our institutions, let it be because you earned it by competence and character — not because it was handed to you.</p>
-      <p>Everything I write, build, protect, and endure now anchors back to you.<br/>Not to control your life, but to empower your choices.</p>
-      <p>If life allows, one day you will read this as a man. When you do, know this:<br/>Your mother loved you before she saw you.<br/>Your family stands behind you.<br/>And my greatest legacy is not what I built — it is who you become.</p>
-      <p>With love, discipline, and unwavering faith,<br/>— Your Abba</p>
-    `
-  }
-];
+const DEDICATIONS_CONTENT = {
+  en: [
+    {
+      title: "To my parents — ALAVI KC & AMINA K",
+      content: `
+        <p>Umma and Uppa,</p>
+        <p>you are the first architects of our lives and the foundation beneath everything we are attempting to build. Your sacrifices were quiet, your love unconditional, and your prayers constant. Whatever strength, resilience, and purpose I have today is rooted in the values you lived every single day without fanfare.</p>
+      `
+    },
+    {
+      title: "To the parents of Shanu and Innu — NAZAR ALADI & SHAJITHA O. K.",
+      content: `
+        <p>Umma and Uppa,</p>
+        <p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p>
+        <p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>
+        <p>Both homes together shaped my character before I shaped my ambitions.<br/>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
+        <p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p>
+        <p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p>
+        <p>With deep respect and unwavering commitment,<br/>— Muthu</p>
+      `
+    },
+    {
+      title: "To my beloved Shanu —",
+      content: `
+        <p>You walked into my life like quiet light and left like a prayer, and nothing in my world has been the same since. You did not just share my days; you rewrote my meaning. Your love taught me how to feel, your strength taught me how to stand, and your absence taught me how deep the heart can break and still keep beating.</p>
+        <p>You gave our son life and gave me purpose in the same moment.</p>
+        <p>Your last act on this earth was an act of pure love — and I will honor it for the rest of my life.</p>
+        <p>I carry you in decisions, in silences, in the way I hold Fateh close. I see you in his eyes, in his smile, in the way he reaches out for the world. He is your living chapter — the continuation of your story written in breath and laughter. I promise you this: he will grow with dignity, honesty, and courage. He will know exactly who you were and how much of him comes from you.</p>
+        <p>You were my home before I learned how to build one.</p>
+        <p>You were the calm in my storms, the laughter in my tiredness, the softness in my edges.</p>
+        <p>I miss the life we did not get to finish.<br/>I miss the conversations we never got to have.<br/>I miss the ordinary days that would have been ours.</p>
+        <p>But grief is not the end of our story — legacy is.</p>
+        <p>Everything I build now carries your name in its foundation.<br/>Every prayer I make carries you in its silence.<br/>Every tomorrow I walk into carries the echo of your “stay strong”.</p>
+        <p>If life allows, we will meet again beyond time and explanations. Until then, I will love you through the way I live, the way I raise our son, and the way I honor your memory without letting it break me.</p>
+        <p>You are not gone from my life.<br/>You are woven into it — permanently.</p>
+        <p>With love that didn’t end,<br/>— Ikka.</p>
+      `
+    },
+    {
+      title: "To Innu —",
+      content: `
+        <p>You stepped into my life at a time when the story was already heavy, and instead of stepping back, you chose to stand beside me. That choice was courage. You brought stability where there was chaos, warmth where there was cold, and direction when everything felt unstructured. You did not replace anything — you rebuilt with me, piece by piece, without asking for applause.</p>
+        <p>You are my partner in execution, not just emotion.</p>
+        <p>You carry responsibility with grace and shoulder pain without theatrics, and that inspires me daily.</p>
+        <p>You did not just accept my past; you embraced it with maturity, honoring every chapter that came before you while helping me write the next ones. You love Fateh not as an obligation, but as purpose, and the way you mother him is one of the greatest answers life has given me. Through you, he learns compassion, resilience, and calm strength.</p>
+        <p>You are proof that strength can be quiet and still be unbreakable.</p>
+        <p>You keep moving forward, even when the path is steep, and you push me to level up with you.</p>
+        <p>I want you to know this clearly: your journey matters too. Your dreams, your growth, your healing, your architecture of life — all of it is important. You are not just part of my legacy; you are a co-architect of it. Where I design systems, you breathe life into them. Where I build structures, you create the home inside them.</p>
+        <p>We will not just survive our past; we will outgrow it.<br/>We will not just talk about vision; we will execute it.</p>
+        <p>I am grateful for your patience when I am consumed by work, for your strength when I am tired, and for your faith when plans stretch longer than expected. The life we are building is not accidental — it is intentional, disciplined, and shared.</p>
+        <p>The best chapters are not the ones behind us.<br/>They are the ones we are still committed to writing together.</p>
+        <p>With trust, respect, and unshaken belief in our future,<br/>— Icha.</p>
+      `
+    },
+    {
+      title: "To my son, Fateh Shah KC —",
+      content: `
+        <p>You arrived in this world carrying both love and loss in the same moment, and you changed the entire architecture of my life. You did not just make me a father; you made me a custodian of legacy — of my parents, of your Ummi Shanu, of your Ammi Innu, and of everything our families stand for.</p>
+        <p>This life is my responsibility.<br/>The future is yours.</p>
+        <p>I am building systems so you do not merely inherit assets, but inherit clarity, courage, and character. I want your operating system to be calibrated for wisdom, integrity, compassion, and strength. I want you to stand tall without arrogance, to be kind without being weak, and to be resilient enough to rebuild yourself whenever life resets your plans.</p>
+        <p>Your name carries your roadmap:<br/><strong>Fateh</strong> — victory through purpose<br/><strong>Shah</strong> — heritage, dignity, and lineage<br/><strong>KC</strong> — roots, responsibility, and continuity</p>
+        <p>You are not expected to be perfect. You are expected to be honest, accountable, and unafraid of becoming yourself. If one day you lead our enterprises and our institutions, let it be because you earned it by competence and character — not because it was handed to you.</p>
+        <p>Everything I write, build, protect, and endure now anchors back to you.<br/>Not to control your life, but to empower your choices.</p>
+        <p>If life allows, one day you will read this as a man. When you do, know this:<br/>Your mother loved you before she saw you.<br/>Your family stands behind you.<br/>And my greatest legacy is not what I built — it is who you become.</p>
+        <p>With love, discipline, and unwavering faith,<br/>— Your Abba</p>
+      `
+    }
+  ],
+  ml: [
+     {
+        title: "എന്റെ മാതാപിതാക്കൾക്ക് — അലവി കെസി & അമിന കെ",
+        content: "<p>ഉമ്മയും ഉപ്പയും...</p><p>(Malayalam content for parents dedication goes here)</p>"
+     },
+     {
+        title: "ഷാനുവിൻ്റെയും ഇന്നുവിൻ്റെയും മാതാപിതാക്കൾക്ക്",
+        content: "<p>(Malayalam content for in-laws dedication goes here)</p>"
+     },
+     {
+        title: "എന്റെ പ്രിയപ്പെട്ട ഷാനുവിന്",
+        content: "<p>(Malayalam content for Shanu goes here)</p>"
+     },
+     {
+        title: "ഇന്നുവിന്",
+        content: "<p>(Malayalam content for Innu goes here)</p>"
+     },
+      {
+        title: "എന്റെ മകൻ ഫത്തേ ഷാ കെസിക്ക്",
+        content: "<p>(Malayalam content for Fateh Shah goes here)</p>"
+     }
+  ]
+};
 
 // --- UTILS ---
 const calculateReadingTime = (text) => {
@@ -264,12 +339,12 @@ const ReviewModal = ({ onClose }) => (
   </div>
 );
 
-const ModuleIndexView = ({ onBack }) => (
+const ModuleIndexView = ({ onBack, t }) => (
     <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
         <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
         <div className="max-w-3xl w-full mx-auto mt-12 space-y-12">
             <div className="text-center space-y-2">
-                <h2 className="text-2xl font-serif text-amber-600">Module Index</h2>
+                <h2 className="text-2xl font-serif text-amber-600">{t.index}</h2>
                 <p className="text-xs font-mono text-stone-500">QUICK REFERENCE PAGE</p>
             </div>
             
@@ -297,7 +372,7 @@ const ModuleIndexView = ({ onBack }) => (
     </div>
 );
 
-const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterReviews, onShowInstall }) => (
+const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterReviews, onShowInstall, t, lang, setLang }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-950 to-zinc-950 z-0"></div>
@@ -309,12 +384,28 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
     
     <div className="z-10 w-full max-w-7xl mx-auto flex flex-col items-center animate-fade-in relative pb-32">
       <div className="mb-24 text-center space-y-4 pt-12">
+        {/* BIG PROMINENT LANGUAGE TOGGLE */}
+        <div className="flex justify-center gap-6 mb-12">
+            <button 
+                onClick={() => setLang('en')} 
+                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'en' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
+            >
+                ENGLISH
+            </button>
+            <button 
+                onClick={() => setLang('ml')} 
+                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'ml' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
+            >
+                മലയാളം
+            </button>
+        </div>
+
         <div className="relative inline-block group">
             <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full group-hover:bg-amber-500/30 transition-all duration-500"></div>
             <img src={CONFIG.logoPath} alt="Logo" className="relative w-20 h-20 mx-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-500 mb-4 drop-shadow-[0_0_15px_rgba(217,119,6,0.3)]" />
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-500 to-amber-200 tracking-tight leading-tight drop-shadow-[0_0_10px_rgba(217,119,6,0.5)] font-bold">EXPLORE THE LEGACY E-BOOK SERIES</h1>
-        <p className="text-sm md:text-lg font-mono tracking-widest text-stone-300 uppercase opacity-90">From the world's first LEGACY ARCHITECT</p>
+        <h1 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-500 to-amber-200 tracking-tight leading-tight drop-shadow-[0_0_10px_rgba(217,119,6,0.5)] font-bold">{t.title}</h1>
+        <p className="text-sm md:text-lg font-mono tracking-widest text-stone-300 uppercase opacity-90">{t.subtitle}</p>
         <div className="w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto rounded-full mt-6 opacity-80"></div>
       </div>
 
@@ -323,37 +414,39 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
         <AnimatedCard>
             <div onClick={onEnterSeries} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.seriesCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">ENTER LIBRARY</span></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.enterLib}</span></div>
             </div>
         </AnimatedCard>
 
         <AnimatedCard delay={200}>
             <div onClick={onEnterProfile} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.profileCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">👤</div><div class="text-xs text-stone-500">Upload cover1.png</div></div>`; }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">THE LEGACY ARCHITECT</span></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.architect}</span></div>
             </div>
         </AnimatedCard>
 
         <AnimatedCard delay={400}>
             <div onClick={onEnterAudio} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.audioCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">🎙️</div><div class="text-xs text-stone-500">Upload cover-audio.png</div></div>`; }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">AUDIO BOOKS</span></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.audio}</span></div>
             </div>
         </AnimatedCard>
 
         <AnimatedCard delay={600}>
             <div onClick={onEnterReviews} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.reviewsCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">★</div><div class="text-xs text-stone-500">Upload cover-reviews.png</div></div>`; }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">REVIEWS</span></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.reviews}</span></div>
             </div>
         </AnimatedCard>
 
       </div>
 
-      <button onClick={onShowInstall} className="mt-20 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10"><Download size={14} /> INSTALL APP ICON</button>
+      <button onClick={onShowInstall} className="mt-20 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10"><Download size={14} /> {t.install}</button>
     </div>
   </div>
 );
+
+// --- AUDIO & REVIEWS VIEWS (NOW FETCHING FROM JSON) ---
 
 const AudioView = ({ onBack }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
@@ -443,105 +536,101 @@ const ReviewsView = ({ onBack, onReviewClick }) => {
   );
 };
 
-const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex }) => {
-  const groupedBooks = useMemo(() => {
-    const groups = {};
-    SECTIONS.forEach(sec => {
-        groups[sec.id] = CONFIG.library.filter(b => b.section === sec.id);
-    });
-    return groups;
-  }, []);
+const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t }) => (
+  <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
+    <div className="fixed top-6 left-6 z-50 flex gap-4">
+        <button onClick={onBack} className="flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
+            <ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">{t.home}</span>
+        </button>
+    </div>
+    
+    <div className="fixed top-6 right-6 z-50">
+        <button onClick={onShowIndex} className="flex items-center space-x-2 text-amber-500 hover:text-white transition-colors bg-amber-900/20 hover:bg-amber-900/40 px-4 py-2 rounded-full backdrop-blur-md border border-amber-500/20">
+            <Table size={16} /> <span className="text-xs font-mono tracking-widest">{t.index}</span>
+        </button>
+    </div>
 
-  return (
-    <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
-        <div className="fixed top-6 left-6 z-50 flex gap-4">
-            <button onClick={onBack} className="flex items-center space-x-2 text-stone-500 hover:text-amber-500 transition-colors bg-black/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
-                <ArrowLeft size={16} /> <span className="text-xs font-mono tracking-widest">HOME</span>
-            </button>
-        </div>
-        
-        <div className="fixed top-6 right-6 z-50">
-            <button onClick={onShowIndex} className="flex items-center space-x-2 text-amber-500 hover:text-white transition-colors bg-amber-900/20 hover:bg-amber-900/40 px-4 py-2 rounded-full backdrop-blur-md border border-amber-500/20">
-                <Table size={16} /> <span className="text-xs font-mono tracking-widest">MODULE INDEX</span>
-            </button>
-        </div>
-
-        <div className="max-w-6xl mx-auto mt-20 space-y-20 pb-20">
-            <div className="text-center space-y-2 mb-16">
-                <h2 className="text-3xl font-serif text-amber-600">System Architecture</h2>
-                <p className="text-xs font-mono text-stone-500 uppercase tracking-widest">THE LEGACY SERIES • 2026-2027</p>
-            </div>
-            
-            {SECTIONS.map((section) => (
-                <div key={section.id} className="space-y-6">
-                    <div className="flex items-center gap-4">
-                        <div className="h-px bg-stone-800 flex-grow"></div>
-                        <h3 className="text-lg font-serif text-stone-400 uppercase tracking-widest">{section.title}</h3>
-                        <div className="h-px bg-stone-800 flex-grow"></div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {groupedBooks[section.id]?.map((book) => {
-                            const bookProgress = progressData[book.id] || { current: 0, total: 1 };
-                            const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
-                            const isStarted = progressData[book.id] !== undefined;
-                            
-                            return (
-                                <button key={book.id} onClick={() => onSelectBook(book)} className="group flex flex-col text-left space-y-3 relative">
-                                    <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
-                                        <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between"; e.target.parentNode.innerHTML = `<div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div><div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>`; }} />
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
-                                        {isStarted && <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800"><div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div></div>}
-                                    </div>
-                                    <div>
-                                        <div className="flex justify-between items-start">
-                                            <h3 className="text-sm font-bold text-stone-300 group-hover:text-white font-serif leading-tight">{book.title}</h3>
-                                        </div>
-                                        <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1 line-clamp-1">{book.subtitle}</p>
-                                        <p className="text-[9px] text-stone-600 font-mono mt-2">RELEASE: {book.releaseDate}</p>
-                                    </div>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            ))}
-        </div>
-  </div>
-  );
-};
-
-const DedicationView = ({ onBack }) => (
-  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
-    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
-    <div className="max-w-2xl w-full mx-auto space-y-12 py-12">
-      <h2 className="text-3xl font-serif text-amber-600 text-center tracking-wide border-b border-stone-800 pb-6 mb-8">Dedication</h2>
-      <div className="grid grid-cols-1 gap-8">
-        {DEDICATIONS.map((item, index) => (
-          <div key={index} className="space-y-4 text-center">
-            <h3 className="text-xl font-bold text-stone-200 font-serif">{item.title}</h3>
-            <div className="text-stone-400 font-serif leading-relaxed italic text-sm md:text-base px-4" dangerouslySetInnerHTML={{ __html: item.content }} />
-            {index < DEDICATIONS.length - 1 && <div className="w-12 h-px bg-stone-800 mx-auto mt-8 opacity-50"></div>}
-          </div>
-        ))}
+    <div className="max-w-6xl mx-auto mt-20 space-y-20 pb-20">
+      <div className="text-center space-y-2 mb-16">
+        <h2 className="text-3xl font-serif text-amber-600">The Legacy Series</h2>
+        <p className="text-xs font-mono text-stone-500 uppercase tracking-widest">SYSTEM ARCHITECTURE</p>
       </div>
-      <div className="text-center pt-12"><p className="text-[10px] font-mono text-stone-600 uppercase tracking-widest">FROM THE LEGACY OS MASTER MAP</p></div>
+      
+      {SECTIONS.map((section) => {
+        // Group books
+        const sectionBooks = CONFIG.library.filter(b => b.section === section.id);
+        if (sectionBooks.length === 0) return null;
+
+        return (
+            <div key={section.id} className="space-y-6">
+                <div className="flex items-center gap-4">
+                    <div className="h-px bg-stone-800 flex-grow"></div>
+                    <h3 className="text-lg font-serif text-stone-400 uppercase tracking-widest">{section.title}</h3>
+                    <div className="h-px bg-stone-800 flex-grow"></div>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    {sectionBooks.map((book) => {
+                        const bookProgress = progressData[book.id] || { current: 0, total: 1 };
+                        const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
+                        const isStarted = progressData[book.id] !== undefined;
+                        
+                        return (
+                            <button key={book.id} onClick={() => onSelectBook(book)} className="group flex flex-col text-left space-y-3 relative">
+                                <div className="aspect-[2/3] w-full bg-zinc-900 border border-stone-800 rounded-sm relative overflow-hidden group-hover:border-amber-600/50 transition-all shadow-lg group-hover:shadow-amber-900/10">
+                                    <img src={book.cover} alt={book.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " bg-gradient-to-br from-zinc-800 to-black p-4 flex flex-col justify-between"; e.target.parentNode.innerHTML = `<div class="text-[10px] font-mono text-stone-500 border border-stone-700 w-fit px-2 py-1 rounded">${String(book.id).padStart(2, '0')}</div><div class="w-8 h-8 rounded-full border border-stone-600 mb-2 flex items-center justify-center text-stone-600">L</div>`; }} />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
+                                    {isStarted && <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800"><div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div></div>}
+                                </div>
+                                <div>
+                                    <div className="flex justify-between items-start">
+                                        <h3 className="text-sm font-bold text-stone-300 group-hover:text-white font-serif leading-tight">{book.title}</h3>
+                                    </div>
+                                    <p className="text-[10px] text-stone-500 uppercase tracking-wider mt-1 line-clamp-1">{book.subtitle}</p>
+                                    <p className="text-[9px] text-stone-600 font-mono mt-2">RELEASE: {book.releaseDate}</p>
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+      })}
     </div>
   </div>
 );
 
-const ProfileOptions = ({ onBack, onShowDedications }) => (
+const DedicationView = ({ onBack, t, lang }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-2xl w-full mx-auto space-y-12 py-12">
+      <h2 className="text-3xl font-serif text-amber-600 text-center tracking-wide border-b border-stone-800 pb-6 mb-8">{t.dedicationTitle}</h2>
+      <div className="grid grid-cols-1 gap-8">
+        {DEDICATIONS_CONTENT[lang].map((item, index) => (
+          <div key={index} className="space-y-4 text-center">
+            <h3 className="text-xl font-bold text-stone-200 font-serif">{item.title}</h3>
+            <div className="text-stone-400 font-serif leading-relaxed italic text-sm md:text-base px-4" dangerouslySetInnerHTML={{ __html: item.content }} />
+            {index < DEDICATIONS_CONTENT[lang].length - 1 && <div className="w-12 h-px bg-stone-800 mx-auto mt-8 opacity-50"></div>}
+          </div>
+        ))}
+      </div>
+      <div className="text-center pt-12"><p className="text-[10px] font-mono text-stone-600 uppercase tracking-widest">{t.fromMasterMap}</p></div>
+    </div>
+  </div>
+);
+
+const ProfileOptions = ({ onBack, onShowDedications, t }) => (
   <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative">
     <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
     <div className="max-w-md w-full space-y-8 animate-slide-up text-center">
       <div className="w-24 h-24 mx-auto bg-zinc-900 rounded-full border border-amber-600/30 flex items-center justify-center mb-8"><User size={40} className="text-amber-600" /></div>
-      <h2 className="text-3xl font-serif text-stone-200">The Architect</h2>
-      <p className="text-stone-500 text-sm leading-relaxed px-4">Access the professional profile, download the legacy dossier, or view dedications.</p>
+      <h2 className="text-3xl font-serif text-stone-200">{t.authorTitle}</h2>
+      <p className="text-stone-500 text-sm leading-relaxed px-4">{t.authorDesc}</p>
       <div className="space-y-4 pt-8">
-        <a href={CONFIG.authorWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">LEGACY ARCHITECT</span><ExternalLink size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
-        <a href={CONFIG.profilePdfPath} download className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">DOWNLOAD PROFILE</span><Download size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <a href={CONFIG.authorWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.visitWebsite}</span><ExternalLink size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <a href={CONFIG.profilePdfPath} download className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.downloadProfile}</span><Download size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
         <button onClick={onShowDedications} className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group">
-          <span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">READ DEDICATIONS</span>
+          <span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.readDedications}</span>
           <FileText size={18} className="text-stone-600 group-hover:text-amber-500" />
         </button>
       </div>
@@ -549,7 +638,94 @@ const ProfileOptions = ({ onBack, onShowDedications }) => (
   </div>
 );
 
-const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => {
+// --- NEW MODAL: FORMAT SELECTION ---
+const FormatSelectionModal = ({ onClose, onSelect, t }) => (
+  <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
+    <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
+    <div className="max-w-lg w-full space-y-12 text-center">
+        <h2 className="text-3xl font-serif text-amber-500">{t.selectLang}</h2>
+        <div className="grid grid-cols-2 gap-8">
+            <button onClick={() => onSelect('read')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <BookOpen size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.read}</span>
+            </button>
+            <button onClick={() => onSelect('listen')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <Headphones size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.listen}</span>
+            </button>
+        </div>
+    </div>
+  </div>
+);
+
+// --- NEW AUDIO PLAYER VIEW ---
+const AudioPlayerView = ({ bookData, onBack, language }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const audioRef = useRef(null);
+    const [error, setError] = useState(false);
+
+    // Determine filename based on ID and Language
+    // Format: /audio-{id}-{lang}.mp3
+    // E.g. /audio-1-en.mp3
+    const audioFile = `/audio-${bookData.id}-${language}.mp3`;
+
+    const togglePlay = () => {
+        if (isPlaying) audioRef.current.pause();
+        else audioRef.current.play();
+        setIsPlaying(!isPlaying);
+    };
+
+    return (
+        <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in text-stone-300">
+            <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white flex items-center gap-2"><ArrowLeft size={20} /></button>
+            
+            <div className="max-w-md w-full space-y-8 text-center">
+                <div className="relative aspect-square w-64 mx-auto rounded-lg overflow-hidden border border-stone-800 shadow-2xl">
+                    <img src={bookData.cover} alt="Cover" className="w-full h-full object-cover opacity-80" />
+                    {/* Vinyl Effect */}
+                    <div className={`absolute inset-0 bg-black/20 rounded-full m-4 border-2 border-white/10 ${isPlaying ? 'animate-spin-slow' : ''}`}></div>
+                </div>
+
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-serif text-white">{bookData.title}</h2>
+                    <p className="text-xs font-mono text-amber-600 uppercase tracking-widest">{bookData.subtitle}</p>
+                    <p className="text-xs text-stone-500 mt-2 uppercase">{language === 'en' ? 'English Audio' : 'Malayalam Audio'}</p>
+                </div>
+
+                {error ? (
+                    <div className="p-4 bg-red-900/20 border border-red-900/50 rounded text-red-400 text-xs">
+                        Audio file missing: {audioFile}<br/>Please upload to public folder.
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center gap-8">
+                        <button className="text-stone-500 hover:text-white"><SkipBack size={24} /></button>
+                        <button onClick={togglePlay} className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors shadow-xl">
+                            {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+                        </button>
+                        <button className="text-stone-500 hover:text-white"><SkipForward size={24} /></button>
+                    </div>
+                )}
+                
+                <audio 
+                    ref={audioRef} 
+                    src={audioFile} 
+                    onError={() => setError(true)}
+                    onEnded={() => setIsPlaying(false)}
+                />
+            </div>
+             <style>{`
+                .animate-spin-slow { animation: spin 10s linear infinite; }
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            `}</style>
+        </div>
+    );
+};
+
+const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, language, t }) => {
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(initialProgress || 0);
@@ -557,7 +733,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
   const [fontSize, setFontSize] = useState(19);
   const [showControls, setShowControls] = useState(false);
   const [showTOC, setShowTOC] = useState(false);
-  const [language, setLanguage] = useState('en');
   const [zenMode, setZenMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -566,24 +741,47 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate }) => 
     async function loadContent() {
       setLoading(true);
       try {
-        let filePath = bookData.file;
-        if (language === 'ml') filePath = filePath.replace('.md', '-ml.md');
-        const fetchUrl = `${filePath}?t=${Date.now()}`;
-        const response = await fetch(fetchUrl);
-        if (!response.ok) throw new Error(`Status: ${response.status}`);
+        const baseName = `/book-${bookData.id}`;
+        const targetFile = `${baseName}-${language}.md`;
+        
+        let response = await fetch(`${targetFile}?t=${Date.now()}`);
+        
+        // Fallback to English if specific language file is missing AND user is in English mode, 
+        // OR fallback to English if user is in ML mode but ML file is missing (with disclaimer)
+        if (!response.ok) {
+             response = await fetch(`${baseName}-en.md?t=${Date.now()}`);
+             // If book-X-en.md doesn't exist, try legacy /book-X.md
+             if(!response.ok) response = await fetch(`${bookData.file}?t=${Date.now()}`);
+        }
+
+        if (!response.ok) throw new Error("File not found");
+        
         const text = await response.text();
-        const parsed = parseMarkdown(text);
+        let parsed = parseMarkdown(text);
+        
+        // Inject Disclaimer if language is ML but loaded English content (implied by fallback logic)
+        // Note: Ideally we check if we loaded the specific targetFile. 
+        // For simplicity here, if language is 'ml' we assume we might be showing fallback if we are here.
+        // A better way is to check response.url but that can be tricky with redirects.
+        // We will just prepend the disclaimer if language is ML, assuming English fallback happened if we are still alive.
+        // Actually, let's keep it simple: If language is ML, prepend disclaimer.
+        if (language === 'ml' && t.originalNote) {
+            if (parsed.length > 0) {
+                 parsed[0].content = `<div class="p-4 mb-8 bg-amber-900/20 border border-amber-600/30 rounded text-amber-500 text-xs font-mono">${t.originalNote}</div>` + parsed[0].content;
+            }
+        }
+
         if (parsed.length > 0) setChapters(parsed);
-        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file <strong>${filePath}</strong> was found but appears to be empty or has no '#' headers.</p>` }]);
+        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file was found but appears empty.</p>` }]);
+
       } catch (err) {
-        if (language === 'ml') setChapters([{ id: 0, title: "Coming soon..", subtitle: "Language", content: "<p>Malayalam version coming soon.</p>" }]);
-        else setChapters([{ id: 0, title: "Coming soon..", subtitle: "Content", content: `<p>The content for <strong>${bookData.title}</strong> is coming soon.</p>` }]);
+         setChapters([{ id: 0, title: t.contentMissing, subtitle: "404", content: `<p>${t.contentMissing}</p>` }]);
       } finally {
         setLoading(false);
       }
     }
     loadContent();
-  }, [bookData, language]);
+  }, [bookData, language, t]);
 
   useEffect(() => {
     if (chapters.length > 0) onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
@@ -715,6 +913,7 @@ export default function TheLegacyReader() {
   const [progressData, setProgressData] = useState({});
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [lang, setLang] = useState('en'); // Global Language State
 
   useEffect(() => {
     const saved = localStorage.getItem('legacy_os_progress');
@@ -733,8 +932,27 @@ export default function TheLegacyReader() {
   const goAudio = () => setView('audio');
   const goReviews = () => setView('reviews');
   const goDedications = () => setView('dedications');
-  const goIndex = () => setView('index'); // New Nav function
-  const openBook = (book) => { setSelectedBook(book); setView('reader'); };
+  const goIndex = () => setView('index');
+
+  // Trigger Format Modal when book is clicked
+  const onBookClick = (book) => {
+    setFormatModal(book);
+  };
+
+  // Handle Format Selection
+  const handleFormatSelect = (format) => {
+     if (format === 'read') {
+         setSelectedBook(formatModal);
+         setView('reader');
+     } else if (format === 'listen') {
+         setSelectedBook(formatModal);
+         setView('audio_player'); // New view for specific audio book
+     }
+     setFormatModal(null);
+  };
+
+  const [formatModal, setFormatModal] = useState(null); 
+  const t = CONFIG.translations[lang] || CONFIG.translations['en'];
 
   return (
     <>
@@ -744,21 +962,37 @@ export default function TheLegacyReader() {
           onEnterProfile={goProfile} 
           onEnterAudio={goAudio}
           onEnterReviews={goReviews}
-          onShowInstall={() => setShowInstallGuide(true)} 
+          onShowInstall={() => setShowInstallGuide(true)}
+          t={t}
+          lang={lang}
+          setLang={setLang}
         />
       )}
       
       {showInstallGuide && <InstallGuide onClose={() => setShowInstallGuide(false)} />}
       {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
-
-      {view === 'gallery' && <LibraryGrid onSelectBook={openBook} onBack={goHome} progressData={progressData} onShowIndex={goIndex} />}
-      {view === 'profile' && <ProfileOptions onBack={goHome} onShowDedications={goDedications} />}
-      {view === 'dedications' && <DedicationView onBack={goProfile} />}
       
-      {/* Module Index View */}
-      {view === 'index' && <ModuleIndexView onBack={goGallery} />}
+      {/* Format Selection Modal */}
+      {formatModal && (
+          <FormatSelectionModal 
+            onClose={() => setFormatModal(null)} 
+            onSelect={handleFormatSelect} 
+            t={t}
+          />
+      )}
 
+      {view === 'gallery' && <LibraryGrid onSelectBook={onBookClick} onBack={goHome} progressData={progressData} onShowIndex={goIndex} t={t} />}
+      {view === 'profile' && <ProfileOptions onBack={goHome} onShowDedications={goDedications} t={t} />}
+      {view === 'dedications' && <DedicationView onBack={goProfile} t={t} lang={lang} />}
+      
+      {view === 'index' && <ModuleIndexView onBack={goGallery} t={t} />}
+
+      {/* Global Audio Archive (from Landing) */}
       {view === 'audio' && <AudioView onBack={goHome} />}
+      
+      {/* Specific Audio Book Player (from Library) */}
+      {view === 'audio_player' && selectedBook && <AudioPlayerView bookData={selectedBook} onBack={goGallery} language={lang} />}
+
       {view === 'reviews' && <ReviewsView onBack={goHome} onReviewClick={() => setShowReviewModal(true)} />}
 
       {view === 'reader' && selectedBook && (
@@ -767,6 +1001,8 @@ export default function TheLegacyReader() {
           onBack={goGallery} 
           initialProgress={progressData[selectedBook.id]?.current || 0}
           onProgressUpdate={updateProgress}
+          language={lang}
+          t={t}
         />
       )}
       <style>{`
