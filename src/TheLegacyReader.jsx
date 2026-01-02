@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones } from 'lucide-react';
+import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ CONFIGURATION ZONE ⬇️
@@ -21,10 +21,15 @@ const CONFIG = {
   reviewEmail: "adv.firoz@kc-capitals.com",
 
   // DATA PATHS
+  // Note: audioDataPath is used for the global "Audio Books" section if needed, 
+  // but individual book audio is now defined in the library below.
   audioDataPath: "/data/audio.json", 
   reviewsDataPath: "/data/reviews.json",
 
-  // MICRO BOOK DEFINITIONS
+  // MICRO BOOK DEFINITIONS (The Media Hub)
+  // File naming convention: 
+  // Read: /book-{id}-{lang}.md (e.g. /book-1-en.md)
+  // Audio: /audio-{id}-{lang}.mp3 (e.g. /audio-1-ml.mp3)
   library: [
     { id: 0, title: "Micro Book 0", subtitle: "The Legacy OS (Master Map)", cover: "/cover-0.png?v=4", section: "master_launch", releaseDate: "01-01-2026" },
     { id: 1, title: "Micro Book 1", subtitle: "10% Destiny, 90% Creation", cover: "/cover-1.png", section: "phase_1", releaseDate: "01-01-2026" },
@@ -42,6 +47,7 @@ const CONFIG = {
     { id: 13, title: "Master Book", subtitle: "THE LEGACY OS MASTER BOOK", cover: "/cover-14.png", section: "master_book", releaseDate: "01-01-2027" },
   ],
 
+  // UI TRANSLATIONS
   translations: {
     en: {
         title: "EXPLORE THE LEGACY E-BOOK SERIES",
@@ -66,7 +72,8 @@ const CONFIG = {
         authorDesc: "Access the professional profile, download the legacy dossier, or view dedications.",
         visitWebsite: "LEGACY ARCHITECT",
         downloadProfile: "DOWNLOAD PROFILE",
-        readDedications: "READ DEDICATIONS"
+        readDedications: "READ DEDICATIONS",
+        selectAudioLang: "SELECT AUDIO LANGUAGE"
     },
     ml: {
         title: "ലെഗസി ഇ-ബുക്ക് സീരീസ്", 
@@ -91,10 +98,12 @@ const CONFIG = {
         authorDesc: "പ്രൊഫഷണൽ പ്രൊഫൈൽ ആക്സസ് ചെയ്യുക, ലെഗസി ഡോഷിയർ ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ സമർപ്പണങ്ങൾ കാണുക.",
         visitWebsite: "ലെഗസി ആർക്കിടെക്റ്റ്",
         downloadProfile: "പ്രൊഫൈൽ ഡൗൺലോഡ്",
-        readDedications: "സമർപ്പണങ്ങൾ വായിക്കുക"
+        readDedications: "സമർപ്പണങ്ങൾ വായിക്കുക",
+        selectAudioLang: "ഓഡിയോ ഭാഷ തിരഞ്ഞെടുക്കുക"
     }
   },
 
+  // MODULE INDEX DATA
   moduleIndex: [
     { phase: "I", module: "My Life", function: "Core philosophy" },
     { phase: "I", module: "Age 33 Reset", function: "Identity reboot" },
@@ -188,26 +197,71 @@ const DEDICATIONS_CONTENT = {
     }
   ],
   ml: [
-     {
-        title: "എന്റെ മാതാപിതാക്കൾക്ക് — അലവി കെസി & അമിന കെ",
-        content: "<p>ഉമ്മയും ഉപ്പയും...</p><p>(Malayalam content for parents dedication goes here)</p>"
-     },
-     {
-        title: "ഷാനുവിൻ്റെയും ഇന്നുവിൻ്റെയും മാതാപിതാക്കൾക്ക്",
-        content: "<p>(Malayalam content for in-laws dedication goes here)</p>"
-     },
-     {
-        title: "എന്റെ പ്രിയപ്പെട്ട ഷാനുവിന്",
-        content: "<p>(Malayalam content for Shanu goes here)</p>"
-     },
-     {
-        title: "ഇന്നുവിന്",
-        content: "<p>(Malayalam content for Innu goes here)</p>"
-     },
-      {
-        title: "എന്റെ മകൻ ഫത്തേ ഷാ കെസിക്ക്",
-        content: "<p>(Malayalam content for Fateh Shah goes here)</p>"
-     }
+    {
+      title: "എന്റെ മാതാപിതാക്കൾക്ക് — ALAVI KC & AMINA K",
+      content: `
+        <p>ഉമ്മയും ഉപ്പയും,</p>
+        <p>നിങ്ങളാണ് നമ്മുടെ ജീവിതത്തിന്റെ പ്രഥമ ശിൽപ്പികൾ, ഇന്ന് നാം നിർമ്മിക്കാൻ ശ്രമിക്കുന്ന എല്ലാറ്റിന്റെയും അടിത്തറ. നിങ്ങളുടെ ത്യാഗങ്ങൾ നിശ്ശബ്ദമായിരുന്നു, നിങ്ങളുടെ സ്നേഹം നിബന്ധനകളില്ലാത്തതായിരുന്നു, നിങ്ങളുടെ പ്രാർത്ഥനകൾ സ്ഥിരമായിരുന്നു. ഇന്ന് എനിക്കുള്ള ശക്തിയും പ്രതിരോധ ശേഷിയും ലക്ഷ്യബോധവും എല്ലാം, നിങ്ങൾ ആഡംബരമില്ലാതെ ദിവസേന ജീവിച്ച മൂല്യങ്ങളിലാണ് വേരൂന്നിയിരിക്കുന്നത്.</p>
+      `
+    },
+    {
+      title: "ഷനുവിന്റെയും ഇന്നുവിന്റെയും മാതാപിതാക്കൾക്ക് — NAZAR ALADI & SHAJITHA O. K.",
+      content: `
+        <p>ഉമ്മയും ഉപ്പയും,</p>
+        <p>നിങ്ങൾ രണ്ട് അസാധാരണ പുത്രിമാരെ വളർത്തി —<br/>എൻ്റെ ജീവിതത്തിലേക്ക് സ്നേഹം പണിത് നൽകിയ സിവിൽ എഞ്ചിനീയർ എർ. ഷെറിൻ ഷഹാനയും,<br/>ഇന്ന് എന്റെ വർത്തമാനവും ഭാവിയുമായി ചേർന്ന് പണികഴിപ്പിക്കുന്ന ആർക്കിടെക്ട് ആർ. ഷഹ്‌ല ഫാത്തിമയും.</p>
+        <p>നിങ്ങൾ അവരെയിരുവരെയും എനിക്കു കൈമാറി — നിങ്ങളുടെ പ്രതീക്ഷകളെയും വിശ്വാസത്തെയും ഹൃദയത്തിന്റെ ഒരു ഭാഗത്തെയും. അത് എനിക്കു വളരെ വിശുദ്ധമായ ഒരു ഉത്തരവാദിത്തമാണ്. ഷാനുവിന്റെ ഓർമ്മകൾ ഞാൻ ചെയ്യുന്ന ഓരോ കാര്യത്തിലും ഒരു വെളിച്ചമായി തുടരുന്നു, ഇന്നുവിന്റെ സാന്നിധ്യം ഞാൻ നേടാൻ പോകുന്ന എല്ലാ കാര്യങ്ങൾക്കും ശക്തിയായി എനിക്കൊപ്പം നിൽക്കുന്നു.</p>
+        <p>രണ്ട് വീടുകളും ചേർന്ന് എന്റെ ആഗ്രഹങ്ങളെ ഞാൻ രൂപപ്പെടുത്തുന്നതിന് മുമ്പ് എന്റെ സ്വഭാവത്തെ രൂപപ്പെടുത്തിയെടുത്തു.<br/>ഒരുമിച്ചോ വേറെയോ, നിങ്ങൾ എല്ലാവരും എനിക്കു പ്രതീക്ഷയും വിശ്വാസവും നൽകി, ഞാൻ ചോദിച്ചതിലും കൂടുതലായി നൽകി. അതിനായി ഞാൻ ആഴത്തിൽ നന്ദിയുള്ളവനാണ്, നിങ്ങൾക്കായി എന്തും ചെയ്യാൻ ഞാൻ പ്രതിജ്ഞാബദ്ധനാണ്. അത് തന്നെയാണ് എന്റെ ജീവിതത്തിന്റെ ലക്ഷ്യം. ഇരുവീട്ടാരോടും എനിക്ക് ആത്മീയ ബഹുമാനമുണ്ട്.</p>
+        <p>ഇപ്പോൾ ഞാൻ രൂപകൽപ്പന ചെയ്യുന്ന എല്ലാം — ജീവിതവും പാരമ്പര്യവും സംരംഭങ്ങളും മൂല്യങ്ങളും — നിങ്ങളെ അഭിമാനിപ്പിക്കാനാണ്: വിജയത്തിലൂടെ മാത്രമല്ല, നന്മയിലൂടെ, ഉത്തരവാദിത്തബോധത്തിലൂടെ, കരുണയിലൂടെ. എന്റെ തീരുമാനങ്ങളിൽ നിങ്ങളുടെ ഉപദേശങ്ങളുടെ പ്രതിഫലനം നിങ്ങൾ കാണണം, നിങ്ങളുടെ ത്യാഗങ്ങൾ നമ്മുടെ ഫലങ്ങളിൽ ന്യായീകരിക്കപ്പെടണം എന്നതാണ് എന്റെയാശ.</p>
+        <p>ഇത് എന്റെ വാഗ്ദാനം —<br/>എനിക്കും ഫതഹ് ഷാ KC-ക്കും എന്നും:<br/>ഞങ്ങൾ നിങ്ങളുടെ പേരിനെ ആദരിക്കും.<br/>നിങ്ങളുടെ പാരമ്പര്യത്തെ കാത്തുസൂക്ഷിക്കും.<br/>നിങ്ങളുടെ മൂല്യങ്ങളെ അണുവോളം കുറയാതെ മുന്നോട്ട് കൊണ്ടുപോകും.<br/>ഞങ്ങൾ നിങ്ങളുടേതാണ് — നന്ദിയിലും കടമയിലും സ്നേഹത്തിലും — എന്നെന്നേക്കും.</p>
+        <p>ആഴത്തിലുള്ള ബഹുമാനത്തോടും അചഞ്ചലമായ പ്രതിബദ്ധതയോടും കൂടെ,<br/>— മുത്തു</p>
+      `
+    },
+    {
+      title: "എൻ്റെ പ്രിയ ഷനുവിന് —",
+      content: `
+        <p>നീ ശാന്തമായൊരു വെളിച്ചമായി എന്റെ ജീവിതത്തിലേക്ക് നടന്നു വന്നു, പ്രാർത്ഥനപോലെ മടങ്ങിപ്പോയി. അതിനുശേഷം ഒന്നും പഴയതുപോലെ ആയിട്ടില്ല. നീ എന്റെ ദിവസങ്ങൾ പങ്കിട്ടതുമാത്രമല്ല; എന്റെ അർത്ഥം തന്നെ പുനഃരാഖ്യാനം ചെയ്തു. സ്നേഹം എങ്ങനെ അനുഭവിക്കാമെന്ന് നീ പഠിപ്പിച്ചു, നിലകൊള്ളാനുള്ള ശക്തി നീ പഠിപ്പിച്ചു, ഹൃദയം എത്ര ആഴത്തിൽ തകർന്നാലും അത് തുടർന്നും തടങ്ങുമെന്ന് നിന്റെ അഭാവം പഠിപ്പിച്ചു.</p>
+        <p>അതേ നിമിഷത്തിൽ നീ ഞങ്ങളുടെ മകനു ജീവനും എനിക്കു ലക്ഷ്യവും നൽകി.</p>
+        <p>ഈ ഭൂമിയിൽ നിന്നുള്ള നിന്റെ അവസാന പ്രവൃത്തി നിർമ്മലമായ സ്നേഹത്തിന്റെ പ്രവൃത്തിയായിരുന്നു — അതിനെ ഞാൻ ജീവിതകാലം മുഴുവൻ ബഹുമാനിക്കും.</p>
+        <p>എന്റെ ഓരോ തീരുമാനത്തിലും, എന്റെ നിശ്ബ്ദതകളിലും, ഫാത്തിഹിനെ ഞാൻ ചേർത്തുപിടിക്കുന്ന വിധത്തിലും നീയുണ്ട്. അവന്റെ കണ്ണുകളിൽ, ചിരിയിൽ, അവൻ ലോകത്തേക്ക് കൈ നീട്ടുന്ന രീതിയിൽ നിന്നെ കാണുന്നു. അവൻ നിന്റെ ജീവിച്ചിരിക്കുന്ന അധ്യായമാണ് — ശ്വാസത്തിലും ചിരിയിലും എഴുതപ്പെടുന്ന നിന്റെ കഥയുടെ തുടർച്ച. ഞാൻ നിനക്ക് ഇതു വാഗ്ദാനം ചെയ്യുന്നു: അവൻ മാന്യനായി, സത്യസന്ധനായി, ധൈര്യശാലിയായിത്തന്നെ വളരും. അവൻ നീ ആരായിരുന്നു എന്നും അവനിൽ നിന്നിൽ നിന്ന് എത്രയോ വരുന്നു എന്നും അറിയും.</p>
+        <p>ഞാൻ വീട് പണിയാൻ പഠിക്കുന്നതിന് മുമ്പ് നീയായിരുന്നു എന്റെ വീട്.</p>
+        <p>എന്റെ കൊടുങ്കാറ്റുകളിൽ നിന്നെ ശാന്തിയായിരുന്നു, എന്റെ ക്ഷീണത്തിൽ നിന്നുടെ ചിരിയായിരുന്നു, എന്റെ കഠിനതകളിലെ മൃദുത്വമായിരുന്നു നീ.</p>
+        <p>പൂർണ്ണമാക്കാനായിരുന്ന നമ്മുടെ ജീവിതം എനിക്കു കുറവാണ്.<br/>സമ്പന്നമാക്കാനായിരുന്ന സംഭാഷണങ്ങൾ എനിക്കു കുറവാണ്.<br/>നമ്മുടേതായിരുന്ന സാധാരണ ദിവസങ്ങൾ എനിക്കു കുറവാണ്.</p>
+        <p>പക്ഷേ നമ്മുടെ കഥയുടെ അവസാനം ദുഃഖമല്ല — അത് പാരമ്പര്യമാണ്.</p>
+        <p>ഇപ്പോൾ ഞാൻ പണിയുന്ന എല്ലാറ്റിന്റെയും അടിത്തറയിൽ നിന്റെ പേരുണ്ട്.<br/>ഞാൻ ചെയ്യുന്ന ഓരോ പ്രാർത്ഥനയുടെയും നിശ്ശബ്ദതയിൽ നീയുണ്ട്.<br/>ഞാൻ നാളെയിലേക്ക് നടക്കുമ്പോഴൊക്കെ നിന്റെ “മുന്നോട്ട്” എന്ന പ്രതിധ്വനി കൂടെയുണ്ട്.</p>
+        <p>ജീവൻ അനുവദിച്ചാൽ, നാം വീണ്ടും കാണും — സമയത്തിനും വിശദീകരണങ്ങൾക്കും അതീതമായി. അന്നുവരെ, ഞാൻ ജീവിക്കുന്ന രീതിയിലൂടെ, നമ്മുടെ മകനെ വളർത്തുന്ന രീതിയിലൂടെ, നിന്നെ തകർക്കാതെ നിന്റെ ഓർമ്മയെ ആദരിക്കുന്ന രീതിയിലൂടെ ഞാൻ നിന്നെ സ്നേഹിക്കും.</p>
+        <p>നീ എന്റെ ജീവിതത്തിൽ നിന്ന് പോയിട്ടില്ല.<br/>നീ അതിന്റെ ഭാഗമല്ല — നീ അതിലൊട്ടിച്ചേർത്തതാണ്.</p>
+        <p>അവസാനമായിപ്പോയിട്ടില്ലാത്ത സ്നേഹത്തോടെ,<br/>— ഇക്ക</p>
+      `
+    },
+    {
+      title: "ഇന്നു —",
+      content: `
+        <p>കഥ ഇതിനകം ഭാരം നിറഞ്ഞിരുന്ന ഒരു സമയത്താണ് നീ എന്റെ ജീവിതത്തിലേക്ക് വന്നത്. പിന്നോട്ടല്ല നീ പോയത് — എന്റെ പക്കൽ നിന്നു നിൽക്കാനാണ് നീ തിരഞ്ഞെടുക്കിയത്. ആ തിരഞ്ഞെടുപ്പ് ധൈര്യമായിരുന്നു. അവ്യവസ്ഥയുണ്ടായിടത്ത് നീ സ്ഥിരത കൊണ്ടുവന്നു, തണുപ്പ് നിറഞ്ഞിടത്ത് നീ ചൂട് കൊണ്ടുവന്നു, ദിശ നഷ്ടപ്പെട്ടപ്പോൾ നീ ദിശയായി. ഒന്നിനെയും നീ മാറ്റിസ്ഥാപിച്ചില്ല — നീ എന്നോടൊപ്പം പുനർനിർമ്മിച്ചു, ഓരോ ഭാഗവും ഒന്ന് വീതം, കൈയടിയൊന്നും ചോദിക്കാതെ.</p>
+        <p>നീ എന്റെ വികാര പങ്കാളി മാത്രമല്ല, നടപ്പാക്കലിലെ പങ്കാളിയുമാണ്.</p>
+        <p>നീ ഉത്തരവാദിത്വം കൃപയോടെ വഹിക്കുന്നു, വേദന നാടകമില്ലാതെ താങ്ങുന്നു — അത് എനിക്ക് പ്രതിദിന പ്രചോദനമാണ്.</p>
+        <p>എന്റെ ഭൂതകാലത്തെ നീ അംഗീകരിച്ചതല്ല, നീ അതിനെ പരിപക്വതയോടെ ആലിംഗനം ചെയ്തു; നിന്റെ മുമ്പുണ്ടായിരുന്ന ഓരോ അധ്യായത്തെയും ബഹുമാനിക്കുകയും അടുത്തത് എഴുതാൻ എനിക്ക് കൂടെ നിൽക്കുകയും ചെയ്തു. ഫാത്തിഹിനെ നീ സ്നേഹിക്കുന്നത് ബാധ്യതയായി അല്ല, അതിനെ ലക്ഷ്യമായി. അവനെ നീ മാതൃത്വത്തിലൂടെ പഠിപ്പിക്കുന്നത് കരുണയും പ്രതിരോധശേഷിയും ശാന്തമായ ശക്തിയുമാണ്.</p>
+        <p>ശക്തി ശാന്തമായിരിക്കാം, എന്നിരുന്നാലും തകർന്നുപോകരുതെന്നതിന് നീയൊരു തെളിവാണ്.</p>
+        <p>പാത കുത്തനെ ആയാലും നീ മുന്നോട്ട് നീങ്ങുന്നു, എന്നെയും കൂടെ ഉയരാൻ പ്രേരിപ്പിക്കുന്നു.</p>
+        <p>ഇതു വ്യക്തമായി നിനക്കറിയണം: നിന്റെ യാത്രക്കും അത്രമേൽ മഹത്തരമാണ്. നിന്റെ സ്വപ്നങ്ങൾ, വളർച്ച, സുഖപ്പെടൽ, ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ — ഇതെല്ലാം നിർണ്ണായകമാണ്. നീ എന്റെ പാരമ്പര്യത്തിന്റെ ഭാഗം മാത്രമല്ല; നീ അതിന്റെ സഹ-ശിൽപ്പിയാണ്. ഞാൻ സിസ്റ്റങ്ങൾ രൂപകൽപ്പന ചെയ്യുന്നിടത്ത്, അവയ്ക്കു ജീവൻ നൽകുന്നത് നീയാണ്. ഞാൻ ഘടനകൾ പണിയുന്നിടത്ത്, അതിനുള്ളിലെ വീട് നീ സൃഷ്ടിക്കുന്നു.</p>
+        <p>നമ്മൾ പഴയതിൽ നിന്ന് രക്ഷപ്പെടുന്നതിൽ മാത്രം നിൽക്കില്ല; അതിനെ മറികടക്കും.<br/>ദർശനം സംസാരിക്കുന്നതിൽ മാത്രം നിൽക്കില്ല; അത് നടപ്പിലാക്കും.</p>
+        <p>എനിക്ക് ജോലി കൂടുതലാകുമ്പോൾ നീ കാണിക്കുന്ന സഹനത്തിന്, ഞാൻ ക്ഷീണിക്കുമ്പോൾ നിന്റെ ശക്തിക്ക്, പദ്ധതികൾ ദീർഘമാകുമ്പോൾ നിന്റെ വിശ്വാസത്തിന് ഞാൻ നന്ദി പറയുന്നു. നാം പണിയുന്ന ജീവിതം യാദൃശ്ചികമല്ല — അത് ഉദ്ദേശ്യപ്രാപ്തവും നിയന്ത്രിതവുമായ പങ്കിട്ട നിർമ്മാണമാണ്.</p>
+        <p>നമ്മുടെ മികച്ച അധ്യായങ്ങൾ പിന്നിലല്ല.<br/>അവ ഇപ്പോഴും നമ്മൾ ചേർന്ന് എഴുതാൻ പ്രതിജ്ഞാബദ്ധരായവയാണ്.</p>
+        <p>വിശ്വാസത്തോടും ബഹുമാനത്തോടും നമ്മുടെ ഭാവിയിൽ അചഞ്ചലമായ ആകാംക്ഷയോടും കൂടെ,<br/>—ೀಚ</p>
+      `
+    },
+    {
+      title: "എൻ്റെ മകൻ, ഫാതഹ് ഷാ KC —",
+      content: `
+        <p>നീ ഈ ലോകത്തേക്ക് വന്നത് ഒരേ നിമിഷത്തിൽ സ്നേഹവും നഷ്ടവും കൈയിൽ പിടിച്ചുകൊണ്ടാണ്, അത് എന്റെ മുഴുവൻ ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ മാറ്റിക്കളഞ്ഞു. നീ എന്നെ അച്ഛനാക്കിയതുമാത്രമല്ല; നീ എന്നെ ഒരു പാരമ്പര്യത്തിന്റെ സംരക്ഷകനാക്കി — എന്റെ മാതാപിതാക്കളുടെ, നിന്റെ ഉമ്മി ഷാനുവിന്റെ, നിന്റെ അമ്മി ഇന്നുവിന്റെ, നമ്മുടെ രണ്ടു കുടുംബങ്ങളും നിൽക്കുന്ന മൂല്യങ്ങളുടെ.</p>
+        <p>ഈ ജീവിതം എന്റെ ഉത്തരവാദിത്വമാണ്.<br/>ഭാവി നിനക്കുദ്ദേശിച്ചിട്ടുള്ളതാണ്.</p>
+        <p>നിനക്കു കൈമാറുന്നത് സ്വത്തുകളെ മാത്രമാക്കാതെ, വ്യക്തതയും ധൈര്യവും സ്വഭാവവും കൈമാറാൻ ഞാൻ സിസ്റ്റങ്ങൾ പണിയുന്നു. നിന്റെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ജ്ഞാനം, നന്മ, കരുണ, ശക്തി എന്നിവയ്ക്കായി കലിബ്രേറ്റ് ചെയ്തിരിക്കാൻ ഞാൻ ആഗ്രഹിക്കുന്നു. അഹങ്കാരമില്ലാതെ ഉയർന്ന് നിൽക്കാനും, ദൗർബല്യമില്ലാതെ ദയയുള്ളവനാകാനും, ജീവിതം നിന്റെ പദ്ധതികളെ റീസെറ്റ് ചെയ്താലും നിന്നെ പുനർനിർമ്മിക്കാൻ കഴിയുന്നവനാകാനും ഞാൻ നിന്നെ ആഗ്രഹിക്കുന്നു.</p>
+        <p>നിന്റെ പേര് തന്നെയാണ് നിന്റെ റോഡ്‌മാപ്പ്:<br/><strong>ഫതഹ്</strong> — ലക്ഷ്യബോധത്തിലൂടെ വിജയം<br/><strong>ഷാ</strong> — പൈതൃകം, മാന്യത, വംശപരമ്പര്യം<br/><strong>KC</strong> — വേരുകൾ, ഉത്തരവാദിത്വം, തുടർച്ച</p>
+        <p>നിന്നിൽ നിന്നെക്കുറിച്ചുള്ള എന്റെ പ്രതീക്ഷ പരിപൂർണ്ണതയല്ല. നിഷ്ഠയോടെ, ഉത്തരവാദിത്തത്തോടെയും നിനക്കു തന്നെ ആവാൻ ഭയമില്ലാത്തവനായി നീ മാറുക എന്നതാണ് എന്റെ പ്രതീക്ഷ. ഒരിക്കൽ നീ നമ്മുടെ സംരംഭങ്ങളെയും സ്ഥാപനങ്ങളെയും നയിക്കുന്ന സ്ഥാനത്ത് എത്തിയാൽ, അത് നിനക്ക് അവകാശമായി ലഭിച്ചതുകൊണ്ടല്ല; കഴിവിന്റെയും സ്വഭാവത്തിന്റെയും അടിസ്ഥാനത്തിലാണ് ലഭിക്കേണ്ടത്.</p>
+        <p>ഇപ്പോൾ ഞാൻ എഴുതുന്നതും പണിയുന്നതും സംരക്ഷിക്കുന്നതും ഭരിക്കുന്നതും എല്ലാം നിന്നിലേക്ക് ബന്ധിപ്പിച്ചിരിക്കുന്നു.<br/>നിന്റെ ജീവിതത്തെ നിയന്ത്രിക്കാനല്ല, നിന്റെ തിരഞ്ഞെടുപ്പുകൾക്ക് ശക്തി നൽകാനാണ്.</p>
+        <p>ജീവൻ അനുവദിച്ചാൽ, ഒരുദിവസം നീ ഇത് ഒരു പുരുഷനായിട്ടാണ് വായിക്കുക. അന്ന് ഇതറിയുക:<br/>നിന്റെ അമ്മ നിന്നെ കാണുന്നതിന് മുമ്പ് തന്നെ നിന്നെ സ്നേഹിച്ചിരുന്നു.<br/>നിന്റെ കുടുംബം എല്ലായ്പ്പോഴും നിന്റെ പിന്നാലെ നിൽക്കുന്നു.<br/>ഞാൻ പണിതതാണ് എന്റെ ഏറ്റവും വലിയ പാരമ്പര്യം അല്ല — നീ ആകുന്ന ആളാണ്.</p>
+        <p>സ്നേഹത്തോടും ശിക്ഷണത്തോടും അചഞ്ചലമായ വിശ്വാസത്തോടും കൂടി,<br/>— നിന്റെ അಬ್ಬ</p>
+      `
+    }
   ]
 };
 
@@ -381,25 +435,15 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
         <div className="absolute top-10 left-20 w-1 h-1 bg-amber-500 rounded-full opacity-50 animate-bounce" style={{ animationDuration: '3s' }}></div>
         <div className="absolute bottom-20 right-40 w-1 h-1 bg-amber-500 rounded-full opacity-30 animate-bounce" style={{ animationDuration: '5s' }}></div>
     </div>
+
+    {/* LANGUAGE TOGGLE AT TOP RIGHT */}
+    <div className="absolute top-6 right-6 z-50 flex gap-2">
+        <button onClick={() => setLang('en')} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en' ? 'bg-amber-600 text-black' : 'bg-zinc-900 text-stone-500 border border-stone-800'}`}>EN</button>
+        <button onClick={() => setLang('ml')} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'ml' ? 'bg-amber-600 text-black' : 'bg-zinc-900 text-stone-500 border border-stone-800'}`}>ML</button>
+    </div>
     
     <div className="z-10 w-full max-w-7xl mx-auto flex flex-col items-center animate-fade-in relative pb-32">
       <div className="mb-24 text-center space-y-4 pt-12">
-        {/* BIG PROMINENT LANGUAGE TOGGLE */}
-        <div className="flex justify-center gap-6 mb-12">
-            <button 
-                onClick={() => setLang('en')} 
-                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'en' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
-            >
-                ENGLISH
-            </button>
-            <button 
-                onClick={() => setLang('ml')} 
-                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'ml' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
-            >
-                മലയാളം
-            </button>
-        </div>
-
         <div className="relative inline-block group">
             <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full group-hover:bg-amber-500/30 transition-all duration-500"></div>
             <img src={CONFIG.logoPath} alt="Logo" className="relative w-20 h-20 mx-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-500 mb-4 drop-shadow-[0_0_15px_rgba(217,119,6,0.3)]" />
@@ -663,14 +707,13 @@ const FormatSelectionModal = ({ onClose, onSelect, t }) => (
 );
 
 // --- NEW AUDIO PLAYER VIEW ---
-const AudioPlayerView = ({ bookData, onBack, language }) => {
+const AudioPlayerView = ({ bookData, onBack, language, t }) => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState(1);
     const audioRef = useRef(null);
     const [error, setError] = useState(false);
 
     // Determine filename based on ID and Language
-    // Format: /audio-{id}-{lang}.mp3
-    // E.g. /audio-1-en.mp3
     const audioFile = `/audio-${bookData.id}-${language}.mp3`;
 
     const togglePlay = () => {
@@ -679,34 +722,46 @@ const AudioPlayerView = ({ bookData, onBack, language }) => {
         setIsPlaying(!isPlaying);
     };
 
+    const changeSpeed = () => {
+        const newRate = playbackRate === 1 ? 1.5 : playbackRate === 1.5 ? 2 : 1;
+        setPlaybackRate(newRate);
+        if(audioRef.current) audioRef.current.playbackRate = newRate;
+    };
+
     return (
         <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in text-stone-300">
             <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white flex items-center gap-2"><ArrowLeft size={20} /></button>
             
             <div className="max-w-md w-full space-y-8 text-center">
                 <div className="relative aspect-square w-64 mx-auto rounded-lg overflow-hidden border border-stone-800 shadow-2xl">
-                    <img src={bookData.cover} alt="Cover" className="w-full h-full object-cover opacity-80" />
+                    <img src="/icon-v2.png" alt="Audio Cover" className="w-full h-full object-cover p-8 opacity-90" />
                     {/* Vinyl Effect */}
-                    <div className={`absolute inset-0 bg-black/20 rounded-full m-4 border-2 border-white/10 ${isPlaying ? 'animate-spin-slow' : ''}`}></div>
+                    <div className={`absolute inset-0 bg-black/10 rounded-full m-4 border-2 border-white/5 ${isPlaying ? 'animate-spin-slow' : ''}`}></div>
                 </div>
 
                 <div className="space-y-2">
                     <h2 className="text-2xl font-serif text-white">{bookData.title}</h2>
                     <p className="text-xs font-mono text-amber-600 uppercase tracking-widest">{bookData.subtitle}</p>
-                    <p className="text-xs text-stone-500 mt-2 uppercase">{language === 'en' ? 'English Audio' : 'Malayalam Audio'}</p>
+                    <p className="text-xs text-stone-500 mt-2 uppercase">{language === 'en' ? 'ENGLISH AUDIO' : 'MALAYALAM AUDIO'}</p>
                 </div>
 
                 {error ? (
-                    <div className="p-4 bg-red-900/20 border border-red-900/50 rounded text-red-400 text-xs">
-                        Audio file missing: {audioFile}<br/>Please upload to public folder.
+                    <div className="p-4 bg-red-900/20 border border-red-900/50 rounded text-red-400 text-xs font-mono">
+                        AUDIO FILE NOT FOUND<br/>({audioFile})
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center gap-8">
-                        <button className="text-stone-500 hover:text-white"><SkipBack size={24} /></button>
-                        <button onClick={togglePlay} className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors shadow-xl">
-                            {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+                    <div className="flex flex-col gap-8">
+                        <div className="flex items-center justify-center gap-8">
+                            <button className="text-stone-500 hover:text-white transition-colors"><SkipBack size={24} /></button>
+                            <button onClick={togglePlay} className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors shadow-xl scale-110">
+                                {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+                            </button>
+                            <button className="text-stone-500 hover:text-white transition-colors"><SkipForward size={24} /></button>
+                        </div>
+                        
+                        <button onClick={changeSpeed} className="mx-auto flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-stone-800 text-xs font-mono text-amber-600 hover:border-amber-600 transition-all">
+                           <Gauge size={14} /> SPEED: {playbackRate}x
                         </button>
-                        <button className="text-stone-500 hover:text-white"><SkipForward size={24} /></button>
                     </div>
                 )}
                 
@@ -746,11 +801,9 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, langu
         
         let response = await fetch(`${targetFile}?t=${Date.now()}`);
         
-        // Fallback to English if specific language file is missing AND user is in English mode, 
-        // OR fallback to English if user is in ML mode but ML file is missing (with disclaimer)
+        // Fallback logic
         if (!response.ok) {
              response = await fetch(`${baseName}-en.md?t=${Date.now()}`);
-             // If book-X-en.md doesn't exist, try legacy /book-X.md
              if(!response.ok) response = await fetch(`${bookData.file}?t=${Date.now()}`);
         }
 
@@ -759,12 +812,6 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, langu
         const text = await response.text();
         let parsed = parseMarkdown(text);
         
-        // Inject Disclaimer if language is ML but loaded English content (implied by fallback logic)
-        // Note: Ideally we check if we loaded the specific targetFile. 
-        // For simplicity here, if language is 'ml' we assume we might be showing fallback if we are here.
-        // A better way is to check response.url but that can be tricky with redirects.
-        // We will just prepend the disclaimer if language is ML, assuming English fallback happened if we are still alive.
-        // Actually, let's keep it simple: If language is ML, prepend disclaimer.
         if (language === 'ml' && t.originalNote) {
             if (parsed.length > 0) {
                  parsed[0].content = `<div class="p-4 mb-8 bg-amber-900/20 border border-amber-600/30 rounded text-amber-500 text-xs font-mono">${t.originalNote}</div>` + parsed[0].content;
@@ -988,10 +1035,10 @@ export default function TheLegacyReader() {
       {view === 'index' && <ModuleIndexView onBack={goGallery} t={t} />}
 
       {/* Global Audio Archive (from Landing) */}
-      {view === 'audio' && <AudioView onBack={goHome} />}
+      {view === 'audio' && <AudioView onBack={goHome} t={t} onSelectBook={onBookClick} />}
       
       {/* Specific Audio Book Player (from Library) */}
-      {view === 'audio_player' && selectedBook && <AudioPlayerView bookData={selectedBook} onBack={goGallery} language={lang} />}
+      {view === 'audio_player' && selectedBook && <AudioPlayerView bookData={selectedBook} onBack={goGallery} language={lang} t={t} />}
 
       {view === 'reviews' && <ReviewsView onBack={goHome} onReviewClick={() => setShowReviewModal(true)} />}
 
