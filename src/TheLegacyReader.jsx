@@ -138,11 +138,11 @@ const DEDICATIONS_CONTENT = {
         <p>Umma and Uppa,</p>
         <p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p>
         <p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>
-
+      `
     },
     {
       title: "Both homes together shaped my character before I shaped my ambitions.",
-      content:
+      content: `
         <p>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
         <p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p>
         <p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p>
@@ -195,9 +195,7 @@ const DEDICATIONS_CONTENT = {
         <p>With love, discipline, and unwavering faith,<br/>— Your Abba</p>
       `
     }
-  ]
-};
-
+  ],
   ml: [
     {
       title: "എന്റെ മാതാപിതാക്കൾക്ക് — ALAVI KC & AMINA K",
