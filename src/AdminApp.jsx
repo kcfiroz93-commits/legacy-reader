@@ -1,263 +1,175 @@
-import React, { useState, useEffect } from "react";
-import { marked } from "marked";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
 
-// ============== UI SHELL ==============
-const TabButton = ({ active, onClick, children }) => (
-  <button
-    onClick={onClick}
-    style={{
-      padding: "10px 16px",
-      marginRight: 10,
-      borderRadius: 10,
-      border: active ? "1px solid #d4af37" : "1px solid #333",
-      background: active ? "#111" : "#000",
-      color: active ? "#d4af37" : "white",
-      cursor: "pointer"
-    }}
-  >
-    {children}
-  </button>
-);
-
-// ============== MAIN APP ==============
 function AdminApp() {
 
-  // --------------- Auth ---------------
   const [authorized, setAuthorized] = useState(false);
+  const [books, setBooks] = useState({});
+  const [reviews, setReviews] = useState([]);
+  const [audio, setAudio] = useState([]);
 
   useEffect(() => {
-    const key = new URLSearchParams(window.location.search).get("key");
-    if (key === "legacyroot") setAuthorized(true);
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get("key");
+
+    // Simple hidden gate - In a real app, use proper auth!
+    if (key === "legacyroot") {
+      setAuthorized(true);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!authorized) return;
+
+    // preload data
+    fetch("/data/reviews.json")
+      .then(r => r.json())
+      .then(setReviews)
+      .catch(() => setReviews([]));
+
+    fetch("/data/audio.json")
+      .then(r => r.json())
+      .then(setAudio)
+      .catch(() => setAudio([]));
+  }, [authorized]);
+
 
   if (!authorized) {
     return (
-      <div style={{ background: "black", color: "white", height: "100vh", display: "grid", placeItems: "center" }}>
-        <h2>404 — Not Found</h2>
+      <div style={{padding: "40px", textAlign: "center", color: "#666", fontFamily: "monospace"}}>
+        <h1>401</h1>
+        <p>Access Denied</p>
       </div>
     );
   }
 
-  // --------------- Tabs ---------------
-  const [tab, setTab] = useState("dashboard");
-
-  // --------------- Data Stores ---------------
-  const [audioList, setAudioList] = useState([]);
-  const [reviews, setReviews] = useState([]);
-
-  // Books
-  const [bookId, setBookId] = useState(0);
-  const [language, setLanguage] = useState("en");
-  const [markdown, setMarkdown] = useState("");
-
-  // --------------- Load json on mount ---------------
-  useEffect(() => {
-    fetch("/data/audio.json").then(r => r.json()).then(setAudioList).catch(() => setAudioList([]));
-    fetch("/data/reviews.json").then(r => r.json()).then(setReviews).catch(() => setReviews([]));
-  }, []);
-
-  // --------------- BOOKS ---------------
-  const loadBook = async () => {
-    const file =
-      language === "ml"
-        ? `/book-${bookId}-ml.md`
-        : `/book-${bookId}.md`;
-
-    try {
-      const txt = await (await fetch(file)).text();
-      setMarkdown(txt);
-    } catch {
-      setMarkdown("# New Book");
-    }
-  };
-
-  const downloadBook = () => {
-    const filename =
-      language === "ml"
-        ? `book-${bookId}-ml.md`
-        : `book-${bookId}.md`;
-
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-  };
-
-  // --------------- AUDIO ---------------
-  const addAudioTrack = () => {
-    const id = prompt("Book ID?");
-    if (!id) return;
-    const title = prompt("Audio Title?");
-    setAudioList([...audioList, { id: Number(id), title }]);
-  };
-
-  // --------------- REVIEWS ---------------
-  const addReview = () => {
-    const name = prompt("Reviewer name");
-    const role = prompt("Role");
-    const type = prompt("Type: text / image / audio / video");
-
-    if (type === "text") {
-      const content = prompt("Enter text review");
-      setReviews([...reviews, { id: Date.now(), name, role, type, content }]);
-    }
-
-    if (type === "image") {
-      const image = prompt("File name e.g., review_1.png");
-      setReviews([...reviews, { id: Date.now(), name, role, type, image }]);
-    }
-
-    if (type === "audio") {
-      const audio = prompt("File name e.g., audio-review-1.mp3");
-      setReviews([...reviews, { id: Date.now(), name, role, type, audio }]);
-    }
-
-    if (type === "video") {
-      const videoUrl = prompt("Paste video link");
-      setReviews([...reviews, { id: Date.now(), name, role, type, videoUrl }]);
-    }
-  };
-
-  const downloadJSON = (obj, name) => {
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    a.click();
-  };
-
-  // --------------- STYLE ---------------
-  const card = {
-    background: "#0A0A0A",
-    border: "1px solid #222",
-    padding: 20,
-    marginTop: 18,
-    borderRadius: 14
-  };
-
-  const gold = "#d4af37";
-
   return (
-    <div style={{ background: "black", minHeight: "100vh", color: "white", padding: 20 }}>
-      <h1 style={{ color: gold }}>LEGACY OS — ADMIN DASHBOARD</h1>
+    <div style={{padding: "40px", fontFamily: "monospace", maxWidth: "800px", margin: "0 auto"}}>
+      <h1 style={{color: "#d97706"}}>LEGACY OS — ADMIN DASHBOARD</h1>
+      <p style={{color: "#666", borderBottom: "1px solid #333", paddingBottom: "20px"}}>
+        Status: <span style={{color: "#10b981"}}>Online</span> | Key: Verified
+      </p>
 
-      {/* TABS */}
-      <div style={{ marginTop: 10 }}>
-        <TabButton active={tab === "dashboard"} onClick={() => setTab("dashboard")}>Dashboard</TabButton>
-        <TabButton active={tab === "books"} onClick={() => setTab("books")}>Books</TabButton>
-        <TabButton active={tab === "audio"} onClick={() => setTab("audio")}>Audio</TabButton>
-        <TabButton active={tab === "reviews"} onClick={() => setTab("reviews")}>Reviews</TabButton>
-        <TabButton active={tab === "upload"} onClick={() => setTab("upload")}>Upload Assistant</TabButton>
-      </div>
-
-      {/* ================= DASHBOARD ================= */}
-      {tab === "dashboard" && (
-        <div style={card}>
-          <h2 style={{ color: gold }}>Welcome, Administrator</h2>
-          <p>You can manage the ENTIRE Legacy OS content from here without touching code.</p>
-
-          <ul>
-            <li>Write books → Download markdown → push</li>
-            <li>Manage audio tracks</li>
-            <li>Manage reviews</li>
-            <li>Ensure filenames are correct before upload</li>
-          </ul>
+      {/* ---------------- BOOKS ---------------- */}
+      <section style={{marginTop: "40px"}}>
+        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>📚 Books (Content)</h2>
+        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
+            <p style={{marginBottom: "15px", fontSize: "0.9rem", color: "#999"}}>
+                Content is managed via Markdown files in <code>/public</code>.
+            </p>
+            <div style={{display: "flex", gap: "10px", flexWrap: "wrap"}}>
+                <button
+                    style={btnStyle}
+                    onClick={() => window.open("/book-0.md", "_blank")}
+                >
+                    View Book 0 (EN)
+                </button>
+                <button
+                    style={btnStyle}
+                    onClick={() => window.open("/book-1.md", "_blank")}
+                >
+                    View Book 1 (EN)
+                </button>
+            </div>
         </div>
-      )}
+      </section>
 
-      {/* ================= BOOKS ================= */}
-      {tab === "books" && (
-        <div style={card}>
-          <h2 style={{ color: gold }}>📚 Book Editor with Live Preview</h2>
-
-          <div>
-            Book ID:
-            <input value={bookId} onChange={e => setBookId(e.target.value)} style={{ width: 60, marginLeft: 6 }} />
-
-            Language:
-            <select value={language} onChange={e => setLanguage(e.target.value)} style={{ marginLeft: 6 }}>
-              <option value="en">English</option>
-              <option value="ml">Malayalam</option>
-            </select>
-
-            <button onClick={loadBook} style={{ marginLeft: 8 }}>Load</button>
-            <button onClick={downloadBook} style={{ marginLeft: 8, color: gold }}>Download</button>
-          </div>
-
-          <textarea
-            value={markdown}
-            onChange={e => setMarkdown(e.target.value)}
-            style={{ width: "100%", height: 260, marginTop: 10, background: "#111", color: "white" }}
-          />
-
-          <div style={{ marginTop: 10, padding: 10, background: "#0f0f0f" }}>
-            <div style={{ color: gold }}>Live Preview</div>
-            <div dangerouslySetInnerHTML={{ __html: marked.parse(markdown || "") }} />
-          </div>
+      {/* ---------------- AUDIO ---------------- */}
+      <section style={{marginTop: "40px"}}>
+        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>🎧 Audio Tracks</h2>
+        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
+            <textarea 
+                style={textAreaStyle}
+                value={JSON.stringify(audio, null, 2)}
+                onChange={(e) => {
+                    try {
+                        setAudio(JSON.parse(e.target.value));
+                    } catch(err) {
+                        // ignore parse error while typing
+                    }
+                }}
+            />
+            <div style={{marginTop: "10px", display: "flex", justifyContent: "flex-end"}}>
+                <button
+                style={actionBtnStyle}
+                onClick={() => downloadJSON(audio, "audio.json")}
+                >
+                Download updated audio.json
+                </button>
+            </div>
         </div>
-      )}
+      </section>
 
-      {/* ================= AUDIO ================= */}
-      {tab === "audio" && (
-        <div style={card}>
-          <h2 style={{ color: gold }}>🎧 Audio Manager</h2>
-
-          <button onClick={addAudioTrack}>Add Track</button>
-          <button onClick={() => downloadJSON(audioList, "audio.json")} style={{ marginLeft: 10 }}>
-            Download audio.json
-          </button>
-
-          <pre style={{ marginTop: 10 }}>{JSON.stringify(audioList, null, 2)}</pre>
-
-          <p>
-            Audio files go in <span style={{ color: gold }}>/public/audio/</span><br />
-            Naming: <b>audio-0-en.mp3, audio-3-ml.mp3</b>
-          </p>
+      {/* ---------------- REVIEWS ---------------- */}
+      <section style={{marginTop: "40px"}}>
+        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>⭐ Reviews</h2>
+        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
+            <textarea 
+                style={textAreaStyle}
+                value={JSON.stringify(reviews, null, 2)}
+                onChange={(e) => {
+                    try {
+                        setReviews(JSON.parse(e.target.value));
+                    } catch(err) {
+                        // ignore
+                    }
+                }}
+            />
+            <div style={{marginTop: "10px", display: "flex", justifyContent: "flex-end"}}>
+                <button
+                style={actionBtnStyle}
+                onClick={() => downloadJSON(reviews, "reviews.json")}
+                >
+                Download updated reviews.json
+                </button>
+            </div>
         </div>
-      )}
-
-      {/* ================= REVIEWS ================= */}
-      {tab === "reviews" && (
-        <div style={card}>
-          <h2 style={{ color: gold }}>⭐ Review Manager</h2>
-
-          <button onClick={addReview}>Add Review</button>
-          <button onClick={() => downloadJSON(reviews, "reviews.json")} style={{ marginLeft: 10 }}>
-            Download reviews.json
-          </button>
-
-          <pre style={{ marginTop: 10 }}>{JSON.stringify(reviews, null, 2)}</pre>
-
-          <p>
-            Image reviews → <span style={{ color: gold }}>/public/reviews/images/</span><br />
-            Audio reviews → <span style={{ color: gold }}>/public/reviews/audio/</span>
-          </p>
-        </div>
-      )}
-
-      {/* ================= UPLOAD ASSISTANT ================= */}
-      {tab === "upload" && (
-        <div style={card}>
-          <h2 style={{ color: gold }}>🖼 Upload & Naming Assistant</h2>
-
-          <ul>
-            <li>Books → book-0.md / book-0-ml.md</li>
-            <li>Covers → cover-0.png</li>
-            <li>Audio EN → audio-0-en.mp3</li>
-            <li>Audio ML → audio-0-ml.mp3</li>
-            <li>Review image → review_1.png</li>
-            <li>Review audio → audio-review-1.mp3</li>
-          </ul>
-
-          <p style={{ opacity: 0.8 }}>
-            This admin does NOT upload directly — it prepares files correctly so your Git workflow stays safe and clean.
-          </p>
-        </div>
-      )}
+      </section>
 
     </div>
   );
 }
 
-export default AdminApp;
+// --- Styles ---
+const btnStyle = {
+    background: "#222",
+    color: "#fff",
+    border: "1px solid #444",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "0.85rem"
+};
+
+const actionBtnStyle = {
+    ...btnStyle,
+    background: "#d97706",
+    color: "#000",
+    fontWeight: "bold",
+    border: "none"
+};
+
+const textAreaStyle = {
+    width: "100%",
+    height: "200px",
+    background: "#000",
+    color: "#0f0",
+    border: "1px solid #333",
+    padding: "10px",
+    fontFamily: "monospace",
+    fontSize: "0.85rem",
+    borderRadius: "4px"
+};
+
+// --- Utils ---
+const downloadJSON = (data, filename) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+};
+
+const root = ReactDOM.createRoot(document.getElementById("admin-root"));
+root.render(<AdminApp />);
