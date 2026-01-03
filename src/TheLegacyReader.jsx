@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Moon, Sun, Menu, X, Type, ChevronLeft, ChevronRight, Smartphone, Globe, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, Share, FileText, Mic, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge, Lock } from 'lucide-react';
+import { Moon, Sun, X, Type, ChevronLeft, ChevronRight, Smartphone,  Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge, Lock, Filter, Radio, Disc, Mic2 } from 'lucide-react';
 
 /* ==================================================================================
    ⬇️ CONFIGURATION ZONE ⬇️
    ================================================================================== */
 
 const CONFIG = {
-  author: "KC FIROZ", 
+  author: "ADVOCATE KC FIROZ", 
   logoPath: "/icon-v2.png",   
   
   // LANDING PAGE IMAGES
@@ -138,7 +138,12 @@ const DEDICATIONS_CONTENT = {
         <p>Umma and Uppa,</p>
         <p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p>
         <p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>
-        <p>Both homes together shaped my character before I shaped my ambitions.<br/>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
+
+    },
+    {
+      title: "Both homes together shaped my character before I shaped my ambitions.",
+      content:
+        <p>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
         <p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p>
         <p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p>
         <p>With deep respect and unwavering commitment,<br/>— Muthu</p>
@@ -260,7 +265,7 @@ const DEDICATIONS_CONTENT = {
       `
     }
   ]
-
+};
 
 // --- UTILS ---
 const calculateReadingTime = (text) => {
@@ -269,7 +274,7 @@ const calculateReadingTime = (text) => {
   return Math.ceil(words / wordsPerMinute);
 };
 
-// --- MARKDOWN PARSER ENGINE V2.2 (Robust & Forgiving) ---
+// --- MARKDOWN PARSER ENGINE V2.2 ---
 const parseMarkdown = (text) => {
   if (!text) return [];
   const parts = text.split(/(?=^#{1,3}\s+)/gm);
@@ -294,7 +299,6 @@ const parseMarkdown = (text) => {
              return `<div class="my-8 flex justify-center"><img src="${src}" alt="${imgMatch[1]}" class="max-w-full h-auto rounded-sm border border-stone-800" onError="this.style.display='none'" /></div>`;
           }
         }
-        // STYLE UPDATE: Manifesto Blockquote
         if (p.startsWith('> ')) {
             return `<div class="my-10 p-8 border-l-4 border-amber-600 bg-zinc-900/50 text-stone-300 font-serif text-lg leading-relaxed shadow-lg">${p.replace(/^> /, '')}</div>`;
         }
@@ -347,7 +351,7 @@ const AnimatedCard = ({ children, delay = 0 }) => {
   );
 };
 
-// --- SYSTEM TOUR COMPONENT (The "Architect's Briefing") ---
+// --- SYSTEM TOUR COMPONENT ---
 const SystemTour = ({ onClose, t }) => {
   const [step, setStep] = useState(0);
 
@@ -387,7 +391,6 @@ const SystemTour = ({ onClose, t }) => {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center animate-fade-in">
       <div className="absolute inset-0 bg-zinc-950/90 backdrop-blur-sm"></div>
-      
       <div className="relative z-[110] max-w-md w-full bg-zinc-900 border-2 border-amber-600 p-8 shadow-[0_0_50px_rgba(217,119,6,0.2)]">
         <div className="flex items-center justify-between mb-6 border-b border-stone-800 pb-4">
           <span className="text-[10px] font-mono text-amber-600 tracking-widest uppercase">
@@ -399,28 +402,12 @@ const SystemTour = ({ onClose, t }) => {
             ))}
           </div>
         </div>
-
-        <h3 className="text-xl font-serif text-white mb-4 tracking-wide">
-          {currentStep.title}
-        </h3>
-        <p className="text-sm font-mono text-stone-400 leading-relaxed mb-8">
-          {currentStep.content}
-        </p>
-
+        <h3 className="text-xl font-serif text-white mb-4 tracking-wide">{currentStep.title}</h3>
+        <p className="text-sm font-mono text-stone-400 leading-relaxed mb-8">{currentStep.content}</p>
         <div className="flex justify-between items-center">
-          <button 
-            onClick={onClose}
-            className="text-[10px] font-bold text-stone-600 hover:text-stone-400 uppercase tracking-widest"
-          >
-            Skip Briefing
-          </button>
-          
-          <button 
-            onClick={handleNext}
-            className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-white text-black text-xs font-bold tracking-widest uppercase transition-all"
-          >
-            {step === TOUR_STEPS.length - 1 ? "INITIALIZE SYSTEM" : "NEXT PHASE"}
-            <ChevronRight size={14} />
+          <button onClick={onClose} className="text-[10px] font-bold text-stone-600 hover:text-stone-400 uppercase tracking-widest">Skip Briefing</button>
+          <button onClick={handleNext} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-white text-black text-xs font-bold tracking-widest uppercase transition-all">
+            {step === TOUR_STEPS.length - 1 ? "INITIALIZE SYSTEM" : "NEXT PHASE"} <ChevronRight size={14} />
           </button>
         </div>
       </div>
@@ -434,20 +421,12 @@ const InstallGuide = ({ onClose }) => (
   <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
     <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
     <div className="max-w-sm w-full space-y-8 text-center">
-      <div className="mx-auto w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-amber-600/30 mb-4">
-        <Smartphone size={32} className="text-amber-600" />
-      </div>
+      <div className="mx-auto w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center border border-amber-600/30 mb-4"><Smartphone size={32} className="text-amber-600" /></div>
       <h2 className="text-xl font-serif text-stone-200">Install to Home Screen</h2>
       <div className="space-y-6 text-left bg-zinc-900/50 p-6 rounded border border-stone-800">
-        <div className="flex gap-4">
-          <div className="text-2xl">🍎</div>
-          <div><h3 className="text-sm font-bold text-stone-300 mb-1">iPhone (iOS)</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Share</strong> button (box with arrow).<br/>2. Scroll down and tap <strong>"Add to Home Screen"</strong>.</p></div>
-        </div>
+        <div className="flex gap-4"><div className="text-2xl">🍎</div><div><h3 className="text-sm font-bold text-stone-300 mb-1">iPhone (iOS)</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Share</strong> button (box with arrow).<br/>2. Scroll down and tap <strong>"Add to Home Screen"</strong>.</p></div></div>
         <div className="h-px bg-stone-800"></div>
-        <div className="flex gap-4">
-          <div className="text-2xl">🤖</div>
-          <div><h3 className="text-sm font-bold text-stone-300 mb-1">Android</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Menu</strong> (three dots).<br/>2. Tap <strong>"Add to Home screen"</strong> or "Install App".</p></div>
-        </div>
+        <div className="flex gap-4"><div className="text-2xl">🤖</div><div><h3 className="text-sm font-bold text-stone-300 mb-1">Android</h3><p className="text-xs text-stone-500 leading-relaxed">1. Tap the <strong>Menu</strong> (three dots).<br/>2. Tap <strong>"Add to Home screen"</strong> or "Install App".</p></div></div>
       </div>
       <button onClick={onClose} className="text-xs font-mono text-stone-500 hover:text-white mt-8">CLOSE GUIDE</button>
     </div>
@@ -458,13 +437,9 @@ const ReviewModal = ({ onClose }) => (
   <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
     <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
     <div className="max-w-md w-full space-y-8 text-center">
-      <div className="mx-auto w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-amber-600/30 mb-4">
-        <Star size={32} className="text-amber-600 fill-amber-600/20" />
-      </div>
+      <div className="mx-auto w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-amber-600/30 mb-4"><Star size={32} className="text-amber-600 fill-amber-600/20" /></div>
       <h2 className="text-2xl font-serif text-amber-500">Submit Your Review</h2>
-      <p className="text-stone-400 text-sm leading-relaxed px-4">
-        Your feedback shapes the legacy. Please send your audio, video, or text reviews directly to the author.
-      </p>
+      <p className="text-stone-400 text-sm leading-relaxed px-4">Your feedback shapes the legacy. Please send your audio, video, or text reviews directly to the author.</p>
       <div className="bg-zinc-900 p-6 rounded border border-stone-800 flex flex-col items-center space-y-4">
         <span className="text-xs font-mono text-stone-500 uppercase tracking-widest">SEND TO</span>
         <a href={`mailto:${CONFIG.reviewEmail}`} className="text-lg font-bold text-white hover:text-amber-500 transition-colors border-b border-stone-700 pb-1">{CONFIG.reviewEmail}</a>
@@ -479,27 +454,15 @@ const ModuleIndexView = ({ onBack, t }) => (
     <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
         <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
         <div className="max-w-3xl w-full mx-auto mt-12 space-y-12">
-            <div className="text-center space-y-2">
-                <h2 className="text-2xl font-serif text-amber-600">{t.index}</h2>
-                <p className="text-xs font-mono text-stone-500">QUICK REFERENCE PAGE</p>
-            </div>
-            
+            <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">{t.index}</h2><p className="text-xs font-mono text-stone-500">QUICK REFERENCE PAGE</p></div>
             <div className="bg-zinc-900/50 rounded border border-stone-800 overflow-hidden">
                 <table className="w-full text-left text-sm text-stone-400">
                     <thead className="bg-zinc-900 text-stone-300 font-bold uppercase text-xs border-b border-stone-800">
-                        <tr>
-                            <th className="p-4 w-1/4">Phase</th>
-                            <th className="p-4 w-1/2">Module</th>
-                            <th className="p-4 w-1/4">Function</th>
-                        </tr>
+                        <tr><th className="p-4 w-1/4">Phase</th><th className="p-4 w-1/2">Module</th><th className="p-4 w-1/4">Function</th></tr>
                     </thead>
                     <tbody className="divide-y divide-stone-800/50">
                         {CONFIG.moduleIndex.map((item, index) => (
-                            <tr key={index} className="hover:bg-zinc-800/30 transition-colors">
-                                <td className="p-4 font-mono text-amber-600/80">{item.phase}</td>
-                                <td className="p-4 text-stone-200 font-medium">{item.module}</td>
-                                <td className="p-4 italic">{item.function}</td>
-                            </tr>
+                            <tr key={index} className="hover:bg-zinc-800/30 transition-colors"><td className="p-4 font-mono text-amber-600/80">{item.phase}</td><td className="p-4 text-stone-200 font-medium">{item.module}</td><td className="p-4 italic">{item.function}</td></tr>
                         ))}
                     </tbody>
                 </table>
@@ -519,20 +482,9 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
     <div className="z-10 w-full max-w-7xl mx-auto flex flex-col items-center animate-fade-in relative pb-32">
       <div className="mb-8 text-center space-y-4 pt-12">
         <div className="flex justify-center gap-6 mb-12">
-            <button 
-                onClick={() => setLang('en')} 
-                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'en' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
-            >
-                ENGLISH
-            </button>
-            <button 
-                onClick={() => setLang('ml')} 
-                className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'ml' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}
-            >
-                മലയാളം
-            </button>
+            <button onClick={() => setLang('en')} className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'en' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}>ENGLISH</button>
+            <button onClick={() => setLang('ml')} className={`px-8 py-3 rounded-full text-lg font-bold tracking-widest transition-all border-2 ${lang === 'ml' ? 'bg-amber-600 text-black border-amber-600 shadow-[0_0_25px_rgba(217,119,6,0.6)] scale-110' : 'bg-transparent text-stone-500 border-stone-800 hover:border-amber-600/50 hover:text-stone-300'}`}>മലയാളം</button>
         </div>
-
         <div className="relative inline-block group">
             <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full group-hover:bg-amber-500/30 transition-all duration-500"></div>
             <img src={CONFIG.logoPath} alt="Logo" className="relative w-20 h-20 mx-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-500 mb-4 drop-shadow-[0_0_15px_rgba(217,119,6,0.3)]" />
@@ -543,49 +495,44 @@ const LandingPortal = ({ onEnterSeries, onEnterProfile, onEnterAudio, onEnterRev
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl px-4 mt-4">
-        
         <AnimatedCard>
             <div onClick={onEnterSeries} className="tour-library group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.seriesCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-amber-600/90 group-hover:bg-amber-500 text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.enterLib}</span></div>
             </div>
         </AnimatedCard>
-
         <AnimatedCard delay={200}>
             <div onClick={onEnterProfile} className="tour-profile group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.profileCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">👤</div><div class="text-xs text-stone-500">Upload cover1.png</div></div>`; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-white group-hover:text-black px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.architect}</span></div>
             </div>
         </AnimatedCard>
-
         <AnimatedCard delay={400}>
             <div onClick={onEnterAudio} className="tour-audio group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.audioCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">🎙️</div><div class="text-xs text-stone-500">Upload cover-audio.png</div></div>`; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.audio}</span></div>
             </div>
         </AnimatedCard>
-
         <AnimatedCard delay={600}>
             <div onClick={onEnterReviews} className="group relative cursor-pointer w-full aspect-[3/4] bg-zinc-900 border border-stone-800/50 hover:border-amber-500/50 transition-all duration-500 rounded-lg overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(217,119,6,0.15)] hover:-translate-y-2">
             <img src={CONFIG.reviewsCover} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" onError={(e) => { e.target.style.display='none'; e.target.parentNode.className += " flex items-center justify-center bg-zinc-900"; e.target.parentNode.innerHTML += `<div class="text-center p-4"><div class="text-2xl mb-2 text-stone-600">★</div><div class="text-xs text-stone-500">Upload cover-reviews.png</div></div>`; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-end justify-center pb-8"><span className="font-mono text-[10px] font-bold tracking-[0.2em] text-white bg-stone-800/90 group-hover:bg-amber-600 px-4 py-2 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">{t.reviews}</span></div>
             </div>
         </AnimatedCard>
-
       </div>
-
       <button onClick={onShowInstall} className="mt-20 flex items-center gap-2 text-[10px] font-mono tracking-widest text-stone-500 hover:text-amber-500 transition-all px-5 py-2 border border-stone-800 rounded-full hover:border-amber-600/50 hover:bg-amber-950/10"><Download size={14} /> {t.install}</button>
     </div>
   </div>
 );
 
-// --- AUDIO & REVIEWS VIEWS ---
+// --- REIMAGINED AUDIO HUB VIEW ---
 
 const AudioView = ({ onBack }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('ALL'); // ALL, PHASE I, PHASE II, PHASE III
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -593,7 +540,7 @@ const AudioView = ({ onBack }) => {
         setTracks(data);
         setLoading(false);
     }).catch(err => {
-        console.warn("Audio JSON missing, using empty list");
+        console.warn("Audio JSON missing");
         setLoading(false);
     });
   }, []);
@@ -610,25 +557,129 @@ const AudioView = ({ onBack }) => {
     }
   };
 
+  const filteredTracks = filter === 'ALL' ? tracks : tracks.filter(t => t.phase === filter);
+
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300">
-      <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white"><X size={32} strokeWidth={1} /></button>
-      <div className="max-w-xl w-full mx-auto mt-12 space-y-8">
-        <div className="text-center space-y-2"><h2 className="text-2xl font-serif text-amber-600">Spoken Legacy</h2><p className="text-xs font-mono text-stone-500">AUDIO ARCHIVE • VOLUME 1</p></div>
-        
-        {loading ? <div className="text-center text-xs font-mono text-stone-500">LOADING TRACKS...</div> : (
-             <div className="space-y-4">
-                {tracks.length === 0 ? <div className="text-center text-xs text-stone-600 italic py-10">No audio tracks found. Upload audio.json to public/data/</div> : tracks.map((track) => (
-                    <div key={track.id} onClick={() => playTrack(track)} className={`p-4 rounded border cursor-pointer transition-all flex items-center justify-between group ${currentTrack?.id === track.id ? 'bg-zinc-900 border-amber-600' : 'border-stone-800 hover:bg-zinc-900 hover:border-stone-700'}`}>
-                        <div className="flex items-center gap-4"><div className={`w-10 h-10 rounded-full flex items-center justify-center ${currentTrack?.id === track.id ? 'bg-amber-600 text-white' : 'bg-stone-800 text-stone-500 group-hover:text-stone-300'}`}>{currentTrack?.id === track.id && isPlaying ? <Pause size={16} /> : <Play size={16} />}</div><div><h3 className={`text-sm font-bold ${currentTrack?.id === track.id ? 'text-amber-500' : 'text-stone-300'}`}>{track.title}</h3><p className="text-[10px] text-stone-500 font-mono">DURATION: {track.duration}</p></div></div>
-                        {currentTrack?.id === track.id && <div className="text-amber-600 animate-pulse"><Volume2 size={16} /></div>}
-                    </div>
-                ))}
-            </div>
-        )}
-        
-        {currentTrack && (<div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-stone-800 p-4 flex items-center justify-between z-50"><div className="flex items-center gap-4"><button onClick={() => playTrack(currentTrack)} className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button><div><p className="text-xs font-mono text-amber-600">NOW PLAYING</p><p className="text-sm font-bold text-white">{currentTrack.title}</p></div></div><audio ref={audioRef} src={currentTrack.file} onEnded={() => setIsPlaying(false)} /></div>)}
+    <div className="min-h-screen bg-zinc-950 flex flex-col p-6 animate-fade-in text-stone-300 relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-900/5 rounded-full blur-3xl pointer-events-none"></div>
+      
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 relative z-10">
+          <button onClick={onBack} className="p-2 -ml-2 text-stone-500 hover:text-white transition-colors flex items-center gap-2"><ArrowLeft size={20} /> <span className="hidden md:inline text-xs font-mono tracking-widest">EXIT TERMINAL</span></button>
+          <div className="flex items-center gap-2 text-amber-600">
+              <div className="w-2 h-2 bg-amber-600 rounded-full animate-pulse"></div>
+              <span className="text-[10px] font-mono tracking-widest uppercase">AUDIO ARCHIVE ONLINE</span>
+          </div>
       </div>
+
+      <div className="max-w-6xl w-full mx-auto space-y-8 relative z-10 pb-32">
+        <div className="space-y-2">
+            <h2 className="text-3xl font-serif text-white">System Transmissions</h2>
+            <p className="text-xs font-mono text-stone-500 uppercase tracking-widest">ACCESSING PUBLIC AUDIO DATABANK</p>
+        </div>
+        
+        {/* Filters */}
+        <div className="flex flex-wrap gap-2 border-b border-stone-800 pb-4">
+            {['ALL', 'PHASE I', 'PHASE II', 'PHASE III'].map(f => (
+                <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 rounded-full text-[10px] font-bold tracking-widest transition-all ${filter === f ? 'bg-amber-600 text-black' : 'bg-zinc-900 text-stone-500 hover:text-white border border-stone-800'}`}>
+                    {f}
+                </button>
+            ))}
+        </div>
+
+        {loading ? (
+             <div className="flex items-center justify-center h-64 border border-stone-800 rounded bg-zinc-900/50">
+                 <div className="text-center space-y-4">
+                     <div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                     <p className="text-xs font-mono text-amber-600 animate-pulse">SCANNING FREQUENCIES...</p>
+                 </div>
+             </div>
+        ) : (
+            <>
+                {tracks.length === 0 ? (
+                    <div className="text-center py-20 border border-dashed border-stone-800 rounded-lg">
+                        <Mic2 size={48} className="mx-auto text-stone-700 mb-4" />
+                        <h3 className="text-lg font-serif text-stone-400">No Audio Files Detected</h3>
+                        <p className="text-xs font-mono text-stone-600 mt-2 max-w-md mx-auto">
+                            To populate this hub, place your .mp3 files in the public folder and map them in 
+                            <span className="text-amber-600"> /data/audio.json</span>.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredTracks.map((track) => (
+                            <div key={track.id} onClick={() => playTrack(track)} className={`group relative p-6 bg-zinc-900 border transition-all cursor-pointer overflow-hidden ${currentTrack?.id === track.id ? 'border-amber-600 shadow-[0_0_20px_rgba(217,119,6,0.15)]' : 'border-stone-800 hover:border-stone-600 hover:bg-zinc-800'}`}>
+                                {/* Card Decor */}
+                                <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-50 transition-opacity">
+                                    <Disc size={64} className={currentTrack?.id === track.id && isPlaying ? 'animate-spin' : ''} />
+                                </div>
+                                
+                                <div className="relative z-10 space-y-4">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[9px] font-mono text-amber-600 border border-amber-900/50 px-2 py-1 rounded bg-amber-900/10">
+                                            {track.phase || 'UNCATEGORIZED'}
+                                        </span>
+                                        {currentTrack?.id === track.id && <div className="text-amber-500 animate-pulse"><Volume2 size={16} /></div>}
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 className={`text-lg font-bold font-serif leading-tight ${currentTrack?.id === track.id ? 'text-amber-500' : 'text-stone-200 group-hover:text-white'}`}>{track.title}</h3>
+                                        <p className="text-xs text-stone-500 mt-1 line-clamp-1">{track.description || "System Audio File"}</p>
+                                    </div>
+
+                                    <div className="flex items-center gap-4 text-[10px] font-mono text-stone-600 border-t border-stone-800 pt-4 mt-2">
+                                        <span className="flex items-center gap-1"><Clock size={12} /> {track.duration}</span>
+                                        <span className="flex items-center gap-1"><Disc size={12} /> MP3</span>
+                                    </div>
+                                </div>
+                                
+                                {/* Progress Bar Visual */}
+                                <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800">
+                                    {currentTrack?.id === track.id && <div className="h-full bg-amber-600 w-full animate-pulse"></div>}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </>
+        )}
+      </div>
+      
+      {/* Persistent Player Dashboard */}
+      {currentTrack && (
+          <div className="fixed bottom-0 left-0 w-full bg-zinc-950 border-t border-amber-900/30 p-4 z-50 shadow-2xl">
+              <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                      <div className="w-12 h-12 bg-zinc-900 rounded border border-stone-800 flex items-center justify-center relative overflow-hidden">
+                           <div className={`absolute inset-0 bg-amber-600/20 ${isPlaying ? 'animate-pulse' : ''}`}></div>
+                           <Disc size={24} className={`text-amber-600 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '3s' }} />
+                      </div>
+                      <div className="hidden md:block">
+                          <p className="text-[10px] font-mono text-amber-600 uppercase tracking-widest">NOW TRANSMITTING</p>
+                          <p className="text-sm font-bold text-white truncate max-w-[200px]">{currentTrack.title}</p>
+                      </div>
+                  </div>
+
+                  <div className="flex items-center gap-6">
+                       <button className="text-stone-500 hover:text-white transition-colors"><SkipBack size={20} /></button>
+                       <button onClick={() => playTrack(currentTrack)} className="w-14 h-14 bg-amber-600 text-black rounded-full flex items-center justify-center hover:bg-white transition-all shadow-[0_0_15px_rgba(217,119,6,0.4)]">
+                            {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
+                       </button>
+                       <button className="text-stone-500 hover:text-white transition-colors"><SkipForward size={20} /></button>
+                  </div>
+                  
+                  <div className="hidden md:flex flex-1 justify-end">
+                      <audio ref={audioRef} src={currentTrack.file} onEnded={() => setIsPlaying(false)} />
+                      <div className="flex gap-1 h-8 items-end">
+                          {[...Array(5)].map((_,i) => (
+                              <div key={i} className={`w-1 bg-amber-600/50 rounded-sm ${isPlaying ? 'animate-bounce' : 'h-1'}`} style={{ height: isPlaying ? `${Math.random() * 100}%` : '20%', animationDelay: `${i * 0.1}s` }}></div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
     </div>
   );
 };
