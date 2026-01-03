@@ -124,7 +124,7 @@ const SECTIONS = [
 ];
 
 /* ==================================================================================
-   ⬇️ DEDICATIONS CONTENT (FIXED & SECURED) ⬇️
+   ⬇️ DEDICATIONS CONTENT (STRICTLY FIXED) ⬇️
    ================================================================================== */
 const DEDICATIONS_CONTENT = {
   en: [
@@ -693,9 +693,9 @@ const DedicationView = ({ onBack, t, lang }) => (
 );
 
 const ProfileOptions = ({ onBack, onShowDedications, t }) => (
-  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative">
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative z-50">
     <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
-    <div className="max-w-md w-full space-y-8 animate-slide-up text-center">
+    <div className="max-w-md w-full space-y-8 text-center relative z-20">
       <div className="w-24 h-24 mx-auto bg-zinc-900 rounded-full border border-amber-600/30 flex items-center justify-center mb-8"><User size={40} className="text-amber-600" /></div>
       <h2 className="text-3xl font-serif text-stone-200">{t.authorTitle}</h2>
       <p className="text-stone-500 text-sm leading-relaxed px-4">{t.authorDesc}</p>
@@ -711,7 +711,29 @@ const ProfileOptions = ({ onBack, onShowDedications, t }) => (
   </div>
 );
 
-// --- 🎧 ADVANCED AUDIO PLAYER ENGINE (REBUILT FOR ALL) ---
+const FormatSelectionModal = ({ onClose, onSelect, t }) => (
+  <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
+    <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
+    <div className="max-w-lg w-full space-y-12 text-center">
+        <h2 className="text-3xl font-serif text-amber-500">{t.selectLang}</h2>
+        <div className="grid grid-cols-2 gap-8">
+            <button onClick={() => onSelect('read')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <BookOpen size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.read}</span>
+            </button>
+            <button onClick={() => onSelect('listen')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <Headphones size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.listen}</span>
+            </button>
+        </div>
+    </div>
+  </div>
+);
+
 const AudioPlayerView = ({ bookData, onBack, language, t }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1);
@@ -724,7 +746,6 @@ const AudioPlayerView = ({ bookData, onBack, language, t }) => {
     const audioRef = useRef(null);
     const [error, setError] = useState(false);
     
-    // Support both book library format (bookData.id) and simple track format (bookData.file)
     const audioFile = bookData.file ? bookData.file : `/audio-${bookData.id}-${language}.mp3`;
 
     useEffect(() => {
@@ -901,6 +922,194 @@ const AudioPlayerView = ({ bookData, onBack, language, t }) => {
             `}</style>
         </div>
     );
+};
+
+const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, language, t }) => {
+  const [chapters, setChapters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(initialProgress || 0);
+  const [theme, setTheme] = useState('dark');
+  const [fontSize, setFontSize] = useState(19);
+  const [showControls, setShowControls] = useState(false);
+  const [showTOC, setShowTOC] = useState(false);
+  const [zenMode, setZenMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+    async function loadContent() {
+      setLoading(true);
+      try {
+        const baseName = `/book-${bookData.id}`;
+        const targetFile = `${baseName}-${language}.md`;
+        let response = await fetch(`${targetFile}?t=${Date.now()}`);
+        
+        if (!response.ok) {
+             response = await fetch(`${baseName}-en.md?t=${Date.now()}`);
+             if(!response.ok) response = await fetch(`${bookData.file}?t=${Date.now()}`);
+        }
+
+        if (!response.ok) throw new Error("File not found");
+        
+        const text = await response.text();
+        let parsed = parseMarkdown(text);
+        
+        if (language === 'ml' && t.originalNote && parsed.length > 0) {
+             parsed[0].content = `<div class="p-4 mb-8 bg-amber-900/20 border border-amber-600/30 rounded text-amber-500 text-xs font-mono">${t.originalNote}</div>` + parsed[0].content;
+        }
+
+        if (parsed.length > 0) setChapters(parsed);
+        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file was found but appears empty.</p>` }]);
+
+      } catch (err) {
+         setChapters([{ id: 0, title: t.contentMissing, subtitle: "404", content: `<p>${t.contentMissing}</p>` }]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadContent();
+  }, [bookData, language, t]);
+
+  useEffect(() => {
+    if (chapters.length > 0) onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
+  }, [currentChapterIndex, chapters, bookData.id]);
+
+  useEffect(() => {
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  }, [theme]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 3) return [];
+    return chapters.map((chap, idx) => {
+        const text = chap.content.replace(/<[^>]*>/g, ' ');
+        if (text.toLowerCase().includes(searchQuery.toLowerCase())) return { ...chap, index: idx };
+        return null;
+    }).filter(Boolean);
+  }, [searchQuery, chapters]);
+
+  const currentChapter = chapters[currentChapterIndex] || { title: "Loading...", content: "" };
+  const readingTime = calculateReadingTime(currentChapter.content || "");
+
+  return (
+    <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
+      {!zenMode && (
+        <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={onBack} className="p-2 -ml-2 hover:text-amber-600 transition-colors flex items-center gap-2"><ArrowLeft size={20} /></button>
+            <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowTOC(true)}>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-600 opacity-80">{bookData.title}</span>
+                <span className={`text-xs font-serif ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{currentChapter.subtitle || "READING"}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+                <button onClick={() => setShowSearch(!showSearch)} className="p-2 hover:text-amber-600 transition-colors"><Search size={18} /></button>
+                <button onClick={() => setZenMode(true)} className="p-2 hover:text-amber-600 transition-colors"><Maximize size={18} /></button>
+                <div className="relative">
+                    <button onClick={() => setShowControls(!showControls)} className={`p-2 transition-colors ${showControls ? 'text-amber-600' : 'hover:text-amber-600'}`}><Type size={20} /></button>
+                    {showControls && (
+                        <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Mode</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setTheme('light')} className={`p-2 rounded-full ${theme === 'light' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}><Sun size={14} /></button><button onClick={() => setTheme('dark')} className={`p-2 rounded-full ${theme === 'dark' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}><Moon size={14} /></button></div></div>
+                                <div className="space-y-3"><div className="flex items-center justify-between text-stone-500"><span className="text-xs font-sans uppercase">Size</span><span className="text-xs font-mono">{fontSize}px</span></div><input type="range" min="16" max="26" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1 bg-stone-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-600" /></div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            </div>
+            {showSearch && (
+                <div className="border-t border-stone-800 bg-zinc-950/95 backdrop-blur p-4 animate-slide-up">
+                    <div className="max-w-xl mx-auto">
+                        <input type="text" placeholder="Search in this book..." className="w-full bg-zinc-900 border border-stone-700 p-3 text-sm text-white focus:border-amber-600 focus:outline-none rounded-sm mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} autoFocus />
+                        {searchResults.length > 0 && (
+                            <div className="max-h-40 overflow-y-auto space-y-2">
+                                {searchResults.map(res => (
+                                    <button key={res.id} onClick={() => { setCurrentChapterIndex(res.index); setShowSearch(false); }} className="w-full text-left p-3 hover:bg-stone-900 rounded border border-transparent hover:border-stone-800">
+                                        <div className="text-xs text-amber-600 font-mono">{res.subtitle}</div>
+                                        <div className="text-sm text-stone-300 font-serif">{res.title}</div>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        {searchQuery.length > 0 && searchResults.length === 0 && <div className="text-center text-stone-500 text-xs py-2">No results found</div>}
+                    </div>
+                </div>
+            )}
+        </header>
+      )}
+
+      <main className={`max-w-2xl mx-auto px-6 pb-32 transition-all duration-500 ${zenMode ? 'pt-20 cursor-text' : 'pt-32'}`}>
+        <article className="animate-fade-in">
+          {zenMode && (
+              <button onClick={() => setZenMode(false)} className="fixed top-6 right-6 p-2 bg-black/20 hover:bg-black/50 text-stone-500 hover:text-white rounded-full transition-colors z-50"><Minimize size={20} /></button>
+          )}
+          {loading ? (
+             <div className="flex justify-center py-20 text-stone-500 font-mono text-xs animate-pulse">LOADING SYSTEM...</div>
+          ) : (
+            <>
+                <header className="mb-12 text-center">
+                    <span className="block text-amber-600 font-mono text-xs tracking-[0.2em] mb-4 uppercase">{currentChapter.subtitle}</span>
+                    <h2 className={`text-3xl md:text-4xl font-serif font-bold mb-6 ${theme === 'dark' ? 'text-stone-100' : 'text-stone-900'}`}>{currentChapter.title}</h2>
+                    <div className="flex items-center justify-center space-x-2 text-stone-500 text-[10px] font-mono mb-8 opacity-60">
+                        <Clock size={12} />
+                        <span>{readingTime} MIN READ</span>
+                    </div>
+                    <div className="w-8 h-[1px] bg-amber-600/50 mx-auto"></div>
+                </header>
+                <div className="prose dark:prose-invert prose-lg md:prose-xl mx-auto font-serif leading-loose" style={{ fontSize: `${fontSize}px` }}>
+                    <div dangerouslySetInnerHTML={{ __html: currentChapter.content }} />
+                </div>
+            </>
+          )}
+        </article>
+      </main>
+
+      {!zenMode && (
+        <footer className={`fixed bottom-0 w-full z-30 border-t backdrop-blur-md transition-colors ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={() => { if(currentChapterIndex > 0) { setCurrentChapterIndex(prev => prev - 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === 0} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === 0 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><ChevronLeft size={16} /><span className="text-sm font-sans font-medium hidden md:inline">Previous</span></button>
+            <span className="text-[10px] font-mono text-stone-500 tracking-wider">{(currentChapterIndex + 1)} / {chapters.length}</span>
+            <button 
+                onClick={() => { 
+                    if(currentChapterIndex < chapters.length - 1) { 
+                        setCurrentChapterIndex(prev => prev + 1); 
+                        window.scrollTo(0,0); 
+                    } else {
+                        // EXIT FUNCTIONALITY
+                        onBack();
+                    }
+                }} 
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all hover:bg-stone-100 dark:hover:bg-zinc-800`}
+            >
+                {currentChapterIndex === chapters.length - 1 ? (
+                    <span className="text-sm font-sans font-bold text-amber-600">COMPLETE & EXIT</span>
+                ) : (
+                    <>
+                        <span className="text-sm font-sans font-medium hidden md:inline">Next</span>
+                        <ChevronRight size={16} />
+                    </>
+                )}
+            </button>
+            </div>
+        </footer>
+      )}
+
+      {showTOC && (
+        <div className="fixed inset-0 z-40 bg-zinc-950/98 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-fade-in">
+            <button onClick={() => setShowTOC(false)} className="absolute top-6 right-6 text-stone-400 hover:text-white transition-colors p-2"><X size={32} strokeWidth={1} /></button>
+            <h2 className="text-2xl font-serif text-amber-600 mb-12 tracking-wider border-b border-amber-900/30 pb-4">INDEX</h2>
+            <nav className="space-y-4 w-full max-w-md text-center max-h-[70vh] overflow-y-auto">
+            {chapters.map((chapter, index) => (
+                <button key={chapter.id} onClick={() => { setCurrentChapterIndex(index); setShowTOC(false); window.scrollTo(0,0); }} className={`w-full py-4 px-4 text-lg md:text-xl font-serif transition-all duration-300 rounded-sm ${currentChapterIndex === index ? 'bg-amber-900/10 text-amber-500 border border-amber-900/20' : 'text-stone-500 hover:text-stone-200 hover:bg-stone-900'}`}>
+                <span className="block text-[10px] font-mono text-stone-600 mb-1 uppercase tracking-widest">{chapter.subtitle}</span>
+                {chapter.title}
+                </button>
+            ))}
+            </nav>
+        </div>
+      )}
+    </div>
+  );
 };
 
 // --- MAIN CONTROLLER ---
