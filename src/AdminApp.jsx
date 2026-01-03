@@ -1,63 +1,121 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { marked } from "marked";
 
+// ============== UI SHELL ==============
+const TabButton = ({ active, onClick, children }) => (
+  <button
+    onClick={onClick}
+    style={{
+      padding: "10px 16px",
+      marginRight: 10,
+      borderRadius: 10,
+      border: active ? "1px solid #d4af37" : "1px solid #333",
+      background: active ? "#111" : "#000",
+      color: active ? "#d4af37" : "white",
+      cursor: "pointer"
+    }}
+  >
+    {children}
+  </button>
+);
+
+// ============== MAIN APP ==============
 function AdminApp() {
 
-  // ---------- ACCESS GATE ----------
+  // --------------- Auth ---------------
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    const k = new URLSearchParams(window.location.search).get("key");
-    if (k === "legacyroot") setAuthorized(true);
+    const key = new URLSearchParams(window.location.search).get("key");
+    if (key === "legacyroot") setAuthorized(true);
   }, []);
 
   if (!authorized) {
     return (
-      <div style={{ color: "white", background: "black", height: "100vh", display: "grid", placeItems: "center" }}>
-        <div>404 — Not Found</div>
+      <div style={{ background: "black", color: "white", height: "100vh", display: "grid", placeItems: "center" }}>
+        <h2>404 — Not Found</h2>
       </div>
     );
   }
 
-  // ---------- DATA MODELS ----------
+  // --------------- Tabs ---------------
+  const [tab, setTab] = useState("dashboard");
+
+  // --------------- Data Stores ---------------
   const [audioList, setAudioList] = useState([]);
   const [reviews, setReviews] = useState([]);
 
+  // Books
   const [bookId, setBookId] = useState(0);
-  const [lang, setLang] = useState("en");
+  const [language, setLanguage] = useState("en");
   const [markdown, setMarkdown] = useState("");
-  const [status, setStatus] = useState("");
 
-  // ---------- LOAD DATA ----------
+  // --------------- Load json on mount ---------------
   useEffect(() => {
     fetch("/data/audio.json").then(r => r.json()).then(setAudioList).catch(() => setAudioList([]));
     fetch("/data/reviews.json").then(r => r.json()).then(setReviews).catch(() => setReviews([]));
   }, []);
 
-  // ---------- LOAD BOOK ----------
+  // --------------- BOOKS ---------------
   const loadBook = async () => {
-    const path = lang === "ml" ? `/book-${bookId}-ml.md` : `/book-${bookId}.md`;
+    const file =
+      language === "ml"
+        ? `/book-${bookId}-ml.md`
+        : `/book-${bookId}.md`;
+
     try {
-      const t = await (await fetch(path)).text();
-      setMarkdown(t);
-      setStatus("Loaded " + path);
+      const txt = await (await fetch(file)).text();
+      setMarkdown(txt);
     } catch {
-      setMarkdown("# New book file");
-      setStatus("File does not exist yet, starting new.");
+      setMarkdown("# New Book");
     }
   };
 
-  // ---------- DOWNLOAD BOOK ----------
   const downloadBook = () => {
-    const f = lang === "ml" ? `book-${bookId}-ml.md` : `book-${bookId}.md`;
+    const filename =
+      language === "ml"
+        ? `book-${bookId}-ml.md`
+        : `book-${bookId}.md`;
+
     const blob = new Blob([markdown], { type: "text/markdown" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = f;
+    a.download = filename;
     a.click();
   };
 
-  // ---------- JSON DOWNLOAD ----------
+  // --------------- AUDIO ---------------
+  const addAudioTrack = () => {
+    const id = prompt("Book ID?");
+    if (!id) return;
+    const title = prompt("Audio Title?");
+    setAudioList([...audioList, { id: Number(id), title }]);
+  };
+
+  // --------------- REVIEWS ---------------
+  const addReview = () => {
+    const name = prompt("Reviewer name");
+    const role = prompt("Role");
+    const type = prompt("Type: text / image / audio / video");
+    if (type === "text") {
+      const content = prompt("Enter text review");
+      setReviews([...reviews, { id: Date.now(), name, role, type, content }]);
+    }
+    if (type === "image") {
+      const image = prompt("File name e.g., review_1.png");
+      setReviews([...reviews, { id: Date.now(), name, role, type, image }]);
+    }
+    if (type === "audio") {
+      const audio = prompt("File name e.g., audio-review-1.mp3");
+      setReviews([...reviews, { id: Date.now(), name, role, type, audio }]);
+    }
+    if (type === "video") {
+      const videoUrl = prompt("Paste video link");
+      setReviews([...reviews, { id: Date.now(), name, role, type, videoUrl }]);
+    }
+  };
+
   const downloadJSON = (obj, name) => {
     const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -66,48 +124,13 @@ function AdminApp() {
     a.click();
   };
 
-  // ---------- ADD AUDIO ----------
-  const addAudio = () => {
-    const id = prompt("Track ID (number only)");
-    const title = prompt("Enter title");
-    if (!id || !title) return;
-    setAudioList([...audioList, { id: Number(id), title }]);
-  };
-
-  // ---------- ADD REVIEW ----------
-  const addReview = () => {
-    const name = prompt("Reviewer name");
-    const role = prompt("Role / relation");
-    const type = prompt("Type: text / audio / image / video");
-
-    if (type === "text") {
-      const content = prompt("Enter review text");
-      setReviews([...reviews, { id: Date.now(), name, role, type, content }]);
-    }
-
-    if (type === "audio") {
-      const audio = prompt("Audio file name (audio-review-#.mp3)");
-      setReviews([...reviews, { id: Date.now(), name, role, type, audio }]);
-    }
-
-    if (type === "image") {
-      const image = prompt("Image file name (review_#.png)");
-      setReviews([...reviews, { id: Date.now(), name, role, type, image }]);
-    }
-
-    if (type === "video") {
-      const videoUrl = prompt("Paste video URL");
-      setReviews([...reviews, { id: Date.now(), name, role, type, videoUrl }]);
-    }
-  };
-
-  // ---------- STYLE ----------
+  // --------------- STYLE ---------------
   const card = {
-    background: "#0c0c0c",
-    border: "1px solid #2a2a2a",
-    borderRadius: 12,
-    padding: 18,
-    marginTop: 20
+    background: "#0A0A0A",
+    border: "1px solid #222",
+    padding: 20,
+    marginTop: 18,
+    borderRadius: 14
   };
 
   const gold = "#d4af37";
@@ -116,82 +139,120 @@ function AdminApp() {
     <div style={{ background: "black", minHeight: "100vh", color: "white", padding: 20 }}>
 
       <h1 style={{ color: gold }}>LEGACY OS — ADMIN DASHBOARD</h1>
-      <div style={{ opacity: .7 }}>{status}</div>
 
-      {/* ------------ BOOK EDITOR ------------ */}
-      <div style={card}>
-        <h2 style={{ color: gold }}>📚 Book Editor (WYSIWYG + Markdown)</h2>
-
-        <div>
-          Book ID:
-          <input type="number" value={bookId} onChange={e => setBookId(e.target.value)} style={{ width: 60, marginLeft: 10 }} />
-
-          Language:
-          <select value={lang} onChange={e => setLang(e.target.value)} style={{ marginLeft: 10 }}>
-            <option value="en">English</option>
-            <option value="ml">Malayalam</option>
-          </select>
-
-          <button onClick={loadBook} style={{ marginLeft: 10 }}>Load</button>
-          <button onClick={downloadBook} style={{ marginLeft: 10, color: gold }}>Download Updated File</button>
-        </div>
-
-        <textarea
-          value={markdown}
-          onChange={e => setMarkdown(e.target.value)}
-          style={{ width: "100%", height: 260, marginTop: 10, background: "#111", color: "white" }}
-        />
-
-        <div style={{ marginTop: 10, padding: 10, background: "#111" }}>
-          <div style={{ color: gold }}>Live Preview</div>
-          <div dangerouslySetInnerHTML={{ __html: marked.parse(markdown || "") }} />
-        </div>
+      {/* TABS */}
+      <div style={{ marginTop: 10 }}>
+        <TabButton active={tab === "dashboard"} onClick={() => setTab("dashboard")}>Dashboard</TabButton>
+        <TabButton active={tab === "books"} onClick={() => setTab("books")}>Books</TabButton>
+        <TabButton active={tab === "audio"} onClick={() => setTab("audio")}>Audio</TabButton>
+        <TabButton active={tab === "reviews"} onClick={() => setTab("reviews")}>Reviews</TabButton>
+        <TabButton active={tab === "upload"} onClick={() => setTab("upload")}>Upload Assistant</TabButton>
       </div>
 
-      {/* ------------ AUDIO MANAGER ------------ */}
-      <div style={card}>
-        <h2 style={{ color: gold }}>🎧 Audio Manager</h2>
+      {/* ================= DASHBOARD ================= */}
+      {tab === "dashboard" && (
+        <div style={card}>
+          <h2 style={{ color: gold }}>Welcome, Administrator</h2>
+          <p>You can manage the ENTIRE Legacy OS content from here without touching code.</p>
 
-        <button onClick={addAudio}>Add New Track</button>
-        <button onClick={() => downloadJSON(audioList, "audio.json")} style={{ marginLeft: 10 }}>Download audio.json</button>
-
-        <pre style={{ marginTop: 10 }}>{JSON.stringify(audioList, null, 2)}</pre>
-
-        <div style={{ opacity: .8, marginTop: 5 }}>
-          Upload audio files to <span style={{ color: gold }}>/public/audio/</span><br />
-          File names: <b>audio-0-en.mp3, audio-5-ml.mp3</b>
+          <ul>
+            <li>Write books → Download markdown → push</li>
+            <li>Manage audio tracks</li>
+            <li>Manage reviews</li>
+            <li>Ensure filenames are correct before upload</li>
+          </ul>
         </div>
-      </div>
+      )}
 
-      {/* ------------ REVIEW MANAGER ------------ */}
-      <div style={card}>
-        <h2 style={{ color: gold }}>⭐ Review Manager</h2>
+      {/* ================= BOOKS ================= */}
+      {tab === "books" && (
+        <div style={card}>
+          <h2 style={{ color: gold }}>📚 Book Editor with Live Preview</h2>
 
-        <button onClick={addReview}>Add Review</button>
-        <button onClick={() => downloadJSON(reviews, "reviews.json")} style={{ marginLeft: 10 }}>Download reviews.json</button>
+          <div>
+            Book ID:
+            <input value={bookId} onChange={e => setBookId(e.target.value)} style={{ width: 60, marginLeft: 6 }} />
 
-        <pre style={{ marginTop: 10 }}>{JSON.stringify(reviews, null, 2)}</pre>
+            Language:
+            <select value={language} onChange={e => setLanguage(e.target.value)} style={{ marginLeft: 6 }}>
+              <option value="en">English</option>
+              <option value="ml">Malayalam</option>
+            </select>
 
-        <div style={{ opacity: .8, marginTop: 5 }}>
-          Review images → <span style={{ color: gold }}>/public/reviews/images/</span><br />
-          Review audio → <span style={{ color: gold }}>/public/reviews/audio/</span>
+            <button onClick={loadBook} style={{ marginLeft: 8 }}>Load</button>
+            <button onClick={downloadBook} style={{ marginLeft: 8, color: gold }}>Download</button>
+          </div>
+
+          <textarea
+            value={markdown}
+            onChange={e => setMarkdown(e.target.value)}
+            style={{ width: "100%", height: 260, marginTop: 10, background: "#111", color: "white" }}
+          />
+
+          <div style={{ marginTop: 10, padding: 10, background: "#0f0f0f" }}>
+            <div style={{ color: gold }}>Live Preview</div>
+            <div dangerouslySetInnerHTML={{ __html: marked.parse(markdown || "") }} />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* ------------ MEDIA ASSISTANT ------------ */}
-      <div style={card}>
-        <h2 style={{ color: gold }}>🖼 Media Upload Assistant</h2>
+      {/* ================= AUDIO ================= */}
+      {tab === "audio" && (
+        <div style={card}>
+          <h2 style={{ color: gold }}>🎧 Audio Manager</h2>
 
-        <ul>
-          <li>Covers → cover-0.png</li>
-          <li>Book English → book-0.md</li>
-          <li>Book Malayalam → book-0-ml.md</li>
-          <li>Audio EN → audio-0-en.mp3</li>
-          <li>Audio ML → audio-0-ml.mp3</li>
-          <li>Review image → review_1.png</li>
-          <li>Review audio → audio-review-1.mp3</li>
-        </ul>
-      </div>
+          <button onClick={addAudioTrack}>Add Track</button>
+          <button onClick={() => downloadJSON(audioList, "audio.json")} style={{ marginLeft: 10 }}>
+            Download audio.json
+          </button>
+
+          <pre style={{ marginTop: 10 }}>{JSON.stringify(audioList, null, 2)}</pre>
+
+          <p>
+            Audio files go in <span style={{ color: gold }}>/public/audio/</span><br />
+            Naming: <b>audio-0-en.mp3, audio-3-ml.mp3</b>
+          </p>
+        </div>
+      )}
+
+      {/* ================= REVIEWS ================= */}
+      {tab === "reviews" && (
+        <div style={card}>
+          <h2 style={{ color: gold }}>⭐ Review Manager</h2>
+
+          <button onClick={addReview}>Add Review</button>
+          <button onClick={() => downloadJSON(reviews, "reviews.json")} style={{ marginLeft: 10 }}>
+            Download reviews.json
+          </button>
+
+          <pre style={{ marginTop: 10 }}>{JSON.stringify(reviews, null, 2)}</pre>
+
+          <p>
+            Image reviews → <span style={{ color: gold }}>/public/reviews/images/</span><br />
+            Audio reviews → <span style={{ color: gold }}>/public/reviews/audio/</span>
+          </p>
+        </div>
+      )}
+
+      {/* ================= UPLOAD ASSISTANT ================= */}
+      {tab === "upload" && (
+        <div style={card}>
+          <h2 style={{ color: gold }}>🖼 Upload & Naming Assistant</h2>
+
+          <ul>
+            <li>Books → book-0.md / book-0-ml.md</li>
+            <li>Covers → cover-0.png</li>
+            <li>Audio EN → audio-0-en.mp3</li>
+            <li>Audio ML → audio-0-ml.mp3</li>
+            <li>Review image → review_1.png</li>
+            <li>Review audio → audio-review-1.mp3</li>
+          </ul>
+
+          <p style={{ opacity: 0.8 }}>
+            This admin does NOT upload directly — it prepares files correctly so your Git workflow stays safe and clean.
+          </p>
+        </div>
+      )}
 
     </div>
   );
