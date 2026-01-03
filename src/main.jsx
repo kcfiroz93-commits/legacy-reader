@@ -1,10 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import TheLegacyReader from './TheLegacyReader'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import TheLegacyReader from "./TheLegacyReader.jsx";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <TheLegacyReader />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
+export default TheLegacyReader;
