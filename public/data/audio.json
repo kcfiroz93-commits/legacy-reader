@@ -1,26 +1,51 @@
 [
   {
     "id": 1,
-    "title": "The Legacy OS - Master Map Edition",
-    "duration": "40:51",
-    "file": "/public/audio/audio-0-ml.mp3"
+    "title": "The Legacy OS - Master Map Edition-Malayalam",
+    "phase": "PHASE I",
+    "duration": "30:29",
+    "file": "/audio/audio-0-ml.mp3"
   },
   {
     "id": 2,
-    "title": "My Life: 10%Destiny 90%Creation.",
+    "title": "My Life: 10%Destiny 90%Creation-Malayalam",
+    "phase": "PHASE I",
     "duration": "40:51",
-    "file": "/public/audio/audio-1-ml.mp3"
+    "file": "/audio/audio-1-ml.mp3"
   },
   {
     "id": 3,
-    "title": "Chapter 2: The Age 33 Shift",
+    "title": "Malayalam Podcast Review of The Legacy OS",
+    "phase": "PHASE II",
     "duration": "09:45",
-    "file": "/audio/ch2.mp3"
+    "file": "/audio/reviews/audio/review-audio-1.mp3"
   },
   {
     "id": 4,
-    "title": "Chapter 3: Destiny (The 10%)",
+    "title": "English Podcast about The Legacy OS",
+    "phase": "PHASE II",
     "duration": "11:20",
-    "file": "/audio/ch3.mp3"
+    "file": "/audio/review-audio-2.mp3"
+  },
+  {
+    "id": 5,
+    "title": "Arabic Review of The Legacy OS",
+    "phase": "PHASE II",
+    "duration": "11:20",
+    "file": "/audio/review-audio-3.mp3"
+  },
+  {
+    "id": 6,
+    "title": "Master Map Edition - English",
+    "phase": "PHASE I",
+    "duration": "13:50",
+    "file": "/audio/audio-0-en.mp3"
+  },
+  {
+    "id": 7,
+    "title": "My Life: 10%Destiny 90%Creation",
+    "phase": "PHASE I",
+    "duration": "14:20",
+    "file": "/audio/audio-1-en.mp3"
   }
 ]
