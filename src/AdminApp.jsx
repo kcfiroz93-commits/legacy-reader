@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom/client";
 import { marked } from "marked";
 
 // ============== UI SHELL ==============
@@ -98,18 +97,22 @@ function AdminApp() {
     const name = prompt("Reviewer name");
     const role = prompt("Role");
     const type = prompt("Type: text / image / audio / video");
+
     if (type === "text") {
       const content = prompt("Enter text review");
       setReviews([...reviews, { id: Date.now(), name, role, type, content }]);
     }
+
     if (type === "image") {
       const image = prompt("File name e.g., review_1.png");
       setReviews([...reviews, { id: Date.now(), name, role, type, image }]);
     }
+
     if (type === "audio") {
       const audio = prompt("File name e.g., audio-review-1.mp3");
       setReviews([...reviews, { id: Date.now(), name, role, type, audio }]);
     }
+
     if (type === "video") {
       const videoUrl = prompt("Paste video link");
       setReviews([...reviews, { id: Date.now(), name, role, type, videoUrl }]);
@@ -137,7 +140,6 @@ function AdminApp() {
 
   return (
     <div style={{ background: "black", minHeight: "100vh", color: "white", padding: 20 }}>
-
       <h1 style={{ color: gold }}>LEGACY OS — ADMIN DASHBOARD</h1>
 
       {/* TABS */}
@@ -258,4 +260,4 @@ function AdminApp() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("admin-root")).render(<AdminApp />);
+export default AdminApp;

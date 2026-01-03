@@ -5,7 +5,6 @@ export default defineConfig({
   plugins: [react()],
 
   resolve: {
-    // CRITICAL: prevents duplicate React versions
     dedupe: ['react', 'react-dom']
   },
 
