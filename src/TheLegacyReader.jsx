@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Moon, Sun, X, Type, ChevronLeft, ChevronRight, Smartphone,  Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge, Lock, Filter, Disc, Mic2, RotateCcw, RotateCw, VolumeX, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 
 /* ==================================================================================
@@ -8,7 +8,7 @@ import { Moon, Sun, X, Type, ChevronLeft, ChevronRight, Smartphone,  Download, E
 const CONFIG = {
   author: "ADVOCATE KC FIROZ", 
   logoPath: "/icon-v2.png",   
-  lockIconPath: "/icon-v3.png", // Your new custom lock icon
+  lockIconPath: "/icon-v3.png", 
   
   // LANDING PAGE IMAGES
   seriesCover: "/cover.png",   
@@ -128,140 +128,49 @@ const DEDICATIONS_CONTENT = {
   en: [
     {
       title: "To my parents — ALAVI KC & AMINA K",
-      content: `
-        <p>Umma and Uppa,</p>
-        <p>you are the first architects of our lives and the foundation beneath everything we are attempting to build. Your sacrifices were quiet, your love unconditional, and your prayers constant. Whatever strength, resilience, and purpose I have today is rooted in the values you lived every single day without fanfare.</p>
-      `
+      content: "<p>Umma and Uppa,</p><p>you are the first architects of our lives and the foundation beneath everything we are attempting to build. Your sacrifices were quiet, your love unconditional, and your prayers constant. Whatever strength, resilience, and purpose I have today is rooted in the values you lived every single day without fanfare.</p>"
     },
     {
       title: "To the parents of Shanu and Innu — NAZAR ALADI & SHAJITHA O. K.",
-      content: `
-        <p>Umma and Uppa,</p>
-        <p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p>
-        <p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>
-      `
+      content: "<p>Umma and Uppa,</p><p>you raised two extraordinary daughters —<br/>Er. Sherin Shahana, the civil engineer who built love into my life, and<br/>Ar. Shahla Fathima, the architect who now builds my present and my future with me.</p><p>You entrusted both of them to me — your hopes, your trust, and a part of your hearts. That responsibility is sacred to me. Shanu’s memory lives as light in everything I do, and Innu’s presence stands beside me as strength in everything I am yet to accomplish.</p>"
     },
     {
       title: "Both homes together shaped my character before I shaped my ambitions.",
-      content: `
-        <p>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p>
-        <p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p>
-        <p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p>
-        <p>With deep respect and unwavering commitment,<br/>— Muthu</p>
-      `
+      content: "<p>Together or individually, all of you trusted me with hope and faith, and gave me more than I ever asked for. I am deeply grateful for everything, and I remain committed to doing anything for you all. That is the purpose of my life. I hold both families with reverence.</p><p>Everything I design now — life, legacy, ventures, and values — is built with the intention of making you proud in ways that matter: not just through success, but through integrity, responsibility, and compassion. I want you to see your teachings reflected in my choices and your sacrifices justified in our outcomes.</p><p>This is my promise —<br/>for myself and for Fateh Shah KC — always:<br/>We will honor your names.<br/>We will protect your legacy.<br/>We will carry your values forward without dilution or compromise.<br/>We are yours — in gratitude, duty, and love — forever.</p><p>With deep respect and unwavering commitment,<br/>— Muthu</p>"
     },
     {
       title: "To my beloved Shanu —",
-      content: `
-        <p>You walked into my life like quiet light and left like a prayer, and nothing in my world has been the same since. You did not just share my days; you rewrote my meaning. Your love taught me how to feel, your strength taught me how to stand, and your absence taught me how deep the heart can break and still keep beating.</p>
-        <p>You gave our son life and gave me purpose in the same moment.</p>
-        <p>Your last act on this earth was an act of pure love — and I will honor it for the rest of my life.</p>
-        <p>I carry you in decisions, in silences, in the way I hold Fateh close. I see you in his eyes, in his smile, in the way he reaches out for the world. He is your living chapter — the continuation of your story written in breath and laughter. I promise you this: he will grow with dignity, honesty, and courage. He will know exactly who you were and how much of him comes from you.</p>
-        <p>You were my home before I learned how to build one.</p>
-        <p>You were the calm in my storms, the laughter in my tiredness, the softness in my edges.</p>
-        <p>I miss the life we did not get to finish.<br/>I miss the conversations we never got to have.<br/>I miss the ordinary days that would have been ours.</p>
-        <p>But grief is not the end of our story — legacy is.</p>
-        <p>Everything I build now carries your name in its foundation.<br/>Every prayer I make carries you in its silence.<br/>Every tomorrow I walk into carries the echo of your “stay strong”.</p>
-        <p>If life allows, we will meet again beyond time and explanations. Until then, I will love you through the way I live, the way I raise our son, and the way I honor your memory without letting it break me.</p>
-        <p>You are not gone from my life.<br/>You are woven into it — permanently.</p>
-        <p>With love that didn’t end,<br/>— Ikka.</p>
-      `
+      content: "<p>You walked into my life like quiet light and left like a prayer, and nothing in my world has been the same since. You did not just share my days; you rewrote my meaning. Your love taught me how to feel, your strength taught me how to stand, and your absence taught me how deep the heart can break and still keep beating.</p><p>You gave our son life and gave me purpose in the same moment.</p><p>Your last act on this earth was an act of pure love — and I will honor it for the rest of my life.</p><p>I carry you in decisions, in silences, in the way I hold Fateh close. I see you in his eyes, in his smile, in the way he reaches out for the world. He is your living chapter — the continuation of your story written in breath and laughter. I promise you this: he will grow with dignity, honesty, and courage. He will know exactly who you were and how much of him comes from you.</p><p>You were my home before I learned how to build one.</p><p>You were the calm in my storms, the laughter in my tiredness, the softness in my edges.</p><p>I miss the life we did not get to finish.<br/>I miss the conversations we never got to have.<br/>I miss the ordinary days that would have been ours.</p><p>But grief is not the end of our story — legacy is.</p><p>Everything I build now carries your name in its foundation.<br/>Every prayer I make carries you in its silence.<br/>Every tomorrow I walk into carries the echo of your “stay strong”.</p><p>If life allows, we will meet again beyond time and explanations. Until then, I will love you through the way I live, the way I raise our son, and the way I honor your memory without letting it break me.</p><p>You are not gone from my life.<br/>You are woven into it — permanently.</p><p>With love that didn’t end,<br/>— Ikka.</p>"
     },
     {
       title: "To Innu —",
-      content: `
-        <p>You stepped into my life at a time when the story was already heavy, and instead of stepping back, you chose to stand beside me. That choice was courage. You brought stability where there was chaos, warmth where there was cold, and direction when everything felt unstructured. You did not replace anything — you rebuilt with me, piece by piece, without asking for applause.</p>
-        <p>You are my partner in execution, not just emotion.</p>
-        <p>You carry responsibility with grace and shoulder pain without theatrics, and that inspires me daily.</p>
-        <p>You did not just accept my past; you embraced it with maturity, honoring every chapter that came before you while helping me write the next ones. You love Fateh not as an obligation, but as purpose, and the way you mother him is one of the greatest answers life has given me. Through you, he learns compassion, resilience, and calm strength.</p>
-        <p>You are proof that strength can be quiet and still be unbreakable.</p>
-        <p>You keep moving forward, even when the path is steep, and you push me to level up with you.</p>
-        <p>I want you to know this clearly: your journey matters too. Your dreams, your growth, your healing, your architecture of life — all of it is important. You are not just part of my legacy; you are a co-architect of it. Where I design systems, you breathe life into them. Where I build structures, you create the home inside them.</p>
-        <p>We will not just survive our past; we will outgrow it.<br/>We will not just talk about vision; we will execute it.</p>
-        <p>I am grateful for your patience when I am consumed by work, for your strength when I am tired, and for your faith when plans stretch longer than expected. The life we are building is not accidental — it is intentional, disciplined, and shared.</p>
-        <p>The best chapters are not the ones behind us.<br/>They are the ones we are still committed to writing together.</p>
-        <p>With trust, respect, and unshaken belief in our future,<br/>— Icha.</p>
-      `
+      content: "<p>You stepped into my life at a time when the story was already heavy, and instead of stepping back, you chose to stand beside me. That choice was courage. You brought stability where there was chaos, warmth where there was cold, and direction when everything felt unstructured. You did not replace anything — you rebuilt with me, piece by piece, without asking for applause.</p><p>You are my partner in execution, not just emotion.</p><p>You carry responsibility with grace and shoulder pain without theatrics, and that inspires me daily.</p><p>You did not just accept my past; you embraced it with maturity, honoring every chapter that came before you while helping me write the next ones. You love Fateh not as an obligation, but as purpose, and the way you mother him is one of the greatest answers life has given me. Through you, he learns compassion, resilience, and calm strength.</p><p>You are proof that strength can be quiet and still be unbreakable.</p><p>You keep moving forward, even when the path is steep, and you push me to level up with you.</p><p>I want you to know this clearly: your journey matters too. Your dreams, your growth, your healing, your architecture of life — all of it is important. You are not just part of my legacy; you are a co-architect of it. Where I design systems, you breathe life into them. Where I build structures, you create the home inside them.</p><p>We will not just survive our past; we will outgrow it.<br/>We will not just talk about vision; we will execute it.</p><p>I am grateful for your patience when I am consumed by work, for your strength when I am tired, and for your faith when plans stretch longer than expected. The life we are building is not accidental — it is intentional, disciplined, and shared.</p><p>The best chapters are not the ones behind us.<br/>They are the ones we are still committed to writing together.</p><p>With trust, respect, and unshaken belief in our future,<br/>— Icha.</p>"
     },
     {
       title: "To my son, Fateh Shah KC —",
-      content: `
-        <p>You arrived in this world carrying both love and loss in the same moment, and you changed the entire architecture of my life. You did not just make me a father; you made me a custodian of legacy — of my parents, of your Ummi Shanu, of your Ammi Innu, and of everything our families stand for.</p>
-        <p>This life is my responsibility.<br/>The future is yours.</p>
-        <p>I am building systems so you do not merely inherit assets, but inherit clarity, courage, and character. I want your operating system to be calibrated for wisdom, integrity, compassion, and strength. I want you to stand tall without arrogance, to be kind without being weak, and to be resilient enough to rebuild yourself whenever life resets your plans.</p>
-        <p>Your name carries your roadmap:<br/><strong>Fateh</strong> — victory through purpose<br/><strong>Shah</strong> — heritage, dignity, and lineage<br/><strong>KC</strong> — roots, responsibility, and continuity</p>
-        <p>You are not expected to be perfect. You are expected to be honest, accountable, and unafraid of becoming yourself. If one day you lead our enterprises and our institutions, let it be because you earned it by competence and character — not because it was handed to you.</p>
-        <p>Everything I write, build, protect, and endure now anchors back to you.<br/>Not to control your life, but to empower your choices.</p>
-        <p>If life allows, one day you will read this as a man. When you do, know this:<br/>Your mother loved you before she saw you.<br/>Your family stands behind you.<br/>And my greatest legacy is not what I built — it is who you become.</p>
-        <p>With love, discipline, and unwavering faith,<br/>— Your Abba</p>
-      `
+      content: "<p>You arrived in this world carrying both love and loss in the same moment, and you changed the entire architecture of my life. You did not just make me a father; you made me a custodian of legacy — of my parents, of your Ummi Shanu, of your Ammi Innu, and of everything our families stand for.</p><p>This life is my responsibility.<br/>The future is yours.</p><p>I am building systems so you do not merely inherit assets, but inherit clarity, courage, and character. I want your operating system to be calibrated for wisdom, integrity, compassion, and strength. I want you to stand tall without arrogance, to be kind without being weak, and to be resilient enough to rebuild yourself whenever life resets your plans.</p><p>Your name carries your roadmap:<br/><strong>Fateh</strong> — victory through purpose<br/><strong>Shah</strong> — heritage, dignity, and lineage<br/><strong>KC</strong> — roots, responsibility, and continuity</p><p>You are not expected to be perfect. You are expected to be honest, accountable, and unafraid of becoming yourself. If one day you lead our enterprises and our institutions, let it be because you earned it by competence and character — not because it was handed to you.</p><p>Everything I write, build, protect, and endure now anchors back to you.<br/>Not to control your life, but to empower your choices.</p><p>If life allows, one day you will read this as a man. When you do, know this:<br/>Your mother loved you before she saw you.<br/>Your family stands behind you.<br/>And my greatest legacy is not what I built — it is who you become.</p><p>With love, discipline, and unwavering faith,<br/>— Your Abba</p>"
     }
   ],
   ml: [
     {
       title: "എന്റെ മാതാപിതാക്കൾക്ക് — ALAVI KC & AMINA K",
-      content: `
-        <p>ഉമ്മയും ഉപ്പയും,</p>
-        <p>നിങ്ങളാണ് നമ്മുടെ ജീവിതത്തിന്റെ പ്രഥമ ശിൽപ്പികൾ, ഇന്ന് നാം നിർമ്മിക്കാൻ ശ്രമിക്കുന്ന എല്ലാറ്റിന്റെയും അടിത്തറ. നിങ്ങളുടെ ത്യാഗങ്ങൾ നിശ്ശബ്ദമായിരുന്നു, നിങ്ങളുടെ സ്നേഹം നിബന്ധനകളില്ലാത്തതായിരുന്നു, നിങ്ങളുടെ പ്രാർത്ഥനകൾ സ്ഥിരമായിരുന്നു. ഇന്ന് എനിക്കുള്ള ശക്തിയും പ്രതിരോധ ശേഷിയും ലക്ഷ്യബോധവും എല്ലാം, നിങ്ങൾ ആഡംബരമില്ലാതെ ദിവസേന ജീവിച്ച മൂല്യങ്ങളിലാണ് വേരൂന്നിയിരിക്കുന്നത്.</p>
-      `
+      content: "<p>ഉമ്മയും ഉപ്പയും,</p><p>നിങ്ങളാണ് നമ്മുടെ ജീവിതത്തിന്റെ പ്രഥമ ശിൽപ്പികൾ, ഇന്ന് നാം നിർമ്മിക്കാൻ ശ്രമിക്കുന്ന എല്ലാറ്റിന്റെയും അടിത്തറ. നിങ്ങളുടെ ത്യാഗങ്ങൾ നിശ്ശബ്ദമായിരുന്നു, നിങ്ങളുടെ സ്നേഹം നിബന്ധനകളില്ലാത്തതായിരുന്നു, നിങ്ങളുടെ പ്രാർത്ഥനകൾ സ്ഥിരമായിരുന്നു. ഇന്ന് എനിക്കുള്ള ശക്തിയും പ്രതിരോധ ശേഷിയും ലക്ഷ്യബോധവും എല്ലാം, നിങ്ങൾ ആഡംബരമില്ലാതെ ദിവസേന ജീവിച്ച മൂല്യങ്ങളിലാണ് വേരൂന്നിയിരിക്കുന്നത്.</p>"
     },
     {
       title: "ഷനുവിന്റെയും ഇന്നുവിന്റെയും മാതാപിതാക്കൾക്ക് — NAZAR ALADI & SHAJITHA O. K.",
-      content: `
-        <p>ഉമ്മയും ഉപ്പയും,</p>
-        <p>നിങ്ങൾ രണ്ട് അസാധാരണ പുത്രിമാരെ വളർത്തി —<br/>എൻ്റെ ജീവിതത്തിലേക്ക് സ്നേഹം പണിത് നൽകിയ സിവിൽ എഞ്ചിനീയർ എർ. ഷെറിൻ ഷഹാനയും,<br/>ഇന്ന് എന്റെ വർത്തമാനവും ഭാവിയുമായി ചേർന്ന് പണികഴിപ്പിക്കുന്ന ആർക്കിടെക്ട് ആർ. ഷഹ്‌ല ഫാത്തിമയും.</p>
-        <p>നിങ്ങൾ അവരെയിരുവരെയും എനിക്കു കൈമാറി — നിങ്ങളുടെ പ്രതീക്ഷകളെയും വിശ്വാസത്തെയും ഹൃദയത്തിന്റെ ഒരു ഭാഗത്തെയും. അത് എനിക്കു വളരെ വിശുദ്ധമായ ഒരു ഉത്തരവാദിത്തമാണ്. ഷാനുവിന്റെ ഓർമ്മകൾ ഞാൻ ചെയ്യുന്ന ഓരോ കാര്യത്തിലും ഒരു വെളിച്ചമായി തുടരുന്നു, ഇന്നുവിന്റെ സാന്നിധ്യം ഞാൻ നേടാൻ പോകുന്ന എല്ലാ കാര്യങ്ങൾക്കും ശക്തിയായി എനിക്കൊപ്പം നിൽക്കുന്നു.</p>
-        <p>രണ്ട് വീടുകളും ചേർന്ന് എന്റെ ആഗ്രഹങ്ങളെ ഞാൻ രൂപപ്പെടുത്തുന്നതിന് മുമ്പ് എന്റെ സ്വഭാവത്തെ രൂപപ്പെടുത്തിയെടുത്തു.<br/>ഒരുമിച്ചോ വേറെയോ, നിങ്ങൾ എല്ലാവരും എനിക്കു പ്രതീക്ഷയും വിശ്വാസവും നൽകി, ഞാൻ ചോദിച്ചതിലും കൂടുതലായി നൽകി. അതിനായി ഞാൻ ആഴത്തിൽ നന്ദിയുള്ളവനാണ്, നിങ്ങൾക്കായി എന്തും ചെയ്യാൻ ഞാൻ പ്രതിജ്ഞാബദ്ധനാണ്. അത് തന്നെയാണ് എന്റെ ജീവിതത്തിന്റെ ലക്ഷ്യം. ഇരുവീട്ടാരോടും എനിക്ക് ആത്മീയ ബഹുമാനമുണ്ട്.</p>
-        <p>ഇപ്പോൾ ഞാൻ രൂപകൽപ്പന ചെയ്യുന്ന എല്ലാം — ജീവിതവും പാരമ്പര്യവും സംരംഭങ്ങളും മൂല്യങ്ങളും — നിങ്ങളെ അഭിമാനിപ്പിക്കാനാണ്: വിജയത്തിലൂടെ മാത്രമല്ല, നന്മയിലൂടെ, ഉത്തരവാദിത്തബോധത്തിലൂടെ, കരുണയിലൂടെ. എന്റെ തീരുമാനങ്ങളിൽ നിങ്ങളുടെ ഉപദേശങ്ങളുടെ പ്രതിഫലനം നിങ്ങൾ കാണണം, നിങ്ങളുടെ ത്യാഗങ്ങൾ നമ്മുടെ ഫലങ്ങളിൽ ന്യായീകരിക്കപ്പെടണം എന്നതാണ് എന്റെയാശ.</p>
-        <p>ഇത് എന്റെ വാഗ്ദാനം —<br/>എനിക്കും ഫത്തഹ് ഷാക്കും എന്നും:<br/>ഞങ്ങൾ നിങ്ങളുടെ പേരിനെ ആദരിക്കും.<br/>നിങ്ങളുടെ പാരമ്പര്യത്തെ കാത്തുസൂക്ഷിക്കും.<br/>നിങ്ങളുടെ മൂല്യങ്ങളെ അണുവോളം കുറയാതെ മുന്നോട്ട് കൊണ്ടുപോകും.<br/>ഞങ്ങൾ നിങ്ങളുടേതാണ് — നന്ദിയിലും കടമയിലും സ്നേഹത്തിലും — എന്നെന്നേക്കും.</p>
-        <p>ആഴത്തിലുള്ള ബഹുമാനത്തോടും അചഞ്ചലമായ പ്രതിബദ്ധതയോടും കൂടെ,<br/>— മുത്തു</p>
-      `
+      content: "<p>ഉമ്മയും ഉപ്പയും,</p><p>നിങ്ങൾ രണ്ട് അസാധാരണ പുത്രിമാരെ വളർത്തി —<br/>എൻ്റെ ജീവിതത്തിലേക്ക് സ്നേഹം പണിത് നൽകിയ സിവിൽ എഞ്ചിനീയർ എർ. ഷെറിൻ ഷഹാനയും,<br/>ഇന്ന് എന്റെ വർത്തമാനവും ഭാവിയുമായി ചേർന്ന് പണികഴിപ്പിക്കുന്ന ആർക്കിടെക്ട് ആർ. ഷഹ്‌ല ഫാത്തിമയും.</p><p>നിങ്ങൾ അവരെയിരുവരെയും എനിക്കു കൈമാറി — നിങ്ങളുടെ പ്രതീക്ഷകളെയും വിശ്വാസത്തെയും ഹൃദയത്തിന്റെ ഒരു ഭാഗത്തെയും. അത് എനിക്കു വളരെ വിശുദ്ധമായ ഒരു ഉത്തരവാദിത്തമാണ്. ഷാനുവിന്റെ ഓർമ്മകൾ ഞാൻ ചെയ്യുന്ന ഓരോ കാര്യത്തിലും ഒരു വെളിച്ചമായി തുടരുന്നു, ഇന്നുവിന്റെ സാന്നിധ്യം ഞാൻ നേടാൻ പോകുന്ന എല്ലാ കാര്യങ്ങൾക്കും ശക്തിയായി എനിക്കൊപ്പം നിൽക്കുന്നു.</p><p>രണ്ട് വീടുകളും ചേർന്ന് എന്റെ ആഗ്രഹങ്ങളെ ഞാൻ രൂപപ്പെടുത്തുന്നതിന് മുമ്പ് എന്റെ സ്വഭാവത്തെ രൂപപ്പെടുത്തിയെടുത്തു.<br/>ഒരുമിച്ചോ വേറെയോ, നിങ്ങൾ എല്ലാവരും എനിക്കു പ്രതീക്ഷയും വിശ്വാസവും നൽകി, ഞാൻ ചോദിച്ചതിലും കൂടുതലായി നൽകി. അതിനായി ഞാൻ ആഴത്തിൽ നന്ദിയുള്ളവനാണ്, നിങ്ങൾക്കായി എന്തും ചെയ്യാൻ ഞാൻ പ്രതിജ്ഞാബദ്ധനാണ്. അത് തന്നെയാണ് എന്റെ ജീവിതത്തിന്റെ ലക്ഷ്യം. ഇരുവീട്ടാരോടും എനിക്ക് ആത്മീയ ബഹുമാനമുണ്ട്.</p><p>ഇപ്പോൾ ഞാൻ രൂപകൽപ്പന ചെയ്യുന്ന എല്ലാം — ജീവിതവും പാരമ്പര്യവും സംരംഭങ്ങളും മൂല്യങ്ങളും — നിങ്ങളെ അഭിമാനിപ്പിക്കാനാണ്: വിജയത്തിലൂടെ മാത്രമല്ല, നന്മയിലൂടെ, ഉത്തരവാദിത്തബോധത്തിലൂടെ, കരുണയിലൂടെ. എന്റെ തീരുമാനങ്ങളിൽ നിങ്ങളുടെ ഉപദേശങ്ങളുടെ പ്രതിഫലനം നിങ്ങൾ കാണണം, നിങ്ങളുടെ ത്യാഗങ്ങൾ നമ്മുടെ ഫലങ്ങളിൽ ന്യായീകരിക്കപ്പെടണം എന്നതാണ് എന്റെയാശ.</p><p>ഇത് എന്റെ വാഗ്ദാനം —<br/>എനിക്കും ഫത്തഹ് ഷാക്കും എന്നും:<br/>ഞങ്ങൾ നിങ്ങളുടെ പേരിനെ ആദരിക്കും.<br/>നിങ്ങളുടെ പാരമ്പര്യത്തെ കാത്തുസൂക്ഷിക്കും.<br/>നിങ്ങളുടെ മൂല്യങ്ങളെ അണുവോളം കുറയാതെ മുന്നോട്ട് കൊണ്ടുപോകും.<br/>ഞങ്ങൾ നിങ്ങളുടേതാണ് — നന്ദിയിലും കടമയിലും സ്നേഹത്തിലും — എന്നെന്നേക്കും.</p><p>ആഴത്തിലുള്ള ബഹുമാനത്തോടും അചഞ്ചലമായ പ്രതിബദ്ധതയോടും കൂടെ,<br/>— മുത്തു</p>"
     },
     {
       title: "എൻ്റെ പ്രിയ ഷനുവിന് —",
-      content: `
-        <p>നീ ശാന്തമായൊരു വെളിച്ചമായി എന്റെ ജീവിതത്തിലേക്ക് നടന്നു വന്നു, പ്രാർത്ഥനപോലെ മടങ്ങിപ്പോയി. അതിനുശേഷം ഒന്നും പഴയതുപോലെ ആയിട്ടില്ല. നീ എന്റെ ദിവസങ്ങൾ പങ്കിട്ടതുമാത്രമല്ല; എന്റെ അർത്ഥം തന്നെ പുനഃരാഖ്യാനം ചെയ്തു. സ്നേഹം എങ്ങനെ അനുഭവിക്കാമെന്ന് നീ പഠിപ്പിച്ചു, നിലകൊള്ളാനുള്ള ശക്തി നീ പഠിപ്പിച്ചു, ഹൃദയം എത്ര ആഴത്തിൽ തകർന്നാലും അത് തുടർന്നും തടങ്ങുമെന്ന് നിന്റെ അഭാവം പഠിപ്പിച്ചു.</p>
-        <p>അതേ നിമിഷത്തിൽ നീ ഞങ്ങളുടെ മകനു ജീവനും എനിക്കു ലക്ഷ്യവും നൽകി.</p>
-        <p>ഈ ഭൂമിയിൽ നിന്നുള്ള നിന്റെ അവസാന പ്രവൃത്തി നിർമ്മലമായ സ്നേഹത്തിന്റെ പ്രവൃത്തിയായിരുന്നു — അതിനെ ഞാൻ ജീവിതകാലം മുഴുവൻ ബഹുമാനിക്കും.</p>
-        <p>എന്റെ ഓരോ തീരുമാനത്തിലും, എന്റെ നിശ്ബ്ദതകളിലും, ഫത്തഹ് ഷാനെ ഞാൻ ചേർത്തുപിടിക്കുന്ന വിധത്തിലും നീയുണ്ട്. അവന്റെ കണ്ണുകളിൽ, ചിരിയിൽ, അവൻ ലോകത്തേക്ക് കൈ നീട്ടുന്ന രീതിയിൽ നിന്നെ കാണുന്നു. അവൻ നിന്റെ ജീവിച്ചിരിക്കുന്ന അധ്യായമാണ് — ശ്വാസത്തിലും ചിരിയിലും എഴുതപ്പെടുന്ന നിന്റെ കഥയുടെ തുടർച്ച. ഞാൻ നിനക്ക് ഇതു വാഗ്ദാനം ചെയ്യുന്നു: അവൻ മാന്യനായി, സത്യസന്ധനായി, ധൈര്യശാലിയായിത്തന്നെ വളരും. അവൻ നീ ആരായിരുന്നു എന്നും അവനിൽ നിന്നിൽ നിന്ന് എത്രയോ വരുന്നു എന്നും അറിയും.</p>
-        <p>ഞാൻ വീട് പണിയാൻ പഠിക്കുന്നതിന് മുമ്പ് നീയായിരുന്നു എന്റെ വീട്.</p>
-        <p>എന്റെ കൊടുങ്കാറ്റുകളിൽ നിന്നെ ശാന്തിയായിരുന്നു, എന്റെ ക്ഷീണത്തിൽ നിന്നുടെ ചിരിയായിരുന്നു, എന്റെ കഠിനതകളിലെ മൃദുത്വമായിരുന്നു നീ.</p>
-        <p>പൂർണ്ണമാക്കാനായിരുന്ന നമ്മുടെ ജീവിതം എനിക്കു കുറവാണ്.<br/>സമ്പന്നമാക്കാനായിരുന്ന സംഭാഷണങ്ങൾ എനിക്കു കുറവാണ്.<br/>നമ്മുടേതായിരുന്ന സാധാരണ ദിവസങ്ങൾ എനിക്കു കുറവാണ്.</p>
-        <p>പക്ഷേ നമ്മുടെ കഥയുടെ അവസാനം ദുഃഖമല്ല — അത് പാരമ്പര്യമാണ്.</p>
-        <p>ഇപ്പോൾ ഞാൻ പണിയുന്ന എല്ലാറ്റിന്റെയും അടിത്തറയിൽ നിന്റെ പേരുണ്ട്.<br/>ഞാൻ ചെയ്യുന്ന ഓരോ പ്രാർത്ഥനയുടെയും നിശ്ശബ്ദതയിൽ നീയുണ്ട്.<br/>ഞാൻ നാളെയിലേക്ക് നടക്കുമ്പോഴൊക്കെ നിന്റെ “മുന്നോട്ട്” എന്ന പ്രതിധ്വനി കൂടെയുണ്ട്.</p>
-        <p>ജീവൻ അനുവദിച്ചാൽ, നാം വീണ്ടും കാണും — സമയത്തിനും വിശദീകരണങ്ങൾക്കും അതീതമായി. അന്നുവരെ, ഞാൻ ജീവിക്കുന്ന രീതിയിലൂടെ, നമ്മുടെ മകനെ വളർത്തുന്ന രീതിയിലൂടെ, നിന്നെ തകർക്കാതെ നിന്റെ ഓർമ്മയെ ആദരിക്കുന്ന രീതിയിലൂടെ ഞാൻ നിന്നെ സ്നേഹിക്കും.</p>
-        <p>നീ എന്റെ ജീവിതത്തിൽ നിന്ന് പോയിട്ടില്ല.<br/>നീ അതിന്റെ ഭാഗമല്ല — നീ അതിലൊട്ടിച്ചേർത്തതാണ്.</p>
-        <p>അവസാനമായിപ്പോയിട്ടില്ലാത്ത സ്നേഹത്തോടെ,<br/>— ഇക്ക</p>
-      `
+      content: "<p>നീ ശാന്തമായൊരു വെളിച്ചമായി എന്റെ ജീവിതത്തിലേക്ക് നടന്നു വന്നു, പ്രാർത്ഥനപോലെ മടങ്ങിപ്പോയി. അതിനുശേഷം ഒന്നും പഴയതുപോലെ ആയിട്ടില്ല. നീ എന്റെ ദിവസങ്ങൾ പങ്കിട്ടതുമാത്രമല്ല; എന്റെ അർത്ഥം തന്നെ പുനഃരാഖ്യാനം ചെയ്തു. സ്നേഹം എങ്ങനെ അനുഭവിക്കാമെന്ന് നീ പഠിപ്പിച്ചു, നിലകൊള്ളാനുള്ള ശക്തി നീ പഠിപ്പിച്ചു, ഹൃദയം എത്ര ആഴത്തിൽ തകർന്നാലും അത് തുടർന്നും തടങ്ങുമെന്ന് നിന്റെ അഭാവം പഠിപ്പിച്ചു.</p><p>അതേ നിമിഷത്തിൽ നീ ഞങ്ങളുടെ മകനു ജീവനും എനിക്കു ലക്ഷ്യവും നൽകി.</p><p>ഈ ഭൂമിയിൽ നിന്നുള്ള നിന്റെ അവസാന പ്രവൃത്തി നിർമ്മലമായ സ്നേഹത്തിന്റെ പ്രവൃത്തിയായിരുന്നു — അതിനെ ഞാൻ ജീവിതകാലം മുഴുവൻ ബഹുമാനിക്കും.</p><p>എന്റെ ഓരോ തീരുമാനത്തിലും, എന്റെ നിശ്ബ്ദതകളിലും, ഫത്തഹ് ഷാനെ ഞാൻ ചേർത്തുപിടിക്കുന്ന വിധത്തിലും നീയുണ്ട്. അവന്റെ കണ്ണുകളിൽ, ചിരിയിൽ, അവൻ ലോകത്തേക്ക് കൈ നീട്ടുന്ന രീതിയിൽ നിന്നെ കാണുന്നു. അവൻ നിന്റെ ജീവിച്ചിരിക്കുന്ന അധ്യായമാണ് — ശ്വാസത്തിലും ചിരിയിലും എഴുതപ്പെടുന്ന നിന്റെ കഥയുടെ തുടർച്ച. ഞാൻ നിനക്ക് ഇതു വാഗ്ദാനം ചെയ്യുന്നു: അവൻ മാന്യനായി, സത്യസന്ധനായി, ധൈര്യശാലിയായിത്തന്നെ വളരും. അവൻ നീ ആരായിരുന്നു എന്നും അവനിൽ നിന്നിൽ നിന്ന് എത്രയോ വരുന്നു എന്നും അറിയും.</p><p>ഞാൻ വീട് പണിയാൻ പഠിക്കുന്നതിന് മുമ്പ് നീയായിരുന്നു എന്റെ വീട്.</p><p>എന്റെ കൊടുങ്കാറ്റുകളിൽ നിന്നെ ശാന്തിയായിരുന്നു, എന്റെ ക്ഷീണത്തിൽ നിന്നുടെ ചിരിയായിരുന്നു, എന്റെ കഠിനതകളിലെ മൃദുത്വമായിരുന്നു നീ.</p><p>പൂർണ്ണമാക്കാനായിരുന്ന നമ്മുടെ ജീവിതം എനിക്കു കുറവാണ്.<br/>സമ്പന്നമാക്കാനായിരുന്ന സംഭാഷണങ്ങൾ എനിക്കു കുറവാണ്.<br/>നമ്മുടേതായിരുന്ന സാധാരണ ദിവസങ്ങൾ എനിക്കു കുറവാണ്.</p><p>പക്ഷേ നമ്മുടെ കഥയുടെ അവസാനം ദുഃഖമല്ല — അത് പാരമ്പര്യമാണ്.</p><p>ഇപ്പോൾ ഞാൻ പണിയുന്ന എല്ലാറ്റിന്റെയും അടിത്തറയിൽ നിന്റെ പേരുണ്ട്.<br/>ഞാൻ ചെയ്യുന്ന ഓരോ പ്രാർത്ഥനയുടെയും നിശ്ശബ്ദതയിൽ നീയുണ്ട്.<br/>ഞാൻ നാളെയിലേക്ക് നടക്കുമ്പോഴൊക്കെ നിന്റെ “മുന്നോട്ട്” എന്ന പ്രതിധ്വനി കൂടെയുണ്ട്.</p><p>ജീവൻ അനുവദിച്ചാൽ, നാം വീണ്ടും കാണും — സമയത്തിനും വിശദീകരണങ്ങൾക്കും അതീതമായി. അന്നുവരെ, ഞാൻ ജീവിക്കുന്ന രീതിയിലൂടെ, നമ്മുടെ മകനെ വളർത്തുന്ന രീതിയിലൂടെ, നിന്നെ തകർക്കാതെ നിന്റെ ഓർമ്മയെ ആദരിക്കുന്ന രീതിയിലൂടെ ഞാൻ നിന്നെ സ്നേഹിക്കും.</p><p>നീ എന്റെ ജീവിതത്തിൽ നിന്ന് പോയിട്ടില്ല.<br/>നീ അതിന്റെ ഭാഗമല്ല — നീ അതിലൊട്ടിച്ചേർത്തതാണ്.</p><p>അവസാനമായിപ്പോയിട്ടില്ലാത്ത സ്നേഹത്തോടെ,<br/>— ഇക്ക</p>"
     },
     {
       title: "ഇന്നു —",
-      content: `
-        <p>കഥ ഇതിനകം ഭാരം നിറഞ്ഞിരുന്ന ഒരു സമയത്താണ് നീ എന്റെ ജീവിതത്തിലേക്ക് വന്നത്. പിന്നോട്ടല്ല നീ പോയത് — എന്റെ പക്കൽ നിന്നു നിൽക്കാനാണ് നീ തിരഞ്ഞെടുക്കിയത്. ആ തിരഞ്ഞെടുപ്പ് ധൈര്യമായിരുന്നു. അവ്യവസ്ഥയുണ്ടായിടത്ത് നീ സ്ഥിരത കൊണ്ടുവന്നു, തണുപ്പ് നിറഞ്ഞിടത്ത് നീ ചൂട് കൊണ്ടുവന്നു, ദിശ നഷ്ടപ്പെട്ടപ്പോൾ നീ ദിശയായി. ഒന്നിനെയും നീ മാറ്റിസ്ഥാപിച്ചില്ല — നീ എന്നോടൊപ്പം പുനർനിർമ്മിച്ചു, ഓരോ ഭാഗവും ഒന്ന് വീതം, കൈയടിയൊന്നും ചോദിക്കാതെ.</p>
-        <p>നീ എന്റെ വികാര പങ്കാളി മാത്രമല്ല, നടപ്പാക്കലിലെ പങ്കാളിയുമാണ്.</p>
-        <p>നീ ഉത്തരവാദിത്വം കൃപയോടെ വഹിക്കുന്നു, വേദന നാടകമില്ലാതെ താങ്ങുന്നു — അത് എനിക്ക് പ്രതിദിന പ്രചോദനമാണ്.</p>
-        <p>എന്റെ ഭൂതകാലത്തെ നീ അംഗീകരിച്ചതല്ല, നീ അതിനെ പരിപക്വതയോടെ ആലിംഗനം ചെയ്തു; നിന്റെ മുമ്പുണ്ടായിരുന്ന ഓരോ അധ്യായത്തെയും ബഹുമാനിക്കുകയും അടുത്തത് എഴുതാൻ എനിക്ക് കൂടെ നിൽക്കുകയും ചെയ്തു. ഫാത്തിഹിനെ നീ സ്നേഹിക്കുന്നത് ബാധ്യതയായി അല്ല, അതിനെ ലക്ഷ്യമായി. അവനെ നീ മാതൃത്വത്തിലൂടെ പഠിപ്പിക്കുന്നത് കരുണയും പ്രതിരോധശേഷിയും ശാന്തമായ ശക്തിയുമാണ്.</p>
-        <p>ശക്തി ശാന്തമായിരിക്കാം, എന്നിരുന്നാലും തകർന്നുപോകരുതെന്നതിന് നീയൊരു തെളിവാണ്.</p>
-        <p>പാത കുത്തനെ ആയാലും നീ മുന്നോട്ട് നീങ്ങുന്നു, എന്നെയും കൂടെ ഉയരാൻ പ്രേരിപ്പിക്കുന്നു.</p>
-        <p>ഇതു വ്യക്തമായി നിനക്കറിയണം: നിന്റെ യാത്രക്കും അത്രമേൽ മഹത്തരമാണ്. നിന്റെ സ്വപ്നങ്ങൾ, വളർച്ച, സുഖപ്പെടൽ, ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ — ഇതെല്ലാം നിർണ്ണായകമാണ്. നീ എന്റെ പാരമ്പര്യത്തിന്റെ ഭാഗം മാത്രമല്ല; നീ അതിന്റെ സഹ-ശിൽപ്പിയാണ്. ഞാൻ സിസ്റ്റങ്ങൾ രൂപകൽപ്പന ചെയ്യുന്നിടത്ത്, അവയ്ക്കു ജീവൻ നൽകുന്നത് നീയാണ്. ഞാൻ ഘടനകൾ പണിയുന്നിടത്ത്, അതിനുള്ളിലെ വീട് നീ സൃഷ്ടിക്കുന്നു.</p>
-        <p>നമ്മൾ പഴയതിൽ നിന്ന് രക്ഷപ്പെടുന്നതിൽ മാത്രം നിൽക്കില്ല; അതിനെ മറികടക്കും.<br/>ദർശനം സംസാരിക്കുന്നതിൽ മാത്രം നിൽക്കില്ല; അത് നടപ്പിലാക്കും.</p>
-        <p>എനിക്ക് ജോലി കൂടുതലാകുമ്പോൾ നീ കാണിക്കുന്ന സഹനത്തിന്, ഞാൻ ക്ഷീണിക്കുമ്പോൾ നിന്റെ ശക്തിക്ക്, പദ്ധതികൾ ദീർഘമാകുമ്പോൾ നിന്റെ വിശ്വാസത്തിന് ഞാൻ നന്ദി പറയുന്നു. നാം പണിയുന്ന ജീവിതം യാദൃശ്ചികമല്ല — അത് ഉദ്ദേശ്യപ്രാപ്തവും നിയന്ത്രിതവുമായ പങ്കിട്ട നിർമ്മാണമാണ്.</p>
-        <p>നമ്മുടെ മികച്ച അധ്യായങ്ങൾ പിന്നിലല്ല.<br/>അവ ഇപ്പോഴും നമ്മൾ ചേർന്ന് എഴുതാൻ പ്രതിജ്ഞാബദ്ധരായവയാണ്.</p>
-        <p>വിശ്വാസത്തോടും ബഹുമാനത്തോടും നമ്മുടെ ഭാവിയിൽ അചഞ്ചലമായ ആകാംക്ഷയോടും കൂടെ,<br/>—ೀಚ</p>
-      `
+      content: "<p>കഥ ഇതിനകം ഭാരം നിറഞ്ഞിരുന്ന ഒരു സമയത്താണ് നീ എന്റെ ജീവിതത്തിലേക്ക് വന്നത്. പിന്നോട്ടല്ല നീ പോയത് — എന്റെ പക്കൽ നിന്നു നിൽക്കാനാണ് നീ തിരഞ്ഞെടുക്കിയത്. ആ തിരഞ്ഞെടുപ്പ് ധൈര്യമായിരുന്നു. അവ്യവസ്ഥയുണ്ടായിടത്ത് നീ സ്ഥിരത കൊണ്ടുവന്നു, തണുപ്പ് നിറഞ്ഞിടത്ത് നീ ചൂട് കൊണ്ടുവന്നു, ദിശ നഷ്ടപ്പെട്ടപ്പോൾ നീ ദിശയായി. ഒന്നിനെയും നീ മാറ്റിസ്ഥാപിച്ചില്ല — നീ എന്നോടൊപ്പം പുനർനിർമ്മിച്ചു, ഓരോ ഭാഗവും ഒന്ന് വീതം, കൈയടിയൊന്നും ചോദിക്കാതെ.</p><p>നീ എന്റെ വികാര പങ്കാളി മാത്രമല്ല, നടപ്പാക്കലിലെ പങ്കാളിയുമാണ്.</p><p>നീ ഉത്തരവാദിത്വം കൃപയോടെ വഹിക്കുന്നു, വേദന നാടകമില്ലാതെ താങ്ങുന്നു — അത് എനിക്ക് പ്രതിദിന പ്രചോദനമാണ്.</p><p>എന്റെ ഭൂതകാലത്തെ നീ അംഗീകരിച്ചതല്ല, നീ അതിനെ പരിപക്വതയോടെ ആലിംഗനം ചെയ്തു; നിന്റെ മുമ്പുണ്ടായിരുന്ന ഓരോ അധ്യായത്തെയും ബഹുമാനിക്കുകയും അടുത്തത് എഴുതാൻ എനിക്ക് കൂടെ നിൽക്കുകയും ചെയ്തു. ഫാത്തിഹിനെ നീ സ്നേഹിക്കുന്നത് ബാധ്യതയായി അല്ല, അതിനെ ലക്ഷ്യമായി. അവനെ നീ മാതൃത്വത്തിലൂടെ പഠിപ്പിക്കുന്നത് കരുണയും പ്രതിരോധശേഷിയും ശാന്തമായ ശക്തിയുമാണ്.</p><p>ശക്തി ശാന്തമായിരിക്കാം, എന്നിരുന്നാലും തകർന്നുപോകരുതെന്നതിന് നീയൊരു തെളിവാണ്.</p><p>പാത കുത്തനെ ആയാലും നീ മുന്നോട്ട് നീങ്ങുന്നു, എന്നെയും കൂടെ ഉയരാൻ പ്രേരിപ്പിക്കുന്നു.</p><p>ഇതു വ്യക്തമായി നിനക്കറിയണം: നിന്റെ യാത്രക്കും അത്രമേൽ മഹത്തരമാണ്. നിന്റെ സ്വപ്നങ്ങൾ, വളർച്ച, സുഖപ്പെടൽ, ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ — ഇതെല്ലാം നിർണ്ണായകമാണ്. നീ എന്റെ പാരമ്പര്യത്തിന്റെ ഭാഗം മാത്രമല്ല; നീ അതിന്റെ സഹ-ശിൽപ്പിയാണ്. ഞാൻ സിസ്റ്റങ്ങൾ രൂപകൽപ്പന ചെയ്യുന്നിടത്ത്, അവയ്ക്കു ജീവൻ നൽകുന്നത് നീയാണ്. ഞാൻ ഘടനകൾ പണിയുന്നിടത്ത്, അതിനുള്ളിലെ വീട് നീ സൃഷ്ടിക്കുന്നു.</p><p>നമ്മൾ പഴയതിൽ നിന്ന് രക്ഷപ്പെടുന്നതിൽ മാത്രം നിൽക്കില്ല; അതിനെ മറികടക്കും.<br/>ദർശനം സംസാരിക്കുന്നതിൽ മാത്രം നിൽക്കില്ല; അത് നടപ്പിലാക്കും.</p><p>എനിക്ക് ജോലി കൂടുതലാകുമ്പോൾ നീ കാണിക്കുന്ന സഹനത്തിന്, ഞാൻ ക്ഷീണിക്കുമ്പോൾ നിന്റെ ശക്തിക്ക്, പദ്ധതികൾ ദീർഘമാകുമ്പോൾ നിന്റെ വിശ്വാസത്തിന് ഞാൻ നന്ദി പറയുന്നു. നാം പണിയുന്ന ജീവിതം യാദൃശ്ചികമല്ല — അത് ഉദ്ദേശ്യപ്രാപ്തവും നിയന്ത്രിതവുമായ പങ്കിട്ട നിർമ്മാണമാണ്.</p><p>നമ്മുടെ മികച്ച അധ്യായങ്ങൾ പിന്നിലല്ല.<br/>അവ ഇപ്പോഴും നമ്മൾ ചേർന്ന് എഴുതാൻ പ്രതിജ്ഞാബദ്ധരായവയാണ്.</p><p>വിശ്വാസത്തോടും ബഹുമാനത്തോടും നമ്മുടെ ഭാവിയിൽ അചഞ്ചലമായ ആകാംക്ഷയോടും കൂടെ,<br/>—ೀಚ</p>"
     },
     {
       title: "എൻ്റെ മകൻ, ഫത്തഹ് ഷാ KC —",
-      content: `
-        <p>നീ ഈ ലോകത്തേക്ക് വന്നത് ഒരേ നിമിഷത്തിൽ സ്നേഹവും നഷ്ടവും കൈയിൽ പിടിച്ചുകൊണ്ടാണ്, അത് എന്റെ മുഴുവൻ ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ മാറ്റിക്കളഞ്ഞു. നീ എന്നെ അച്ഛനാക്കിയതുമാത്രമല്ല; നീ എന്നെ ഒരു പാരമ്പര്യത്തിന്റെ സംരക്ഷകനാക്കി — എന്റെ മാതാപിതാക്കളുടെ, നിന്റെ ഉമ്മി ഷാനുവിന്റെ, നിന്റെ അമ്മി ഇന്നുവിന്റെ, നമ്മുടെ രണ്ടു കുടുംബങ്ങളും നിൽക്കുന്ന മൂല്യങ്ങളുടെ.</p>
-        <p>ഈ ജീവിതം എന്റെ ഉത്തരവാദിത്വമാണ്.<br/>ഭാവി നിനക്കുദ്ദേശിച്ചിട്ടുള്ളതാണ്.</p>
-        <p>നിനക്കു കൈമാറുന്നത് സ്വത്തുകളെ മാത്രമാക്കാതെ, വ്യക്തതയും ധൈര്യവും സ്വഭാവവും കൈമാറാൻ ഞാൻ സിസ്റ്റങ്ങൾ പണിയുന്നു. നിന്റെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ജ്ഞാനം, നന്മ, കരുണ, ശക്തി എന്നിവയ്ക്കായി കലിബ്രേറ്റ് ചെയ്തിരിക്കാൻ ഞാൻ ആഗ്രഹിക്കുന്നു. അഹങ്കാരമില്ലാതെ ഉയർന്ന് നിൽക്കാനും, ദൗർബല്യമില്ലാതെ ദയയുള്ളവനാകാനും, ജീവിതം നിന്റെ പദ്ധതികളെ റീസെറ്റ് ചെയ്താലും നിന്നെ പുനർനിർമ്മിക്കാൻ കഴിയുന്നവനാകാനും ഞാൻ നിന്നെ ആഗ്രഹിക്കുന്നു.</p>
-        <p>നിന്റെ പേര് തന്നെയാണ് നിന്റെ റോഡ്‌മാപ്പ്:<br/><strong>ഫത്തഹ്</strong> — ലക്ഷ്യബോധത്തിലൂടെ വിജയം<br/><strong>ഷാ</strong> — പൈതൃകം, മാന്യത, വംശപരമ്പര്യം<br/><strong>KC</strong> — വേരുകൾ, ഉത്തരവാദിത്വം, തുടർച്ച</p>
-        <p>നിന്നിൽ നിന്നെക്കുറിച്ചുള്ള എന്റെ പ്രതീക്ഷ പരിപൂർണ്ണതയല്ല. നിഷ്ഠയോടെ, ഉത്തരവാദിത്തത്തോടെയും നിനക്കു തന്നെ ആവാൻ ഭയമില്ലാത്തവനായി നീ മാറുക എന്നതാണ് എന്റെ പ്രതീക്ഷ. ഒരിക്കൽ നീ നമ്മുടെ സംരംഭങ്ങളെയും സ്ഥാപനങ്ങളെയും നയിക്കുന്ന സ്ഥാനത്ത് എത്തിയാൽ, അത് നിനക്ക് അവകാശമായി ലഭിച്ചതുകൊണ്ടല്ല; കഴിവിന്റെയും സ്വഭാവത്തിന്റെയും അടിസ്ഥാനത്തിലാണ് ലഭിക്കേണ്ടത്.</p>
-        <p>ഇപ്പോൾ ഞാൻ എഴുതുന്നതും പണിയുന്നതും സംരക്ഷിക്കുന്നതും ഭരിക്കുന്നതും എല്ലാം നിന്നിലേക്ക് ബന്ധിപ്പിച്ചിരിക്കുന്നു.<br/>നിന്റെ ജീവിതത്തെ നിയന്ത്രിക്കാനല്ല, നിന്റെ തിരഞ്ഞെടുപ്പുകൾക്ക് ശക്തി നൽകാനാണ്.</p>
-        <p>ജീവൻ അനുവദിച്ചാൽ, ഒരുദിവസം നീ ഇത് ഒരു പുരുഷനായിട്ടാണ് വായിക്കുക. അന്ന് ഇതറിയുക:<br/>നിന്റെ അമ്മ നിന്നെ കാണുന്നതിന് മുമ്പ് തന്നെ നിന്നെ സ്നേഹിച്ചിരുന്നു.<br/>നിന്റെ കുടുംബം എല്ലായ്പ്പോഴും നിന്റെ പിന്നാലെ നിൽക്കുന്നു.<br/>ഞാൻ പണിതതാണ് എന്റെ ഏറ്റവും വലിയ പാരമ്പര്യം അല്ല — നീ ആകുന്ന ആളാണ്.</p>
-        <p>സ്നേഹത്തോടും ശിക്ഷണത്തോടും അചഞ്ചലമായ വിശ്വാസത്തോടും കൂടി,<br/>— നിന്റെ ABBA</p>
-      `
+      content: "<p>നീ ഈ ലോകത്തേക്ക് വന്നത് ഒരേ നിമിഷത്തിൽ സ്നേഹവും നഷ്ടവും കൈയിൽ പിടിച്ചുകൊണ്ടാണ്, അത് എന്റെ മുഴുവൻ ജീവിതത്തിന്റെ ആർക്കിടെക്ചർ മാറ്റിക്കളഞ്ഞു. നീ എന്നെ അച്ഛനാക്കിയതുമാത്രമല്ല; നീ എന്നെ ഒരു പാരമ്പര്യത്തിന്റെ സംരക്ഷകനാക്കി — എന്റെ മാതാപിതാക്കളുടെ, നിന്റെ ഉമ്മി ഷാനുവിന്റെ, നിന്റെ അമ്മി ഇന്നുവിന്റെ, നമ്മുടെ രണ്ടു കുടുംബങ്ങളും നിൽക്കുന്ന മൂല്യങ്ങളുടെ.</p><p>ഈ ജീവിതം എന്റെ ഉത്തരവാദിത്വമാണ്.<br/>ഭാവി നിനക്കുദ്ദേശിച്ചിട്ടുള്ളതാണ്.</p><p>നിനക്കു കൈമാറുന്നത് സ്വത്തുകളെ മാത്രമാക്കാതെ, വ്യക്തതയും ധൈര്യവും സ്വഭാവവും കൈമാറാൻ ഞാൻ സിസ്റ്റങ്ങൾ പണിയുന്നു. നിന്റെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ജ്ഞാനം, നന്മ, കരുണ, ശക്തി എന്നിവയ്ക്കായി കലിബ്രേറ്റ് ചെയ്തിരിക്കാൻ ഞാൻ ആഗ്രഹിക്കുന്നു. അഹങ്കാരമില്ലാതെ ഉയർന്ന് നിൽക്കാനും, ദൗർബല്യമില്ലാതെ ദയയുള്ളവനാകാനും, ജീവിതം നിന്റെ പദ്ധതികളെ റീസെറ്റ് ചെയ്താലും നിന്നെ പുനർനിർമ്മിക്കാൻ കഴിയുന്നവനാകാനും ഞാൻ നിന്നെ ആഗ്രഹിക്കുന്നു.</p><p>നിന്റെ പേര് തന്നെയാണ് നിന്റെ റോഡ്‌മാപ്പ്:<br/><strong>ഫത്തഹ്</strong> — ലക്ഷ്യബോധത്തിലൂടെ വിജയം<br/><strong>ഷാ</strong> — പൈതൃകം, മാന്യത, വംശപരമ്പര്യം<br/><strong>KC</strong> — വേരുകൾ, ഉത്തരവാദിത്വം, തുടർച്ച</p><p>നിന്നിൽ നിന്നെക്കുറിച്ചുള്ള എന്റെ പ്രതീക്ഷ പരിപൂർണ്ണതയല്ല. നിഷ്ഠയോടെ, ഉത്തരവാദിത്തത്തോടെയും നിനക്കു തന്നെ ആവാൻ ഭയമില്ലാത്തവനായി നീ മാറുക എന്നതാണ് എന്റെ പ്രതീക്ഷ. ഒരിക്കൽ നീ നമ്മുടെ സംരംഭങ്ങളെയും സ്ഥാപനങ്ങളെയും നയിക്കുന്ന സ്ഥാനത്ത് എത്തിയാൽ, അത് നിനക്ക് അവകാശമായി ലഭിച്ചതുകൊണ്ടല്ല; കഴിവിന്റെയും സ്വഭാവത്തിന്റെയും അടിസ്ഥാനത്തിലാണ് ലഭിക്കേണ്ടത്.</p><p>ഇപ്പോൾ ഞാൻ എഴുതുന്നതും പണിയുന്നതും സംരക്ഷിക്കുന്നതും ഭരിക്കുന്നതും എല്ലാം നിന്നിലേക്ക് ബന്ധിപ്പിച്ചിരിക്കുന്നു.<br/>നിന്റെ ജീവിതത്തെ നിയന്ത്രിക്കാനല്ല, നിന്റെ തിരഞ്ഞെടുപ്പുകൾക്ക് ശക്തി നൽകാനാണ്.</p><p>ജീവൻ അനുവദിച്ചാൽ, ഒരുദിവസം നീ ഇത് ഒരു പുരുഷനായിട്ടാണ് വായിക്കുക. അന്ന് ഇതറിയുക:<br/>നിന്റെ അമ്മ നിന്നെ കാണുന്നതിന് മുമ്പ് തന്നെ നിന്നെ സ്നേഹിച്ചിരുന്നു.<br/>നിന്റെ കുടുംബം എല്ലായ്പ്പോഴും നിന്റെ പിന്നാലെ നിൽക്കുന്നു.<br/>ഞാൻ പണിതതാണ് എന്റെ ഏറ്റവും വലിയ പാരമ്പര്യം അല്ല — നീ ആകുന്ന ആളാണ്.</p><p>സ്നേഹത്തോടും ശിക്ഷണത്തോടും അചഞ്ചലമായ വിശ്വാസത്തോടും കൂടി,<br/>— നിന്റെ ABBA</p>"
     }
   ]
 };
@@ -710,7 +619,7 @@ const ReviewsView = ({ onBack, onReviewClick }) => {
   );
 };
 
-// --- LIBRARY GRID WITH LOCKING LOGIC (UPDATED FOR HONOR SYSTEM & LITE MASKING) ---
+// --- LIBRARY GRID WITH LOCKING LOGIC (CRASH FIXED & LITE MASKING) ---
 
 const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnlockRequest }) => (
   <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
@@ -746,13 +655,20 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnl
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     {sectionBooks.map((book) => {
-                        // NEW LOGIC: Book 0 is open. Others need manual unlock or progress.
-                        const bookProgress = progressData[book.id] || { current: 0, total: 1, status: 'locked' };
+                        // SEQUENTIAL LOCKING LOGIC (SAFE VERSION)
+                        const globalIndex = CONFIG.library.findIndex(b => b.id === book.id);
+                        const prevBookId = globalIndex > 0 ? CONFIG.library[globalIndex - 1].id : null;
                         
-                        // It is unlocked if: It is Book 0 OR User has manually unlocked it (status != locked)
-                        const isUnlocked = book.id === 0 || bookProgress.status === 'unlocked';
+                        // FIX: Ensure prevBookProgress is never undefined
+                        const prevBookProgress = (prevBookId !== null && progressData[prevBookId]) 
+                            ? progressData[prevBookId] 
+                            : { current: 0, total: 1 }; // Default to incomplete if data missing
                         
-                        const percent = Math.round(((bookProgress.current + 1) / bookProgress.total) * 100);
+                        // Check if unlocked (either manually unlocked OR sequential progress met)
+                        const currentData = progressData[book.id] || { status: 'locked', current: 0, total: 1 };
+                        const isUnlocked = book.id === 0 || currentData.status === 'unlocked' || (prevBookProgress.current >= (prevBookProgress.total - 1) && prevBookProgress.total > 1);
+                        
+                        const percent = Math.round(((currentData.current + 1) / (currentData.total || 1)) * 100);
 
                         return (
                             <button 
@@ -776,6 +692,7 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnl
                                         </div>
                                     )}
 
+                                    {/* FIX: Removed innerHTML hack for image errors */}
                                     <img 
                                         src={book.cover} 
                                         alt={book.title} 
@@ -790,7 +707,7 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnl
 
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-amber-900/10 transition-colors"></div>
                                     
-                                    {isUnlocked && progressData[book.id] && bookProgress.current > 0 && (
+                                    {isUnlocked && currentData.current > 0 && (
                                         <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800">
                                             <div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${percent}%` }}></div>
                                         </div>
@@ -816,7 +733,451 @@ const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnl
   </div>
 );
 
-// --- MAIN CONTROLLER (UPDATED FOR UNLOCK MODAL) ---
+const DedicationView = ({ onBack, t, lang }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-2xl w-full mx-auto space-y-12 py-12">
+      <h2 className="text-3xl font-serif text-amber-600 text-center tracking-wide border-b border-stone-800 pb-6 mb-8">{t.dedicationTitle}</h2>
+      <div className="grid grid-cols-1 gap-8">
+        {DEDICATIONS_CONTENT[lang].map((item, index) => (
+          <div key={index} className="space-y-4 text-center">
+            <h3 className="text-xl font-bold text-stone-200 font-serif">{item.title}</h3>
+            <div className="text-stone-400 font-serif leading-relaxed italic text-sm md:text-base px-4" dangerouslySetInnerHTML={{ __html: item.content }} />
+            {index < DEDICATIONS_CONTENT[lang].length - 1 && <div className="w-12 h-px bg-stone-800 mx-auto mt-8 opacity-50"></div>}
+          </div>
+        ))}
+      </div>
+      <div className="text-center pt-12"><p className="text-[10px] font-mono text-stone-600 uppercase tracking-widest">{t.fromMasterMap}</p></div>
+    </div>
+  </div>
+);
+
+// --- PROFILE OPTIONS (CRASH FIXED) ---
+const ProfileOptions = ({ onBack, onShowDedications, t }) => (
+  <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative z-50">
+    <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white transition-colors"><X size={32} strokeWidth={1} /></button>
+    <div className="max-w-md w-full space-y-8 animate-slide-up text-center relative z-20">
+      <div className="w-24 h-24 mx-auto bg-zinc-900 rounded-full border border-amber-600/30 flex items-center justify-center mb-8"><User size={40} className="text-amber-600" /></div>
+      <h2 className="text-3xl font-serif text-stone-200">{t.authorTitle}</h2>
+      <p className="text-stone-500 text-sm leading-relaxed px-4">{t.authorDesc}</p>
+      <div className="space-y-4 pt-8">
+        <a href={CONFIG.authorWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.visitWebsite}</span><ExternalLink size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <a href={CONFIG.profilePdfPath} download className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group"><span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.downloadProfile}</span><Download size={18} className="text-stone-600 group-hover:text-amber-500" /></a>
+        <button onClick={onShowDedications} className="flex items-center justify-between w-full p-6 bg-zinc-900 border border-stone-800 hover:border-amber-600 hover:bg-zinc-800 transition-all rounded-sm group">
+          <span className="font-mono text-sm tracking-widest text-stone-300 group-hover:text-amber-500">{t.readDedications}</span>
+          <FileText size={18} className="text-stone-600 group-hover:text-amber-500" />
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const FormatSelectionModal = ({ onClose, onSelect, t }) => (
+  <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 animate-fade-in">
+    <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-white"><X size={24} /></button>
+    <div className="max-w-lg w-full space-y-12 text-center">
+        <h2 className="text-3xl font-serif text-amber-500">{t.selectLang}</h2>
+        <div className="grid grid-cols-2 gap-8">
+            <button onClick={() => onSelect('read')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <BookOpen size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.read}</span>
+            </button>
+            <button onClick={() => onSelect('listen')} className="group flex flex-col items-center gap-4 p-8 bg-zinc-900 border border-stone-800 rounded-xl hover:border-amber-600 transition-all hover:-translate-y-2">
+                <div className="w-16 h-16 rounded-full bg-stone-800 group-hover:bg-amber-600 flex items-center justify-center text-white transition-colors">
+                    <Headphones size={32} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-stone-300 group-hover:text-white">{t.listen}</span>
+            </button>
+        </div>
+    </div>
+  </div>
+);
+
+const AudioPlayerView = ({ bookData, onBack, language, t }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState(1);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [isDragging, setIsDragging] = useState(false);
+    const [showSpeedMenu, setShowSpeedMenu] = useState(false);
+    
+    const audioRef = useRef(null);
+    const [error, setError] = useState(false);
+    
+    const audioFile = bookData.file ? bookData.file : `/audio-${bookData.id}-${language}.mp3`;
+
+    useEffect(() => {
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: bookData.title,
+                artist: "Advocate Firoz KC",
+                album: "The Legacy OS",
+                artwork: [{ src: CONFIG.logoPath, sizes: '512x512', type: 'image/png' }]
+            });
+
+            navigator.mediaSession.setActionHandler('play', togglePlay);
+            navigator.mediaSession.setActionHandler('pause', togglePlay);
+            navigator.mediaSession.setActionHandler('seekbackward', skipBackward);
+            navigator.mediaSession.setActionHandler('seekforward', skipForward);
+        }
+    }, [bookData]);
+
+    const togglePlay = () => {
+        if (isPlaying) audioRef.current.pause();
+        else audioRef.current.play();
+        setIsPlaying(!isPlaying);
+    };
+
+    const handleTimeUpdate = () => {
+        if (!isDragging && audioRef.current) setCurrentTime(audioRef.current.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+        if (audioRef.current) setDuration(audioRef.current.duration);
+    };
+
+    const handleSeek = (e) => {
+        const time = parseFloat(e.target.value);
+        setCurrentTime(time);
+        audioRef.current.currentTime = time;
+    };
+
+    const skipForward = () => {
+        if (audioRef.current) audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 30, duration);
+    };
+
+    const skipBackward = () => {
+        if (audioRef.current) audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+    };
+
+    const setSpeed = (rate) => {
+        setPlaybackRate(rate);
+        if(audioRef.current) audioRef.current.playbackRate = rate;
+        setShowSpeedMenu(false);
+    };
+
+    return (
+        <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative animate-fade-in text-stone-300">
+            {/* Background Blur */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-amber-900/10 to-transparent pointer-events-none"></div>
+
+            <button onClick={onBack} className="absolute top-6 left-6 text-stone-500 hover:text-white flex items-center gap-2 z-20"><ArrowLeft size={20} /></button>
+            
+            <div className="max-w-md w-full space-y-8 text-center relative z-10">
+                {/* --- COVER ART SECTION --- */}
+                <div className="relative aspect-square w-72 mx-auto rounded-lg overflow-hidden border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] group">
+                    <img src={CONFIG.logoPath} alt="Audio Cover" className="w-full h-full object-cover p-10 opacity-80 group-hover:opacity-100 transition-opacity" />
+                    {/* Spinning Ring */}
+                    <div className={`absolute inset-0 border-[3px] border-amber-600/20 rounded-full m-8 ${isPlaying ? 'animate-spin-slow' : ''}`}></div>
+                    {/* Inner Pulse */}
+                    <div className={`absolute inset-0 bg-amber-600/5 rounded-full m-24 ${isPlaying ? 'animate-pulse' : ''}`}></div>
+                </div>
+
+                {/* --- TRACK INFO --- */}
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-serif text-white tracking-wide">{bookData.title}</h2>
+                    <p className="text-xs font-mono text-amber-600 uppercase tracking-widest">{bookData.subtitle || "AUDIO TRANSMISSION"}</p>
+                    <div className="flex justify-center gap-2 mt-2">
+                        <span className="text-[9px] px-2 py-0.5 border border-stone-800 rounded text-stone-500">{language === 'en' ? 'ENG' : 'MAL'}</span>
+                        <span className="text-[9px] px-2 py-0.5 border border-stone-800 rounded text-stone-500">MONO</span>
+                    </div>
+                </div>
+
+                {error ? (
+                    <div className="p-4 bg-red-900/20 border border-red-900/50 rounded text-red-400 text-xs font-mono">
+                        AUDIO FILE NOT FOUND<br/>({audioFile})
+                    </div>
+                ) : (
+                    <div className="bg-zinc-900/50 border border-stone-800 p-6 rounded-2xl backdrop-blur-sm space-y-6">
+                        
+                        {/* --- PROGRESS BAR --- */}
+                        <div className="space-y-2">
+                            <input 
+                                type="range" 
+                                min="0" 
+                                max={duration || 0} 
+                                value={currentTime} 
+                                onChange={(e) => { setCurrentTime(parseFloat(e.target.value)); setIsDragging(true); }}
+                                onMouseUp={(e) => { handleSeek(e); setIsDragging(false); }}
+                                onTouchEnd={(e) => { handleSeek(e); setIsDragging(false); }}
+                                className="w-full h-1 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-600 hover:accent-amber-500"
+                            />
+                            <div className="flex justify-between text-[10px] font-mono text-stone-500">
+                                <span>{formatTime(currentTime)}</span>
+                                <span>{formatTime(duration)}</span>
+                            </div>
+                        </div>
+
+                        {/* --- MAIN CONTROLS --- */}
+                        <div className="flex items-center justify-between px-2">
+                            {/* Speed Control */}
+                            <div className="relative">
+                                <button onClick={() => setShowSpeedMenu(!showSpeedMenu)} className="text-xs font-mono text-stone-500 hover:text-amber-500 flex flex-col items-center gap-1 w-12">
+                                    <Gauge size={18} />
+                                    <span>{playbackRate}x</span>
+                                </button>
+                                {showSpeedMenu && (
+                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-zinc-800 border border-stone-700 rounded-lg overflow-hidden shadow-xl flex flex-col min-w-[60px]">
+                                        {[0.75, 1, 1.25, 1.5, 2].map(rate => (
+                                            <button key={rate} onClick={() => setSpeed(rate)} className={`px-3 py-2 text-xs font-mono hover:bg-stone-700 ${playbackRate === rate ? 'text-amber-500 bg-black/30' : 'text-stone-400'}`}>{rate}x</button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Playback Controls */}
+                            <div className="flex items-center gap-6">
+                                <button onClick={skipBackward} className="text-stone-400 hover:text-white transition-colors flex flex-col items-center gap-1">
+                                    <RotateCcw size={22} />
+                                    <span className="text-[9px] font-mono">-10s</span>
+                                </button>
+                                
+                                <button onClick={togglePlay} className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:bg-amber-500 transition-all shadow-lg scale-100 hover:scale-105 active:scale-95">
+                                    {isPlaying ? <Pause size={32} fill="black" /> : <Play size={32} fill="black" className="ml-1" />}
+                                </button>
+
+                                <button onClick={skipForward} className="text-stone-400 hover:text-white transition-colors flex flex-col items-center gap-1">
+                                    <RotateCw size={22} />
+                                    <span className="text-[9px] font-mono">+30s</span>
+                                </button>
+                            </div>
+
+                            {/* Volume (Visual Only on Mobile, Functional on Desktop) */}
+                            <div className="group relative flex flex-col items-center w-12">
+                                <button className="text-stone-500 hover:text-white">
+                                    {volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                                </button>
+                                <div className="absolute bottom-full mb-2 hidden group-hover:flex bg-zinc-800 p-2 rounded border border-stone-700">
+                                    <input 
+                                        type="range" 
+                                        min="0" max="1" step="0.1" 
+                                        value={volume} 
+                                        onChange={(e) => { setVolume(parseFloat(e.target.value)); if(audioRef.current) audioRef.current.volume = parseFloat(e.target.value); }} 
+                                        className="h-24 w-1 bg-stone-600 appearance-none cursor-pointer accent-amber-600"
+                                        style={{ writingMode: 'bt-lr', WebkitAppearance: 'slider-vertical' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                
+                <audio 
+                    ref={audioRef} 
+                    src={audioFile} 
+                    onError={() => setError(true)}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={() => setIsPlaying(false)}
+                />
+            </div>
+             <style>{`
+                .animate-spin-slow { animation: spin 10s linear infinite; }
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                input[type=range] { -webkit-appearance: none; background: transparent; }
+                input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #d97706; margin-top: -4px; cursor: pointer; }
+                input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #292524; border-radius: 2px; }
+            `}</style>
+        </div>
+    );
+};
+
+const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, language, t }) => {
+  const [chapters, setChapters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(initialProgress || 0);
+  const [theme, setTheme] = useState('dark');
+  const [fontSize, setFontSize] = useState(19);
+  const [showControls, setShowControls] = useState(false);
+  const [showTOC, setShowTOC] = useState(false);
+  const [zenMode, setZenMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+    async function loadContent() {
+      setLoading(true);
+      try {
+        const baseName = `/book-${bookData.id}`;
+        const targetFile = `${baseName}-${language}.md`;
+        let response = await fetch(`${targetFile}?t=${Date.now()}`);
+        
+        if (!response.ok) {
+             response = await fetch(`${baseName}-en.md?t=${Date.now()}`);
+             if(!response.ok) response = await fetch(`${bookData.file}?t=${Date.now()}`);
+        }
+
+        if (!response.ok) throw new Error("File not found");
+        
+        const text = await response.text();
+        let parsed = parseMarkdown(text);
+        
+        if (language === 'ml' && t.originalNote && parsed.length > 0) {
+             parsed[0].content = `<div class="p-4 mb-8 bg-amber-900/20 border border-amber-600/30 rounded text-amber-500 text-xs font-mono">${t.originalNote}</div>` + parsed[0].content;
+        }
+
+        if (parsed.length > 0) setChapters(parsed);
+        else setChapters([{ id: 0, title: "Empty File", subtitle: "Warning", content: `<p>The file was found but appears empty.</p>` }]);
+
+      } catch (err) {
+         setChapters([{ id: 0, title: t.contentMissing, subtitle: "404", content: `<p>${t.contentMissing}</p>` }]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadContent();
+  }, [bookData, language, t]);
+
+  // CRITICAL FIX: Prevent infinite loop by not including onProgressUpdate in dependency array
+  // or relying on a separate effect only when index changes.
+  useEffect(() => {
+    if (chapters.length > 0) {
+        onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
+    }
+  }, [currentChapterIndex, chapters.length, bookData.id]); // Removed onProgressUpdate from deps
+
+  useEffect(() => {
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  }, [theme]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 3) return [];
+    return chapters.map((chap, idx) => {
+        const text = chap.content.replace(/<[^>]*>/g, ' ');
+        if (text.toLowerCase().includes(searchQuery.toLowerCase())) return { ...chap, index: idx };
+        return null;
+    }).filter(Boolean);
+  }, [searchQuery, chapters]);
+
+  const currentChapter = chapters[currentChapterIndex] || { title: "Loading...", content: "" };
+  const readingTime = calculateReadingTime(currentChapter.content || "");
+
+  return (
+    <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-zinc-900 text-stone-300' : 'bg-stone-50 text-stone-800'}`}>
+      {!zenMode && (
+        <header className={`fixed top-0 w-full z-30 transition-all duration-300 border-b backdrop-blur-md ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={onBack} className="p-2 -ml-2 hover:text-amber-600 transition-colors flex items-center gap-2"><ArrowLeft size={20} /></button>
+            <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowTOC(true)}>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-600 opacity-80">{bookData.title}</span>
+                <span className={`text-xs font-serif ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{currentChapter.subtitle || "READING"}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+                <button onClick={() => setShowSearch(!showSearch)} className="p-2 hover:text-amber-600 transition-colors"><Search size={18} /></button>
+                <button onClick={() => setZenMode(true)} className="p-2 hover:text-amber-600 transition-colors"><Maximize size={18} /></button>
+                <div className="relative">
+                    <button onClick={() => setShowControls(!showControls)} className={`p-2 transition-colors ${showControls ? 'text-amber-600' : 'hover:text-amber-600'}`}><Type size={20} /></button>
+                    {showControls && (
+                        <div className="absolute top-full right-0 mt-4 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-xl rounded-sm p-5 w-64 animate-slide-up z-50">
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between"><span className="text-xs font-sans uppercase text-stone-500">Mode</span><div className="flex bg-stone-100 dark:bg-zinc-800 rounded-full p-1"><button onClick={() => setTheme('light')} className={`p-2 rounded-full ${theme === 'light' ? 'bg-white text-amber-600 shadow' : 'text-stone-400'}`}><Sun size={14} /></button><button onClick={() => setTheme('dark')} className={`p-2 rounded-full ${theme === 'dark' ? 'bg-zinc-700 text-amber-400 shadow' : 'text-stone-400'}`}><Moon size={14} /></button></div></div>
+                                <div className="space-y-3"><div className="flex items-center justify-between text-stone-500"><span className="text-xs font-sans uppercase">Size</span><span className="text-xs font-mono">{fontSize}px</span></div><input type="range" min="16" max="26" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1 bg-stone-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-600" /></div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            </div>
+            {showSearch && (
+                <div className="border-t border-stone-800 bg-zinc-950/95 backdrop-blur p-4 animate-slide-up">
+                    <div className="max-w-xl mx-auto">
+                        <input type="text" placeholder="Search in this book..." className="w-full bg-zinc-900 border border-stone-700 p-3 text-sm text-white focus:border-amber-600 focus:outline-none rounded-sm mb-4" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} autoFocus />
+                        {searchResults.length > 0 && (
+                            <div className="max-h-40 overflow-y-auto space-y-2">
+                                {searchResults.map(res => (
+                                    <button key={res.id} onClick={() => { setCurrentChapterIndex(res.index); setShowSearch(false); }} className="w-full text-left p-3 hover:bg-stone-900 rounded border border-transparent hover:border-stone-800">
+                                        <div className="text-xs text-amber-600 font-mono">{res.subtitle}</div>
+                                        <div className="text-sm text-stone-300 font-serif">{res.title}</div>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        {searchQuery.length > 0 && searchResults.length === 0 && <div className="text-center text-stone-500 text-xs py-2">No results found</div>}
+                    </div>
+                </div>
+            )}
+        </header>
+      )}
+
+      <main className={`max-w-2xl mx-auto px-6 pb-32 transition-all duration-500 ${zenMode ? 'pt-20 cursor-text' : 'pt-32'}`}>
+        <article className="animate-fade-in">
+          {zenMode && (
+              <button onClick={() => setZenMode(false)} className="fixed top-6 right-6 p-2 bg-black/20 hover:bg-black/50 text-stone-500 hover:text-white rounded-full transition-colors z-50"><Minimize size={20} /></button>
+          )}
+          {loading ? (
+             <div className="flex justify-center py-20 text-stone-500 font-mono text-xs animate-pulse">LOADING SYSTEM...</div>
+          ) : (
+            <>
+                <header className="mb-12 text-center">
+                    <span className="block text-amber-600 font-mono text-xs tracking-[0.2em] mb-4 uppercase">{currentChapter.subtitle}</span>
+                    <h2 className={`text-3xl md:text-4xl font-serif font-bold mb-6 ${theme === 'dark' ? 'text-stone-100' : 'text-stone-900'}`}>{currentChapter.title}</h2>
+                    <div className="flex items-center justify-center space-x-2 text-stone-500 text-[10px] font-mono mb-8 opacity-60">
+                        <Clock size={12} />
+                        <span>{readingTime} MIN READ</span>
+                    </div>
+                    <div className="w-8 h-[1px] bg-amber-600/50 mx-auto"></div>
+                </header>
+                <div className="prose dark:prose-invert prose-lg md:prose-xl mx-auto font-serif leading-loose" style={{ fontSize: `${fontSize}px` }}>
+                    <div dangerouslySetInnerHTML={{ __html: currentChapter.content }} />
+                </div>
+            </>
+          )}
+        </article>
+      </main>
+
+      {!zenMode && (
+        <footer className={`fixed bottom-0 w-full z-30 border-t backdrop-blur-md transition-colors ${theme === 'dark' ? 'bg-zinc-900/95 border-zinc-800/50' : 'bg-white/95 border-stone-200/50'}`}>
+            <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <button onClick={() => { if(currentChapterIndex > 0) { setCurrentChapterIndex(prev => prev - 1); window.scrollTo(0,0); } }} disabled={currentChapterIndex === 0} className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${currentChapterIndex === 0 ? 'opacity-0 pointer-events-none' : 'hover:bg-stone-100 dark:hover:bg-zinc-800'}`}><ChevronLeft size={16} /><span className="text-sm font-sans font-medium hidden md:inline">Previous</span></button>
+            <span className="text-[10px] font-mono text-stone-500 tracking-wider">{(currentChapterIndex + 1)} / {chapters.length}</span>
+            <button 
+                onClick={() => { 
+                    if(currentChapterIndex < chapters.length - 1) { 
+                        setCurrentChapterIndex(prev => prev + 1); 
+                        window.scrollTo(0,0); 
+                    } else {
+                        // EXIT FUNCTIONALITY
+                        onBack();
+                    }
+                }} 
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all hover:bg-stone-100 dark:hover:bg-zinc-800`}
+            >
+                {currentChapterIndex === chapters.length - 1 ? (
+                    <span className="text-sm font-sans font-bold text-amber-600">COMPLETE & EXIT</span>
+                ) : (
+                    <>
+                        <span className="text-sm font-sans font-medium hidden md:inline">Next</span>
+                        <ChevronRight size={16} />
+                    </>
+                )}
+            </button>
+            </div>
+        </footer>
+      )}
+
+      {showTOC && (
+        <div className="fixed inset-0 z-40 bg-zinc-950/98 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-fade-in">
+            <button onClick={() => setShowTOC(false)} className="absolute top-6 right-6 text-stone-400 hover:text-white transition-colors p-2"><X size={32} strokeWidth={1} /></button>
+            <h2 className="text-2xl font-serif text-amber-600 mb-12 tracking-wider border-b border-amber-900/30 pb-4">INDEX</h2>
+            <nav className="space-y-4 w-full max-w-md text-center max-h-[70vh] overflow-y-auto">
+            {chapters.map((chapter, index) => (
+                <button key={chapter.id} onClick={() => { setCurrentChapterIndex(index); setShowTOC(false); window.scrollTo(0,0); }} className={`w-full py-4 px-4 text-lg md:text-xl font-serif transition-all duration-300 rounded-sm ${currentChapterIndex === index ? 'bg-amber-900/10 text-amber-500 border border-amber-900/20' : 'text-stone-500 hover:text-stone-200 hover:bg-stone-900'}`}>
+                <span className="block text-[10px] font-mono text-stone-600 mb-1 uppercase tracking-widest">{chapter.subtitle}</span>
+                {chapter.title}
+                </button>
+            ))}
+            </nav>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- MAIN CONTROLLER ---
 export default function TheLegacyReader() {
   const [view, setView] = useState('landing');
   const [selectedBook, setSelectedBook] = useState(null);
@@ -824,7 +1185,7 @@ export default function TheLegacyReader() {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [lang, setLang] = useState('en');
-  const [showTour, setShowTour] = useState(false); 
+  const [showTour, setShowTour] = useState(false); // NEW STATE FOR TOUR
   const [formatModal, setFormatModal] = useState(null);
   const [unlockModalBook, setUnlockModalBook] = useState(null); // NEW STATE FOR MODAL
 
@@ -832,27 +1193,35 @@ export default function TheLegacyReader() {
     const saved = localStorage.getItem('legacy_os_progress');
     if (saved) setProgressData(JSON.parse(saved));
 
+    // CHECK TOUR STATUS
     const tourCompleted = localStorage.getItem('legacy_os_tour_complete');
     if (!tourCompleted) {
       setTimeout(() => setShowTour(true), 1500); 
     }
   }, []);
 
-  const updateProgress = (bookId, chapterIndex, totalChapters) => {
-    const currentData = progressData[bookId] || { status: 'unlocked' };
-    const newProgress = { 
-        ...progressData, 
-        [bookId]: { 
-            ...currentData,
-            current: chapterIndex, 
-            total: totalChapters, 
-            lastRead: Date.now(),
-            status: 'unlocked' 
-        } 
-    };
-    setProgressData(newProgress);
-    localStorage.setItem('legacy_os_progress', JSON.stringify(newProgress));
-  };
+  // CRITICAL FIX: Wrapped in useCallback to prevent infinite loop in children
+  const updateProgress = useCallback((bookId, chapterIndex, totalChapters) => {
+    setProgressData(prevProgress => {
+        const currentData = prevProgress[bookId] || { status: 'unlocked' };
+        // Only update if values actually changed to avoid re-render loops
+        if (currentData.current === chapterIndex && currentData.total === totalChapters) {
+            return prevProgress;
+        }
+        const newProgress = { 
+            ...prevProgress, 
+            [bookId]: { 
+                ...currentData,
+                current: chapterIndex, 
+                total: totalChapters, 
+                lastRead: Date.now(),
+                status: 'unlocked' 
+            } 
+        };
+        localStorage.setItem('legacy_os_progress', JSON.stringify(newProgress));
+        return newProgress;
+    });
+  }, []);
 
   // --- NEW: HANDLE MANUAL UNLOCK ---
   const handleUnlockConfirm = (book) => {
@@ -890,6 +1259,7 @@ export default function TheLegacyReader() {
     setFormatModal(book);
   };
 
+  // 🎧 NEW: Play Track directly from Audio Hub
   const onPlayTrack = (track) => {
       setSelectedBook(track);
       setView('audio_player');
@@ -962,6 +1332,7 @@ export default function TheLegacyReader() {
       
       {view === 'index' && <ModuleIndexView onBack={goGallery} t={t} />}
 
+      {/* 🎧 UPDATED: AudioView now passes the Play Handler */}
       {view === 'audio' && <AudioView onBack={goHome} onPlayTrack={onPlayTrack} />}
       
       {view === 'audio_player' && selectedBook && <AudioPlayerView bookData={selectedBook} onBack={goGallery} language={lang} t={t} />}
