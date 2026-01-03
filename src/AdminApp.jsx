@@ -1,175 +1,149 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 
 function AdminApp() {
 
+  // access gate
   const [authorized, setAuthorized] = useState(false);
-  const [books, setBooks] = useState({});
-  const [reviews, setReviews] = useState([]);
-  const [audio, setAudio] = useState([]);
 
+  // data models
+  const [audioList, setAudioList] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [editorContent, setEditorContent] = useState("");
+  const [currentBookId, setCurrentBookId] = useState(0);
+  const [currentLang, setCurrentLang] = useState("en");
+  const [status, setStatus] = useState("");
+
+  // verify ?key=
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const key = params.get("key");
-
-    // Simple hidden gate - In a real app, use proper auth!
-    if (key === "legacyroot") {
-      setAuthorized(true);
-    }
+    if (key === "legacyroot") setAuthorized(true);
   }, []);
 
+  // load json files
   useEffect(() => {
     if (!authorized) return;
 
-    // preload data
-    fetch("/data/reviews.json")
-      .then(r => r.json())
-      .then(setReviews)
-      .catch(() => setReviews([]));
-
-    fetch("/data/audio.json")
-      .then(r => r.json())
-      .then(setAudio)
-      .catch(() => setAudio([]));
+    fetch("/data/audio.json").then(r => r.json()).then(setAudioList);
+    fetch("/data/reviews.json").then(r => r.json()).then(setReviews);
   }, [authorized]);
 
+  // load markdown file into editor
+  const loadBook = async () => {
+    const path =
+      currentLang === "ml"
+        ? `/book-${currentBookId}-ml.md`
+        : `/book-${currentBookId}.md`;
 
-  if (!authorized) {
+    try {
+      const res = await fetch(path);
+      const text = await res.text();
+      setEditorContent(text);
+      setStatus(`Loaded ${path}`);
+    } catch {
+      setEditorContent("# New book file");
+    }
+  };
+
+  // download markdown from browser
+  const downloadBook = () => {
+    const filename =
+      currentLang === "ml"
+        ? `book-${currentBookId}-ml.md`
+        : `book-${currentBookId}.md`;
+
+    const blob = new Blob([editorContent], { type: "text/markdown" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  };
+
+  // download updated json
+  const downloadJSON = (obj, name) => {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+  };
+
+  if (!authorized)
     return (
-      <div style={{padding: "40px", textAlign: "center", color: "#666", fontFamily: "monospace"}}>
-        <h1>401</h1>
-        <p>Access Denied</p>
+      <div style={{ padding: "50px", textAlign: "center" }}>
+        <h1>404</h1>
+        <p>Not Found</p>
       </div>
     );
-  }
 
+  // UI
   return (
-    <div style={{padding: "40px", fontFamily: "monospace", maxWidth: "800px", margin: "0 auto"}}>
-      <h1 style={{color: "#d97706"}}>LEGACY OS — ADMIN DASHBOARD</h1>
-      <p style={{color: "#666", borderBottom: "1px solid #333", paddingBottom: "20px"}}>
-        Status: <span style={{color: "#10b981"}}>Online</span> | Key: Verified
-      </p>
+    <div style={{ padding: 20 }}>
+      <h1>LEGACY OS — ADMIN DASHBOARD</h1>
+      <p>Hidden panel — UI untouched</p>
+      <p style={{ color: "yellow" }}>{status}</p>
 
-      {/* ---------------- BOOKS ---------------- */}
-      <section style={{marginTop: "40px"}}>
-        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>📚 Books (Content)</h2>
-        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
-            <p style={{marginBottom: "15px", fontSize: "0.9rem", color: "#999"}}>
-                Content is managed via Markdown files in <code>/public</code>.
-            </p>
-            <div style={{display: "flex", gap: "10px", flexWrap: "wrap"}}>
-                <button
-                    style={btnStyle}
-                    onClick={() => window.open("/book-0.md", "_blank")}
-                >
-                    View Book 0 (EN)
-                </button>
-                <button
-                    style={btnStyle}
-                    onClick={() => window.open("/book-1.md", "_blank")}
-                >
-                    View Book 1 (EN)
-                </button>
-            </div>
+      {/* BOOK EDITOR */}
+      <section style={{ marginTop: 30 }}>
+        <h2>📚 Book Editor</h2>
+
+        <div>
+          Book ID:
+          <input
+            type="number"
+            value={currentBookId}
+            onChange={e => setCurrentBookId(parseInt(e.target.value))}
+            style={{ width: 70, marginLeft: 10 }}
+          />
+
+          Language:
+          <select
+            value={currentLang}
+            onChange={e => setCurrentLang(e.target.value)}
+            style={{ marginLeft: 10 }}
+          >
+            <option value="en">English</option>
+            <option value="ml">Malayalam</option>
+          </select>
+
+          <button onClick={loadBook} style={{ marginLeft: 10 }}>
+            Load
+          </button>
+
+          <button onClick={downloadBook} style={{ marginLeft: 10 }}>
+            Download Updated File
+          </button>
         </div>
+
+        <textarea
+          value={editorContent}
+          onChange={e => setEditorContent(e.target.value)}
+          style={{ width: "100%", height: 300, marginTop: 10, background: "#111", color: "white" }}
+        />
       </section>
 
-      {/* ---------------- AUDIO ---------------- */}
-      <section style={{marginTop: "40px"}}>
-        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>🎧 Audio Tracks</h2>
-        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
-            <textarea 
-                style={textAreaStyle}
-                value={JSON.stringify(audio, null, 2)}
-                onChange={(e) => {
-                    try {
-                        setAudio(JSON.parse(e.target.value));
-                    } catch(err) {
-                        // ignore parse error while typing
-                    }
-                }}
-            />
-            <div style={{marginTop: "10px", display: "flex", justifyContent: "flex-end"}}>
-                <button
-                style={actionBtnStyle}
-                onClick={() => downloadJSON(audio, "audio.json")}
-                >
-                Download updated audio.json
-                </button>
-            </div>
-        </div>
+      {/* AUDIO */}
+      <section style={{ marginTop: 30 }}>
+        <h2>🎧 Audio Manager</h2>
+        <pre>{JSON.stringify(audioList, null, 2)}</pre>
+
+        <button onClick={() => downloadJSON(audioList, "audio.json")}>
+          Download Updated audio.json
+        </button>
       </section>
 
-      {/* ---------------- REVIEWS ---------------- */}
-      <section style={{marginTop: "40px"}}>
-        <h2 style={{fontSize: "1.2rem", marginBottom: "10px"}}>⭐ Reviews</h2>
-        <div style={{background: "#111", padding: "20px", borderRadius: "8px", border: "1px solid #333"}}>
-            <textarea 
-                style={textAreaStyle}
-                value={JSON.stringify(reviews, null, 2)}
-                onChange={(e) => {
-                    try {
-                        setReviews(JSON.parse(e.target.value));
-                    } catch(err) {
-                        // ignore
-                    }
-                }}
-            />
-            <div style={{marginTop: "10px", display: "flex", justifyContent: "flex-end"}}>
-                <button
-                style={actionBtnStyle}
-                onClick={() => downloadJSON(reviews, "reviews.json")}
-                >
-                Download updated reviews.json
-                </button>
-            </div>
-        </div>
-      </section>
+      {/* REVIEWS */}
+      <section style={{ marginTop: 30 }}>
+        <h2>⭐ Review Manager</h2>
+        <pre>{JSON.stringify(reviews, null, 2)}</pre>
 
+        <button onClick={() => downloadJSON(reviews, "reviews.json")}>
+          Download Updated reviews.json
+        </button>
+      </section>
     </div>
   );
 }
 
-// --- Styles ---
-const btnStyle = {
-    background: "#222",
-    color: "#fff",
-    border: "1px solid #444",
-    padding: "8px 16px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "0.85rem"
-};
-
-const actionBtnStyle = {
-    ...btnStyle,
-    background: "#d97706",
-    color: "#000",
-    fontWeight: "bold",
-    border: "none"
-};
-
-const textAreaStyle = {
-    width: "100%",
-    height: "200px",
-    background: "#000",
-    color: "#0f0",
-    border: "1px solid #333",
-    padding: "10px",
-    fontFamily: "monospace",
-    fontSize: "0.85rem",
-    borderRadius: "4px"
-};
-
-// --- Utils ---
-const downloadJSON = (data, filename) => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-};
-
-const root = ReactDOM.createRoot(document.getElementById("admin-root"));
-root.render(<AdminApp />);
+ReactDOM.createRoot(document.getElementById("admin-root")).render(<AdminApp />);
