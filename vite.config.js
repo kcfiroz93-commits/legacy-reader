@@ -1,18 +1,20 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
 
-  // 👇 this enables multiple HTML entry points
+  // 👇 THIS FIXES THE BLACK SCREEN + React #310
+  resolve: {
+    dedupe: ['react', 'react-dom']
+  },
+
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        admin: resolve(__dirname, 'admin.html'),
-      },
-    },
-  },
-})
+        main: 'index.html',
+        admin: 'admin.html'
+      }
+    }
+  }
+});
