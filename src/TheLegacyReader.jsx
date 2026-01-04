@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { Moon, Sun, X, Type, ChevronLeft, ChevronRight, Smartphone,  Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge, Lock, Filter, Disc, Mic2, RotateCcw, RotateCw, VolumeX, FileText, AlertTriangle, CheckCircle, Share2 } from 'lucide-react';
+import { Moon, Sun, X, Type, ChevronLeft, ChevronRight, Smartphone, Download, ExternalLink, ArrowLeft, BookOpen, User, Maximize, Minimize, Search, Clock, MessageSquare, Star, Play, Pause, SkipForward, SkipBack, Volume2, Table, Headphones, Gauge, Lock, Filter, Disc, Mic2, RotateCcw, RotateCw, VolumeX, FileText, AlertTriangle, CheckCircle, Share2, HardDrive } from 'lucide-react';
 
-// IMPORTING CONTENT FROM EXTERNAL FILES
+// --- IMPORTS FROM YOUR EXTERNAL FILES ---
 import { translations, DEDICATIONS_CONTENT } from './translations';
 import { moduleIndex } from './moduleIndex';
 import { SECTIONS } from './sections';
@@ -127,6 +127,10 @@ const AnimatedCard = ({ children, delay = 0 }) => {
 // --- SYSTEM TOUR COMPONENT ---
 const SystemTour = ({ onClose, t }) => {
   const [step, setStep] = useState(0);
+  
+  // Guard clause in case TOUR_STEPS is empty/undefined
+  if (!TOUR_STEPS || TOUR_STEPS.length === 0) return null;
+  
   const currentStep = TOUR_STEPS[step];
 
   const handleNext = () => {
@@ -202,6 +206,47 @@ const UnlockModal = ({ book, onConfirm, onCancel }) => (
     </div>
   </div>
 );
+
+// --- STORAGE PERMISSION COMPONENT ---
+const StoragePermissionRequest = () => {
+  const [isPersisted, setIsPersisted] = useState(true);
+
+  useEffect(() => {
+    async function checkPersistence() {
+      if (navigator.storage && navigator.storage.persisted) {
+        const result = await navigator.storage.persisted();
+        setIsPersisted(result);
+      }
+    }
+    checkPersistence();
+  }, []);
+
+  const requestPersistence = async () => {
+    if (navigator.storage && navigator.storage.persist) {
+      const result = await navigator.storage.persist();
+      setIsPersisted(result);
+      if (result) {
+        alert("System Storage Optimized: Audio & Books will now remain saved offline.");
+      } else {
+        alert("Storage permission denied. The browser may delete files if space is low.");
+      }
+    }
+  };
+
+  if (isPersisted) return null;
+
+  return (
+    <div className="fixed bottom-4 right-4 z-[60]">
+      <button 
+        onClick={requestPersistence}
+        className="flex items-center gap-2 px-4 py-3 bg-zinc-900 border border-amber-600/50 text-amber-500 text-[10px] font-mono uppercase tracking-widest rounded shadow-lg hover:bg-amber-900/20 transition-all animate-pulse"
+      >
+        <HardDrive size={14} />
+        Initialize Offline Storage
+      </button>
+    </div>
+  );
+};
 
 // --- SUB-COMPONENTS ---
 
@@ -477,7 +522,7 @@ const ReviewsView = ({ onBack, onReviewClick }) => {
   );
 };
 
-// --- LIBRARY GRID WITH LOCKING LOGIC (CRASH FIXED & LITE MASKING) ---
+// --- LIBRARY GRID WITH LOCKING LOGIC (UPDATED FOR HONOR SYSTEM & LITE MASKING) ---
 
 const LibraryGrid = ({ onSelectBook, onBack, progressData, onShowIndex, t, onUnlockRequest }) => (
   <div className="min-h-screen bg-zinc-950 text-stone-300 p-6 md:p-12 animate-fade-in">
@@ -882,6 +927,7 @@ const ReaderView = ({ bookData, onBack, initialProgress, onProgressUpdate, langu
     loadContent();
   }, [bookData, language, t]);
 
+  // CRITICAL FIX: Prevent infinite loop by not including onProgressUpdate in dependency array
   useEffect(() => {
     if (chapters.length > 0) {
         onProgressUpdate(bookData.id, currentChapterIndex, chapters.length);
@@ -1037,6 +1083,7 @@ export default function TheLegacyReader() {
   const [showTour, setShowTour] = useState(false); // NEW STATE FOR TOUR
   const [formatModal, setFormatModal] = useState(null);
   const [unlockModalBook, setUnlockModalBook] = useState(null); // NEW STATE FOR MODAL
+  const [deferredPrompt, setDeferredPrompt] = useState(null); // PWA INSTALL STATE
 
   useEffect(() => {
     const saved = localStorage.getItem('legacy_os_progress');
@@ -1048,6 +1095,34 @@ export default function TheLegacyReader() {
       setTimeout(() => setShowTour(true), 1500); 
     }
   }, []);
+
+  // --- PWA INSTALL LISTENER ---
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  // --- PWA INSTALL HANDLER ---
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    } else {
+      // If native prompt isn't available (like on iOS), show your manual guide
+      setShowInstallGuide(true);
+    }
+  };
 
   // CRITICAL FIX: Wrapped in useCallback to prevent infinite loop in children
   const updateProgress = useCallback((bookId, chapterIndex, totalChapters) => {
@@ -1131,6 +1206,9 @@ export default function TheLegacyReader() {
     <>
       {showTour && <SystemTour onClose={completeTour} t={t} />}
 
+      {/* OFFLINE STORAGE PERMISSION COMPONENT */}
+      <StoragePermissionRequest />
+
       {/* NEW: UNLOCK MODAL */}
       {unlockModalBook && (
           <UnlockModal 
@@ -1146,7 +1224,7 @@ export default function TheLegacyReader() {
           onEnterProfile={goProfile} 
           onEnterAudio={goAudio}
           onEnterReviews={goReviews}
-          onShowInstall={() => setShowInstallGuide(true)}
+          onShowInstall={handleInstallClick}
           t={t}
           lang={lang}
           setLang={setLang}
