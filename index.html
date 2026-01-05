@@ -2,33 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    
+
     <title>The Legacy OS | Advocate Firoz KC</title>
+
+    <!-- Primary Meta -->
+    <link rel="canonical" href="https://legacy.kc-capitals.com/" />
     <meta name="title" content="The Legacy OS | Advocate Firoz KC" />
     <meta name="description" content="Re-building a Lost Life into a Generational System. An operating system for human, family, and institutional architecture." />
     <meta name="keywords" content="Legacy OS, Advocate Firoz KC, generational wealth, family constitution, life architecture, legacy planning" />
 
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Legacy OS" />
     <meta property="og:url" content="https://legacy.kc-capitals.com/" />
     <meta property="og:title" content="The Legacy OS | Advocate Firoz KC" />
     <meta property="og:description" content="Re-building a Lost Life into a Generational System. An operating system for human, family, and institutional architecture." />
-    <meta property="og:image" content="https://legacy.kc-capitals.com/og-image.png" />
+    <meta property="og:image" content="https://legacy.kc-capitals.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
 
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://legacy.kc-capitals.com/" />
     <meta property="twitter:title" content="The Legacy OS | Advocate Firoz KC" />
     <meta property="twitter:description" content="Re-building a Lost Life into a Generational System. An operating system for human, family, and institutional architecture." />
-    <meta property="twitter:image" content="https://legacy.kc-capitals.com/og-image.png" />
+    <meta property="twitter:image" content="https://legacy.kc-capitals.com/og-image.jpg" />
 
+    <!-- PWA + Theme -->
     <meta name="theme-color" content="#0c0a09" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/manifest.json" />
-    
-    <link rel="apple-touch-icon" href="/icon-v2.png">
-    <link rel="icon" type="image/png" href="/icon-v2.png?v=4">
 
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-v2.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-v2.png?v=4" />
+
+    <!-- Performance hint -->
+    <link rel="preload" as="image" href="https://legacy.kc-capitals.com/og-image.jpg" />
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -45,7 +61,8 @@
       }
     </script>
   </head>
-  <body>
+
+  <body class="bg-black text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
